@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/home/princemidha/GitCode/CustomiseCamera/dynamicgrid/src/main/shaders"/></dataSet><dataSet config="debug"><source path="/home/princemidha/GitCode/CustomiseCamera/dynamicgrid/src/debug/shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/home/princemidha/GitCode/BITBUCKET/CustomiseCamera/dynamicgrid/src/main/shaders"/></dataSet><dataSet config="debug"><source path="/home/princemidha/GitCode/BITBUCKET/CustomiseCamera/dynamicgrid/src/debug/shaders"/></dataSet></merger>
