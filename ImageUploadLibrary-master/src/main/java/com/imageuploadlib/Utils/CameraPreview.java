@@ -51,6 +51,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         holder = getHolder();
         holder.addCallback(this);
         Camera.Parameters parameters = mCamera.getParameters();
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         mSupportedPreviewSizes = parameters.getSupportedPreviewSizes();
         mSupportedPictureSizes = parameters.getSupportedPictureSizes();
         display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -171,12 +173,17 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 //            } else {
 //                Choose another supported mode
 //            }
+            mCamera.stopPreview();
+            Camera.Parameters p = mCamera.getParameters();
+            p.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
 
-            params.setPictureSize(mPictureSize.width, mPictureSize.height);
+//            params.setPictureSize(mPictureSize.width, mPictureSize.height);
             // params.setPictureSize(1280,720);
             mCamera.setParameters(params);
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
+
+            mCamera.autoFocus(null);
 
         } catch (IOException e) {
 
@@ -208,24 +215,35 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             Log.e(TAG, e.getMessage());
         }
 
+        Camera.Parameters p = mCamera.getParameters();
+        p.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+
+        mCamera.setParameters(p);
+        try {
+            mCamera.setPreviewDisplay(holder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mCamera.startPreview();
+        mCamera.autoFocus(null);
         // set preview size and make any resize, rotate or
         // reformatting changes here
 
         // start preview with new settings
-        try {
-            Camera.Parameters parameters = mCamera.getParameters();
-            parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
-            holder.addCallback(this);
-            mCamera.setPreviewDisplay(holder);
-            mCamera.setParameters(parameters);
-            mCamera.startPreview();
-            CameraActivity.readyToTakePicture = true;
+//        try {
+//            Camera.Parameters parameters = mCamera.getParameters();
+//            parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+//            holder.addCallback(this);
+//            mCamera.setPreviewDisplay(holder);
+//            mCamera.setParameters(parameters);
+//            mCamera.startPreview();
+//            CameraActivity.readyToTakePicture = true;
             if (readyListener != null)
                 readyListener.readyToTakePicture(true);
-
-        } catch (Exception e) {
-            Log.e(TAG, "" + e.getMessage());
-        }
+//
+//        } catch (Exception e) {
+//            Log.e(TAG, "" + e.getMessage());
+//        }
     }
 
     @Override
