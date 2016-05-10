@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         params.setNoOfPhotos(2);
         params.setEnableCapturedReview(false);
         params.setEnableExtraBrightness(false);
+        params.setEnableRestrictedExtension(true);
         PhotosLibrary.collectPhotos(this,params);
     }
 }

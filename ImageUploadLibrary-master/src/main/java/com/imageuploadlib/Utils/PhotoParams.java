@@ -24,6 +24,7 @@ public class PhotoParams implements Serializable {
     private ArrayList<?> imagePathList;
     private Boolean enableCapturedReview;
     private Boolean enableExtraBrightness;
+    private boolean enableRestrictedExtension;
 
     public enum FolderOptions {
         PUBLIC_DIR, PUBLIC_DIR_DCIM, PUBLIC_DIR_SOCIAL, PUBLIC_DIR_ALL;
@@ -155,5 +156,13 @@ public class PhotoParams implements Serializable {
 
     public void setEnableExtraBrightness(Boolean enableExtraBrightness) {
         this.enableExtraBrightness = enableExtraBrightness;
+    }
+
+    public boolean isEnableRestrictedExtension() {
+        return enableRestrictedExtension;
+    }
+
+    public void setEnableRestrictedExtension(boolean enableRestrictedExtension) {
+        this.enableRestrictedExtension = enableRestrictedExtension;
     }
 }

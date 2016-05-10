@@ -20,6 +20,7 @@ import com.imageuploadlib.Utils.ApplicationController;
 import com.imageuploadlib.Utils.CommonUtils;
 import com.imageuploadlib.Utils.Constants;
 import com.imageuploadlib.Utils.FileInfo;
+import com.imageuploadlib.Utils.PhotoParams;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class GalleryActivity extends BaseActivityGallery implements AdapterView.
     private int croppedImagesCount = 0;
     private ArrayList<String> croppedImages = new ArrayList<>();
     private Boolean fromPriorityActivity = false;
+    private PhotoParams mPhotoParams;
 
     private int maxCount = 0;
 
@@ -64,6 +66,9 @@ public class GalleryActivity extends BaseActivityGallery implements AdapterView.
             maxCount = getIntent().getExtras().getInt(MAX_COUNT);
         if (getIntent().getExtras() != null && getIntent().getExtras().containsKey(CameraPriorityActivity.FROM_PRIORITY_ACTIVITY))
             fromPriorityActivity = getIntent().getExtras().getBoolean(CameraPriorityActivity.FROM_PRIORITY_ACTIVITY);
+        if (getIntent().getSerializableExtra(Constants.PHOTO_PARAMS) != null) {
+            mPhotoParams = (PhotoParams) getIntent().getSerializableExtra(Constants.PHOTO_PARAMS);
+        }
         adapter = new ImagesFoldersAdapter(this, folders);
         gvFolders.setAdapter(adapter);
 
@@ -74,8 +79,12 @@ public class GalleryActivity extends BaseActivityGallery implements AdapterView.
                 "" + MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
                 MediaStore.Images.ImageColumns.DATA
         };
-
-        Cursor mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, "\"1) GROUP BY 1,(1\"", null, null);
+        Cursor mCursor ;
+        if(mPhotoParams.isEnableRestrictedExtension()) {
+            mCursor = getContentResolver().query(uri, PROJECTION_BUCKET,MediaStore.Images.Media.MIME_TYPE+" in (?, ?)", new String[] {"image/jpeg", "image/png"}, null);
+        } else {
+            mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, "\"1) GROUP BY 1,(1\"", null, null);
+        }
 //        Cursor mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, "\"1) GROUP BY "+ MediaStore.Images.Media.BUCKET_DISPLAY_NAME, null, null);
         if (mCursor == null) {
             Toast.makeText(GalleryActivity.this, "Gallery cannot be opened.", Toast.LENGTH_SHORT).show();

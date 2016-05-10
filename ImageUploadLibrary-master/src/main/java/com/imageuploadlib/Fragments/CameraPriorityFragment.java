@@ -321,6 +321,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(GalleryActivity.MAX_COUNT, maxNumberOfImages);
             intent.putExtra(CameraPriorityActivity.FROM_PRIORITY_ACTIVITY, true);
+            intent.putExtra(Constants.PHOTO_PARAMS,mPhotoParams);
             startActivityForResult(intent, GALLERY_PICK);
 
         } else if (v.getId() == R.id.imageName) {
