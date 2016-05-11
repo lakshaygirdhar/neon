@@ -68,7 +68,7 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
 
         public void dragImagesHandler(int first, int second);
 
-        public void gaHandler(String screen, String category, String action, String label, Long value);
+        public void gaHandler(String screen, String category, String action, String label, ArrayList<FileInfo> images);
     }
 
     public static CameraItemsFragment newInstance(Context context, PhotoParams params,
@@ -215,25 +215,27 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
         cameraItemsFiles.clear();
     }
 
+    private ArrayList<FileInfo> cameraList;
+    private ArrayList<FileInfo> galleryList;
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode) {
             case ScanConstants.CODE_CAMERA:
                 if (data != null) {
-                    ArrayList<FileInfo> list = (ArrayList<FileInfo>) data.getSerializableExtra(ScanConstants.CAMERA_IMAGES);
-                    updateGrid(list, ADD_PHOTOS);
-                    imagesHandler.gaHandler(Constants.SCREEN_CAMERA_ITEMS, Constants.CATEGORY_CAMERA, Constants.IMAGE_CAPTURE, list.size() + "", 0L);
+                    cameraList = (ArrayList<FileInfo>) data.getSerializableExtra(ScanConstants.CAMERA_IMAGES);
+                    updateGrid(cameraList, ADD_PHOTOS);
+                    imagesHandler.gaHandler(Constants.SCREEN_CAMERA_ITEMS, Constants.CATEGORY_CAMERA, Constants.IMAGE_CAPTURE, cameraList.size() + "", cameraList);
                 }
                 break;
 
             case ScanConstants.CODE_GALLERY:
                 if (data != null) {
-                    ArrayList<FileInfo> list1 = (ArrayList<FileInfo>) data.getSerializableExtra(GalleryActivity.GALLERY_SELECTED_PHOTOS);
-                    setSource(list1, FileInfo.SOURCE.PHONE_GALLERY);
+                    galleryList = (ArrayList<FileInfo>) data.getSerializableExtra(GalleryActivity.GALLERY_SELECTED_PHOTOS);
+                    setSource(galleryList, FileInfo.SOURCE.PHONE_GALLERY);
                     checkForDeletedFiles(cameraItemsFiles);
-                    updateGrid(list1, ADD_PHOTOS);
-                    imagesHandler.gaHandler(Constants.SCREEN_CAMERA_ITEMS, Constants.CATEGORY_GALLERY, Constants.TAKE_FROM_GALLERY, list1.size() + "", 0L);
+                    updateGrid(galleryList, ADD_PHOTOS);
+                    imagesHandler.gaHandler(Constants.SCREEN_CAMERA_ITEMS, Constants.CATEGORY_GALLERY, Constants.TAKE_FROM_GALLERY, galleryList.size() + "", galleryList);
                 }
                 break;
 
@@ -291,7 +293,7 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
                 Toast.makeText(getActivity().getApplicationContext(), "Maximum photos can be : " + maxPhotos, Toast.LENGTH_SHORT).show();
                 return;
             }
-            imagesHandler.gaHandler(Constants.SCREEN_CAMERA_ITEMS, Constants.CATEGORY_CAMERA, Constants.ACTION_CLICK, Constants.TAKE_PHOTO, 0L);
+//            imagesHandler.gaHandler(Constants.SCREEN_CAMERA_ITEMS, Constants.CATEGORY_CAMERA, Constants.ACTION_CLICK, Constants.TAKE_PHOTO, 0L);
             Intent intent = new Intent(getActivity(), ScanActivity.class);
             intent.putExtra(GalleryActivity.MAX_COUNT, maxPhotos - cameraItemsFiles.size());
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -308,7 +310,7 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
                 Toast.makeText(getActivity().getApplicationContext(), "Maximum photos can be : " + maxPhotos, Toast.LENGTH_SHORT).show();
                 return;
             }
-            imagesHandler.gaHandler(Constants.SCREEN_CAMERA_ITEMS, Constants.CATEGORY_GALLERY, Constants.ACTION_CLICK, Constants.TAKE_FROM_GALLERY, 0L);
+//            imagesHandler.gaHandler(Constants.SCREEN_CAMERA_ITEMS, Constants.CATEGORY_GALLERY, Constants.ACTION_CLICK, Constants.TAKE_FROM_GALLERY, 0L);
             Intent intent1 = new Intent(getActivity(), GalleryActivity.class);
             intent1.putExtra(PHOTO_PARAMS, params);
             //intent1.putExtra(GalleryActivity.MAX_COUNT, maxPhotos-cameraItemsFiles.size());
@@ -316,11 +318,14 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
             startActivityForResult(intent1, ScanConstants.CODE_GALLERY);
 
         } else if (v.getId() == R.id.done) {
-            if (cameraItemsFiles.size() > maxPhotos) {
-                Toast.makeText(getActivity().getApplicationContext(), "Maximum photos can be : " + maxPhotos, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            imagesHandler.outputImages(cameraItemsFiles, deletedImages);
+//            if (cameraItemsFiles.size() > maxPhotos) {
+//                Toast.makeText(getActivity().getApplicationContext(), "Maximum photos can be : " + maxPhotos, Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//            imagesHandler.outputImages(cameraItemsFiles, deletedImages);
+            cameraList.addAll(galleryList);
+            getActivity().setResult(ScanConstants.MULTIPLE_CAPTURED, new Intent().putExtra(ScanConstants.CAMERA_IMAGES,cameraList));
+            getActivity().finish();
         } else if (v.getId() == R.id.ivBack) {
             try {
                 if (ApplicationController.selectedFiles != null)

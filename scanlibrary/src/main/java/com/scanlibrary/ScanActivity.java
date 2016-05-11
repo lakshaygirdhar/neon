@@ -320,7 +320,7 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
             for (FileInfo info : infos) {
                 images.add(info.getFilePath());
             }
-            setResult(RESULT_OK, new Intent().putExtra(ScanConstants.CAMERA_IMAGES,infos));
+            setResult(ScanConstants.MULTIPLE_CAPTURED, new Intent().putExtra(ScanConstants.CAMERA_IMAGES,infos));
             finish();
         } else {
             Toast.makeText(this, "Please click atleast one photo", Toast.LENGTH_SHORT).show();
@@ -408,7 +408,11 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
             } else {
                 if (requestCode == REQUEST_REVIEW) {
                     readyToTakePicture = true;
-                    Log.i(TAG,"image path "+data.getStringExtra(Constants.IMAGE_PATH));
+
+                    Intent intent = new Intent();
+                    intent.putExtra(ScanConstants.CAPTURED_IMAGE_PATH,data.getStringExtra(Constants.IMAGE_PATH));
+                    setResult(ScanConstants.SINGLE_CAPTURED,intent);
+                    finish();
                 } else if (requestCode == GALLERY_PICK) {
                     return;
                 } else if (requestCode != 101) {
