@@ -7,6 +7,9 @@ import android.os.Environment;
  */
 public class ScanConstants {
 
+    public static final int CODE_CAMERA = 148;
+    public static final int CODE_GALLERY = 256;
+    public static final String CAMERA_IMAGES = "captured_images";
     public final static int PICKFILE_REQUEST_CODE = 1;
     public final static int START_CAMERA_REQUEST_CODE = 2;
     public final static String OPEN_INTENT_PREFERENCE = "selectContent";

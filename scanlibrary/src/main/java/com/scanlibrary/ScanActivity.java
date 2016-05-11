@@ -320,7 +320,7 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
             for (FileInfo info : infos) {
                 images.add(info.getFilePath());
             }
-            setResult(RESULT_OK, new Intent().putStringArrayListExtra(Constants.RESULT_IMAGES, images));
+            setResult(RESULT_OK, new Intent().putExtra(ScanConstants.CAMERA_IMAGES,infos));
             finish();
         } else {
             Toast.makeText(this, "Please click atleast one photo", Toast.LENGTH_SHORT).show();

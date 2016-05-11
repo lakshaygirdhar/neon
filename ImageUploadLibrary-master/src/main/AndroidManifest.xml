@@ -52,10 +52,7 @@
             android:name=".Activity.CameraPriorityActivity"
             android:label="@string/title_activity_camera_priority"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activity.NeutralActivity"
-            android:label="@string/title_activity_neutral"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".Activity.BaseActivityGallery"
             android:label="@string/title_activity_base" />

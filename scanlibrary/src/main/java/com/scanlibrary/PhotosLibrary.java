@@ -5,10 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v4.app.Fragment;
 
-import com.imageuploadlib.Activity.NeutralActivity;
-import com.imageuploadlib.Fragments.CameraPriorityFragment;
 import com.imageuploadlib.Utils.CommonUtils;
 import com.imageuploadlib.Utils.Constants;
 import com.imageuploadlib.Utils.PhotoParams;
@@ -41,7 +38,6 @@ public class PhotosLibrary {
                 break;
 
             case NEUTRAL:
-                params.setOrientation(PhotoParams.CameraOrientation.LANDSCAPE);
                 Intent cameraNeutralIntent = new Intent(context, NeutralActivity.class);
                 cameraNeutralIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 cameraNeutralIntent.putExtra("photoParams", params);
