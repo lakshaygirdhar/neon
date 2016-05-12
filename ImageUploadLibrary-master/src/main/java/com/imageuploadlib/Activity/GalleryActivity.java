@@ -64,8 +64,6 @@ public class GalleryActivity extends BaseActivityGallery implements AdapterView.
 //        alreadySelectedFiles = (ArrayList<FileInfo>) getIntent().getSerializableExtra(CameraItemsFragment.CAMERA_ITEMS_SELECTED_FILES);
         if (getIntent().getExtras() != null && getIntent().getExtras().containsKey(MAX_COUNT))
             maxCount = getIntent().getExtras().getInt(MAX_COUNT);
-        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey(CameraPriorityActivity.FROM_PRIORITY_ACTIVITY))
-            fromPriorityActivity = getIntent().getExtras().getBoolean(CameraPriorityActivity.FROM_PRIORITY_ACTIVITY);
         if (getIntent().getSerializableExtra(Constants.PHOTO_PARAMS) != null) {
             mPhotoParams = (PhotoParams) getIntent().getSerializableExtra(Constants.PHOTO_PARAMS);
         }
@@ -225,10 +223,6 @@ public class GalleryActivity extends BaseActivityGallery implements AdapterView.
         intent.putExtra(FOLDER_NAME, fileInfo.getDisplayName());
         if (maxCount > 0)
             intent.putExtra(MAX_COUNT, maxCount);
-        if (fromPriorityActivity)
-            intent.putExtra(CameraPriorityActivity.FROM_PRIORITY_ACTIVITY, true);
-        //intent.putExtra(FILES_IN_FOLDER, filesInFolder);
-//        intent.putExtra(ALREADY_SELECTED_FILES , alreadySelectedFiles);
         startActivityForResult(intent, REQUEST_FOLDER_FILES);
     }
 

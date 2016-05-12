@@ -78,11 +78,7 @@ public class FolderFiles extends BaseActivityGallery implements View.OnClickList
                 ApplicationController.selectedFiles.clear();
             }
         }
-        if (getIntent().getExtras().containsKey(CameraPriorityActivity.FROM_PRIORITY_ACTIVITY)) {
-            if (ApplicationController.selectedFiles != null) {
-                ApplicationController.selectedFiles.clear();
-            }
-        }
+
         selectionArgs = new String[]{folderName, String.valueOf(0)};
 
         if (folderName != null && folderName.equals(".thumbnails")) {
@@ -103,35 +99,6 @@ public class FolderFiles extends BaseActivityGallery implements View.OnClickList
     }
 
     private void setUpActionBar() {
-
-
-//        setSupportActionBar(mToolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        mToolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_color));
-//        mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
-        /*/actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.action_bar_folder_files);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_HOME);
-        actionBar.setDisplayShowCustomEnabled(true);
->>>>>>> master
-
-        textViewDone = (TextView) findViewById(R.id.tvDone);
-        textViewDone.setVisibility(View.GONE);
-        textViewDone.setOnClickListener(this);
-
-        tvFolderName = (TextView) findViewById(R.id.tvFolderNameAndCount);
-
-        Bundle extras = getIntent().getExtras();
-        if(extras != null){
-            String folderName = extras.getString(GalleryActivity.FOLDER_NAME);
-<<<<<<< HEAD
-            mToolbar.setTitle(folderName);
-=======
-            toolbar.setTitle(folderName);
->>>>>>> master
-            tvFolderName.setText(folderName);
-        }/*/
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {

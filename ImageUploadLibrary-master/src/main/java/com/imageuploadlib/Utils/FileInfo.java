@@ -7,17 +7,13 @@ import java.io.Serializable;
  */
 public class FileInfo implements Serializable {
 
-    String filePath;
-
-    ;
-    FILE_TYPE type;
-
-    ;
-    String fileName;
-    String displayName;
-    Boolean selected;
-    SOURCE source;
-    Boolean fromServer = false;
+    private String filePath;;
+    private FILE_TYPE type;
+    private String fileName;
+    private String displayName;
+    private Boolean selected;
+    private SOURCE source;
+    private Boolean fromServer = false;
     int fileCount;
 
     public FileInfo() {

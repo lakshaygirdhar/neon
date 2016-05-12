@@ -24,9 +24,6 @@
         android:label="@string/app_name"
         android:theme="@style/AppCompatNoActionBarTheme">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" />
-        <activity
             android:name=".Activity.CameraActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_item"
@@ -45,21 +42,12 @@
             android:label="@string/title_activity_gallery"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activity.GalleryContentProviderActivity"
-            android:label="@string/title_activity_gallery"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activity.CameraPriorityActivity"
-            android:label="@string/title_activity_camera_priority"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".Activity.NeutralActivity"
             android:label="@string/title_activity_neutral"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.BaseActivityGallery"
             android:label="@string/title_activity_base" />
-        <activity android:name=".Activity.CamCropActivity"></activity>
     </application>
 
 </manifest>
