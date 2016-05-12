@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -29,7 +30,7 @@ import java.io.File;
  */
 public class ReviewImageActivity extends AppCompatActivity implements View.OnClickListener {
 
-    protected android.support.v7.widget.Toolbar toolbar;
+    protected Toolbar toolbar;
     ImageView bDone, bCancel;
     RelativeLayout relativeLayout;
     Boolean flag;

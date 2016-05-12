@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 
-import com.imageuploadlib.Activity.CameraPriorityActivity;
 import com.imageuploadlib.Activity.NeutralActivity;
 import com.imageuploadlib.Fragments.CameraPriorityFragment;
 import com.imageuploadlib.Utils.CommonUtils;
@@ -24,18 +23,18 @@ public class PhotosLibrary {
 
         switch (params.getMode()) {
             case CAMERA_PRIORITY:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                        && !CommonUtils.checkForPermission(context,
-                        new String[]{Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
-                    return;
-                }
-                Intent newIntent = new Intent(context, CameraPriorityActivity.class);
-                newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                newIntent.putExtra("photoParams", params);
-                ((Activity) context).startActivityForResult(newIntent, params.getRequestCode());
-                ((Activity) context).overridePendingTransition(R.anim.slide_in_bottom, R.anim.do_nothing);
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+//                        && !CommonUtils.checkForPermission(context,
+//                        new String[]{Manifest.permission.CAMERA,
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                        Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
+//                    return;
+//                }
+//                Intent newIntent = new Intent(context, CameraPriorityActivity.class);
+//                newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                newIntent.putExtra("photoParams", params);
+//                ((Activity) context).startActivityForResult(newIntent, params.getRequestCode());
+//                ((Activity) context).overridePendingTransition(R.anim.slide_in_bottom, R.anim.do_nothing);
                 break;
 
             case GALLERY_PRIORITY:

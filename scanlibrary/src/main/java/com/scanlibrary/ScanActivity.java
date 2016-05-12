@@ -1,6 +1,5 @@
 package com.scanlibrary;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -24,7 +23,6 @@ import com.imageuploadlib.Activity.GalleryActivity;
 import com.imageuploadlib.Activity.ReviewImageActivity;
 import com.imageuploadlib.Fragments.CameraItemsFragment;
 import com.imageuploadlib.Fragments.CameraPriorityFragment;
-import com.imageuploadlib.Fragments.CameraPriorityFragment2;
 import com.imageuploadlib.Utils.CameraPreview;
 import com.imageuploadlib.Utils.Constants;
 import com.imageuploadlib.Utils.DrawingView;
@@ -57,8 +55,7 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
     DrawingView drawingView;
     FrameLayout camera_lLayout;
     private ArrayList<String> outputImages = new ArrayList<>();
-    private CameraPriorityFragment2 fragment = null;
-    private CameraPriorityFragment fragment1;
+    private CameraPriorityFragment fragment;
 
     @Override
     protected void onDestroy() {
@@ -82,9 +79,9 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
 //            FragmentManager manager = getSupportFragmentManager();
 //            manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 //        } else {
-        fragment1 = CameraPriorityFragment.getInstance(photoParams);
+        fragment = CameraPriorityFragment.getInstance(photoParams);
         FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.content_frame, fragment1).commit();
+        manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 //        }
     }
 
@@ -106,19 +103,6 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
     @Override
     protected void onResume() {
         super.onResume();
-        if(fragment != null && fragment.tvTapToFocus != null){
-            fragment.tvTapToFocus.setVisibility(View.VISIBLE);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    TranslateAnimation anim = new TranslateAnimation(0, -100, 0, 0);
-                    anim.setDuration(1000);
-                    fragment.tvTapToFocus.startAnimation(anim);
-                    fragment.tvTapToFocus.setVisibility(View.GONE);
-                }
-            }, 3000);
-
-        }
 
     }
 

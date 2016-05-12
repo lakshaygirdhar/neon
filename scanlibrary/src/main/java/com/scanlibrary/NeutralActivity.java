@@ -82,9 +82,11 @@ public class NeutralActivity extends FragmentActivity implements CameraItemsFrag
     }
 
     @Override
-    public void gaHandler(String screen, String category, String action, String label, ArrayList<FileInfo> value) {
+    public void gaHandler(String screen, String category, String action, String label, ArrayList<FileInfo> images) {
 
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -108,6 +110,4 @@ public class NeutralActivity extends FragmentActivity implements CameraItemsFrag
             }
         }
     }
-
-
 }

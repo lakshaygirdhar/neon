@@ -33,9 +33,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.imageuploadlib.Activity.CameraPriorityActivity;
 import com.imageuploadlib.Activity.GalleryActivity;
-import com.imageuploadlib.Activity.ReviewImageActivity;
 import com.imageuploadlib.R;
 import com.imageuploadlib.Utils.CameraPreview;
 import com.imageuploadlib.Utils.CommonUtils;
@@ -320,7 +318,6 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
             Intent intent = new Intent(mActivity, GalleryActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(GalleryActivity.MAX_COUNT, maxNumberOfImages);
-            intent.putExtra(CameraPriorityActivity.FROM_PRIORITY_ACTIVITY, true);
             intent.putExtra(Constants.PHOTO_PARAMS,mPhotoParams);
             startActivityForResult(intent, GALLERY_PICK);
 

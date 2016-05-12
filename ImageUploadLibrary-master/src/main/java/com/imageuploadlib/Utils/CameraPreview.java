@@ -27,14 +27,14 @@ import java.util.List;
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
     private static final String TAG = "CameraPreview";
-    Camera mCamera;
-    List<Camera.Size> mSupportedPreviewSizes;
-    List<Camera.Size> mSupportedPictureSizes;
-    Camera.Size mPreviewSize;
-    Camera.Size mPictureSize;
+    private Camera mCamera;
+    private List<Camera.Size> mSupportedPreviewSizes;
+    private List<Camera.Size> mSupportedPictureSizes;
+    private Camera.Size mPreviewSize;
+    private Camera.Size mPictureSize;
     private SurfaceHolder holder;
-    Display display;
-    Activity mActivity;
+    private Display display;
+    private Activity mActivity;
 
     private static final int DEGREES_0 = 0;
     private static final int DEGREES_90 = 90;
