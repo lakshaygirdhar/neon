@@ -7,6 +7,11 @@ import android.os.Environment;
  */
 public class ScanConstants {
 
+    public static final int CODE_CAMERA = 148;
+    public static final int CODE_GALLERY = 256;
+    public static final String CAMERA_IMAGES = "captured_images";
+    public static final String CAPTURED_IMAGE_PATH = "capturedImagePath";
+
     public final static int PICKFILE_REQUEST_CODE = 1;
     public final static int START_CAMERA_REQUEST_CODE = 2;
     public final static String OPEN_INTENT_PREFERENCE = "selectContent";
@@ -18,4 +23,8 @@ public class ScanConstants {
             .getExternalStorageDirectory().getPath() + "/scanSample";
 
     public final static String SELECTED_BITMAP = "selectedBitmap";
+
+    public final static int SINGLE_CAPTURED = 2001;
+    public final static int MULTIPLE_CAPTURED = 2002;
+
 }

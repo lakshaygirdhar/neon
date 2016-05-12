@@ -5,10 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v4.app.Fragment;
 
-import com.imageuploadlib.Activity.NeutralActivity;
-import com.imageuploadlib.Fragments.CameraPriorityFragment;
 import com.imageuploadlib.Utils.CommonUtils;
 import com.imageuploadlib.Utils.Constants;
 import com.imageuploadlib.Utils.PhotoParams;
@@ -17,9 +14,9 @@ import com.imageuploadlib.Utils.PhotoParams;
  * Created by Lakshay on 21-05-2015.
  */
 public class PhotosLibrary {
-    public static final int REQUEST_CODE_UPLOAD_PHOTOS = 2004;
 
-    public static void collectPhotos(Context context, PhotoParams params) {
+
+    public static void collectPhotos(Context context, PhotoParams params, int requestCode) {
 
         switch (params.getMode()) {
             case CAMERA_PRIORITY:
@@ -33,7 +30,7 @@ public class PhotosLibrary {
                 Intent newIntent = new Intent(context, ScanActivity.class);
                 newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 newIntent.putExtra("photoParams", params);
-                ((Activity) context).startActivityForResult(newIntent, params.getRequestCode());
+                ((Activity) context).startActivityForResult(newIntent, requestCode);
                 ((Activity) context).overridePendingTransition(com.imageuploadlib.R.anim.slide_in_bottom, com.imageuploadlib.R.anim.do_nothing);
                 break;
 
@@ -41,11 +38,10 @@ public class PhotosLibrary {
                 break;
 
             case NEUTRAL:
-                params.setOrientation(PhotoParams.CameraOrientation.LANDSCAPE);
                 Intent cameraNeutralIntent = new Intent(context, NeutralActivity.class);
                 cameraNeutralIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 cameraNeutralIntent.putExtra("photoParams", params);
-                ((Activity) context).startActivityForResult(cameraNeutralIntent, REQUEST_CODE_UPLOAD_PHOTOS);
+                ((Activity) context).startActivityForResult(cameraNeutralIntent, requestCode);
                 break;
         }
     }

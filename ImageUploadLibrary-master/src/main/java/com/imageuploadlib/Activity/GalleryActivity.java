@@ -62,10 +62,12 @@ public class GalleryActivity extends BaseActivityGallery implements AdapterView.
 
         GridView gvFolders = (GridView) findViewById(R.id.gvFolders);
 //        alreadySelectedFiles = (ArrayList<FileInfo>) getIntent().getSerializableExtra(CameraItemsFragment.CAMERA_ITEMS_SELECTED_FILES);
-        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey(MAX_COUNT))
-            maxCount = getIntent().getExtras().getInt(MAX_COUNT);
+
+        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey(CameraPriorityActivity.FROM_PRIORITY_ACTIVITY))
+            fromPriorityActivity = getIntent().getExtras().getBoolean(CameraPriorityActivity.FROM_PRIORITY_ACTIVITY);
         if (getIntent().getSerializableExtra(Constants.PHOTO_PARAMS) != null) {
             mPhotoParams = (PhotoParams) getIntent().getSerializableExtra(Constants.PHOTO_PARAMS);
+            maxCount = mPhotoParams.getNoOfPhotos();
         }
         adapter = new ImagesFoldersAdapter(this, folders);
         gvFolders.setAdapter(adapter);
@@ -78,7 +80,7 @@ public class GalleryActivity extends BaseActivityGallery implements AdapterView.
                 MediaStore.Images.ImageColumns.DATA
         };
         Cursor mCursor ;
-        if(mPhotoParams.isEnableRestrictedExtension()) {
+        if(mPhotoParams != null && mPhotoParams.isEnableRestrictedExtension()) {
             mCursor = getContentResolver().query(uri, PROJECTION_BUCKET,MediaStore.Images.Media.MIME_TYPE+" in (?, ?)", new String[] {"image/jpeg", "image/png"}, null);
         } else {
             mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, "\"1) GROUP BY 1,(1\"", null, null);
