@@ -63,8 +63,6 @@ public class GalleryActivity extends BaseActivityGallery implements AdapterView.
         GridView gvFolders = (GridView) findViewById(R.id.gvFolders);
 //        alreadySelectedFiles = (ArrayList<FileInfo>) getIntent().getSerializableExtra(CameraItemsFragment.CAMERA_ITEMS_SELECTED_FILES);
 
-        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey(CameraPriorityActivity.FROM_PRIORITY_ACTIVITY))
-            fromPriorityActivity = getIntent().getExtras().getBoolean(CameraPriorityActivity.FROM_PRIORITY_ACTIVITY);
         if (getIntent().getSerializableExtra(Constants.PHOTO_PARAMS) != null) {
             mPhotoParams = (PhotoParams) getIntent().getSerializableExtra(Constants.PHOTO_PARAMS);
             maxCount = mPhotoParams.getNoOfPhotos();
