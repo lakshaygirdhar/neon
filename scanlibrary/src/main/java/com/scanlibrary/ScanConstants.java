@@ -26,5 +26,10 @@ public class ScanConstants {
 
     public final static int SINGLE_CAPTURED = 2001;
     public final static int MULTIPLE_CAPTURED = 2002;
+    public static final String IMAGE_TAGS_FOR_REVIEW = "imageTagsReview";
+    public static final String IMAGE_MODEL_FOR__REVIEW = "imageModelReview";
+    public static final String IMAGE_REVIEW_POSITION = "imageReviewPosition";
+    public static final String SINGLE_TAG_SELECTION = "singleTagSelection";
+    public static final String ALREADY_SELECTED_TAGS = "alreadySelectedTags";
 
 }

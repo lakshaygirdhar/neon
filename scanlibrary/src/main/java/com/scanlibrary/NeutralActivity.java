@@ -82,8 +82,8 @@ public class NeutralActivity extends FragmentActivity implements CameraItemsFrag
     }
 
     @Override
-    public void gaHandler(String screen, String category, String action, String label, Long value) {
-        //gaHelper.sendEvent(GAHelper.TrackerName.APP_TRACKER, screen, category, action, label, value);
+    public void gaHandler(String screen, String category, String action, String label, ArrayList<FileInfo> value) {
+
     }
 
     @Override
@@ -108,4 +108,6 @@ public class NeutralActivity extends FragmentActivity implements CameraItemsFrag
             }
         }
     }
+
+
 }
