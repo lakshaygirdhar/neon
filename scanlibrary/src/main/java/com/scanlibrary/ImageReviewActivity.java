@@ -11,9 +11,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.imageuploadlib.R;
-import com.imageuploadlib.Utils.Constants;
 
+import com.imageuploadlib.Utils.FileInfo;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -24,8 +25,8 @@ import java.util.HashSet;
 public class ImageReviewActivity extends AppCompatActivity implements View.OnClickListener, FragmentListener {
 
     private ImagesReviewViewPagerAdapter mPagerAdapter;
-    private ArrayList<ImageTagsModel> mImageTags;
-    private ArrayList<ImageModel> imagesList;
+//    private ArrayList<ImageTagsModel> mImageTags;
+    private ArrayList<FileInfo> imagesList;
 
     private TextView mDoneButton;
     private TextView mTitle;
@@ -34,42 +35,42 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
     private boolean isViewDirty = false;
     private ImageView viewPagerRightBtn;
     private ImageView viewPagerLeftBtn;
-    private boolean singleTagSelection;
+//    private boolean singleTagSelection;
 
-    private HashSet<ImageTagsModel> alreadySelectedTags = new HashSet<>();
+//    private HashSet<ImageTagsModel> alreadySelectedTags = new HashSet<>();
 
-    public void setSelectedTagModel(ImageTagsModel lastSelectedModel, ImageTagsModel currentSelectedModel) {
-        if (lastSelectedModel != null) {
-            alreadySelectedTags.remove(lastSelectedModel);
-        }
-        alreadySelectedTags.add(currentSelectedModel);
-    }
-
-    public boolean isAlreadySelectedTag(ImageTagsModel tagsModel) {
-        if (alreadySelectedTags.contains(tagsModel)) {
-            return true;
-        }
-        return false;
-    }
-
-    public HashSet<ImageTagsModel> getAlreadySelectedTags() {
-        return alreadySelectedTags;
-    }
-
-    public void setAlreadySelectedTags(HashSet<ImageTagsModel> alreadySelectedTags) {
-        this.alreadySelectedTags = alreadySelectedTags;
-    }
-
-    public boolean isSingleTagSelection() {
-        return singleTagSelection;
-    }
-
-    public void resetTagsSelection() {
-        alreadySelectedTags.clear();
-        mPagerAdapter.updatePagerItems(imagesList);
-        mPagerAdapter.notifyDataSetChanged();
-        mPager.setCurrentItem(0);
-    }
+//    public void setSelectedTagModel(ImageTagsModel lastSelectedModel, ImageTagsModel currentSelectedModel) {
+//        if (lastSelectedModel != null) {
+//            alreadySelectedTags.remove(lastSelectedModel);
+//        }
+//        alreadySelectedTags.add(currentSelectedModel);
+//    }
+//
+//    public boolean isAlreadySelectedTag(ImageTagsModel tagsModel) {
+//        if (alreadySelectedTags.contains(tagsModel)) {
+//            return true;
+//        }
+//        return false;
+//    }
+//
+//    public HashSet<ImageTagsModel> getAlreadySelectedTags() {
+//        return alreadySelectedTags;
+//    }
+//
+//    public void setAlreadySelectedTags(HashSet<ImageTagsModel> alreadySelectedTags) {
+//        this.alreadySelectedTags = alreadySelectedTags;
+//    }
+//
+//    public boolean isSingleTagSelection() {
+//        return singleTagSelection;
+//    }
+//
+//    public void resetTagsSelection() {
+//        alreadySelectedTags.clear();
+//        mPagerAdapter.updatePagerItems(imagesList);
+//        mPagerAdapter.notifyDataSetChanged();
+//        mPager.setCurrentItem(0);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +91,12 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         Intent intent = getIntent();
-        mImageTags = (ArrayList<ImageTagsModel>) intent.getSerializableExtra(ScanConstants.IMAGE_TAGS_FOR_REVIEW);
-        imagesList = (ArrayList<ImageModel>) intent.getSerializableExtra(ScanConstants.IMAGE_MODEL_FOR__REVIEW);
-        singleTagSelection = intent.getBooleanExtra(ScanConstants.SINGLE_TAG_SELECTION, false);
-        if (singleTagSelection) {
-            alreadySelectedTags = (HashSet<ImageTagsModel>) intent.getSerializableExtra(ScanConstants.ALREADY_SELECTED_TAGS);
-        }
+//        mImageTags = (ArrayList<ImageTagsModel>) intent.getSerializableExtra(ScanConstants.IMAGE_TAGS_FOR_REVIEW);
+        imagesList = (ArrayList<FileInfo>) intent.getSerializableExtra(ScanConstants.IMAGE_MODEL_FOR__REVIEW);
+//        singleTagSelection = intent.getBooleanExtra(ScanConstants.SINGLE_TAG_SELECTION, false);
+//        if (singleTagSelection) {
+//            alreadySelectedTags = (HashSet<ImageTagsModel>) intent.getSerializableExtra(ScanConstants.ALREADY_SELECTED_TAGS);
+//        }
         int position = intent.getIntExtra(ScanConstants.IMAGE_REVIEW_POSITION, 0);
         if (position == 0) {
             viewPagerLeftBtn.setVisibility(View.GONE);
@@ -103,7 +104,7 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
         if (position == imagesList.size() - 1) {
             viewPagerRightBtn.setVisibility(View.GONE);
         }
-        mPagerAdapter = new ImagesReviewViewPagerAdapter(getSupportFragmentManager(), imagesList, mImageTags);
+        mPagerAdapter = new ImagesReviewViewPagerAdapter(getSupportFragmentManager(), imagesList/*, mImageTags*/);
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(position);
         mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -131,7 +132,7 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
         tempImageList.addAll(list);
     }
 
-    private void setArrowButton(int position, ArrayList<ImageModel> imagesTempList) {
+    private void setArrowButton(int position, ArrayList<FileInfo> imagesTempList) {
         if (position == 0 || imagesTempList.size() == 1) {
             viewPagerLeftBtn.setVisibility(View.GONE);
         } else {

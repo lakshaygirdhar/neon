@@ -30,9 +30,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.imageuploadlib.R;
-import com.imageuploadlib.Utils.CommonUtils;
-import com.imageuploadlib.Utils.Constants;
+import com.imageuploadlib.Utils.FileInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,14 +52,14 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     private int mPageNumber;
     private ImageView deleteBtn;
     private ImageView rotateBtn;
-    private TextView txtVwTagSpinner;
+//    private TextView txtVwTagSpinner;
     private ImageView draweeView;
 
-    private ImageModel imageModel;
-    private ArrayList<ImageTagsModel> imageTags;
+    private FileInfo imageModel;
+//    private ArrayList<ImageTagsModel> imageTags;
 
-    private ImageTagsAdapter imageTagsAdapter;
-    private ImageTagsModel selectedTag;
+//    private ImageTagsAdapter imageTagsAdapter;
+//    private ImageTagsModel selectedTag;
     private int counterRotation = 0;
     private int screenWidth, screenHeight;
     private Context mContext;
@@ -77,12 +75,12 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
-    public static ImageReviewViewPagerFragment create(int pageNumber, ImageModel imageModel, ArrayList<ImageTagsModel> imageTags) {
+    public static ImageReviewViewPagerFragment create(int pageNumber, FileInfo imageModel/*, ArrayList<ImageTagsModel> imageTags*/) {
         ImageReviewViewPagerFragment fragment = new ImageReviewViewPagerFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, pageNumber);
         args.putSerializable(ScanConstants.IMAGE_MODEL_FOR__REVIEW, imageModel);
-        args.putSerializable(ScanConstants.IMAGE_TAGS_FOR_REVIEW, imageTags);
+//        args.putSerializable(ScanConstants.IMAGE_TAGS_FOR_REVIEW, imageTags);
         fragment.setArguments(args);
         return fragment;
     }
@@ -107,12 +105,12 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         deleteBtn = (ImageView) rootView.findViewById(R.id.imagereview_deletebtn);
         cropBtn=(ImageView)rootView.findViewById(R.id.imagereview_cropbtn);
         rotateBtn = (ImageView) rootView.findViewById(R.id.imagereview_rotatebtn);
-        txtVwTagSpinner = (TextView) rootView.findViewById(R.id.imagereview_tag_spinner);
+//        txtVwTagSpinner = (TextView) rootView.findViewById(R.id.imagereview_tag_spinner);
         draweeView = (ImageView) rootView.findViewById(R.id.imagereview_imageview);
         deleteBtn.setOnClickListener(this);
         rotateBtn.setOnClickListener(this);
         cropBtn.setOnClickListener(this);
-        txtVwTagSpinner.setOnClickListener(this);
+//        txtVwTagSpinner.setOnClickListener(this);
         onLoad(savedInstanceState);
         // Set the title view to show the page number.
        /* ((TextView) rootView.findViewById(android.R.id.text1)).setText(
@@ -123,29 +121,29 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
 
     public void onLoad(Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-        imageModel = (ImageModel) bundle.getSerializable(ScanConstants.IMAGE_MODEL_FOR__REVIEW);
+        imageModel = (FileInfo) bundle.getSerializable(ScanConstants.IMAGE_MODEL_FOR__REVIEW);
         if (savedInstanceState != null) {
             Object o = bundle.getSerializable(ScanConstants.IMAGE_MODEL_FOR__REVIEW);
             if (o != null) {
-                imageModel = (ImageModel) o;
+                imageModel = (FileInfo) o;
             }
         }
-        imageTags = (ArrayList<ImageTagsModel>) bundle.getSerializable(ScanConstants.IMAGE_TAGS_FOR_REVIEW);
-        if (imageTags != null && imageTags.size() > 0) {
-            txtVwTagSpinner.setVisibility(View.VISIBLE);
-            if (imageModel.getTagsModel() != null) {
-                txtVwTagSpinner.setText(imageModel.getTagsModel().getTag_name());
-                selectedTag = imageModel.getTagsModel();
-            }
-            imageTagsAdapter = new ImageTagsAdapter(getActivity(), imageTags);
-        } else {
-            txtVwTagSpinner.setVisibility(View.GONE);
-        }
+//        imageTags = (ArrayList<ImageTagsModel>) bundle.getSerializable(ScanConstants.IMAGE_TAGS_FOR_REVIEW);
+//        if (imageTags != null && imageTags.size() > 0) {
+//            txtVwTagSpinner.setVisibility(View.VISIBLE);
+//            if (imageModel.getTagsModel() != null) {
+//                txtVwTagSpinner.setText(imageModel.getTagsModel().getTag_name());
+//                selectedTag = imageModel.getTagsModel();
+//            }
+//            imageTagsAdapter = new ImageTagsAdapter(getActivity(), imageTags);
+//        } else {
+//            txtVwTagSpinner.setVisibility(View.GONE);
+//        }
         //draweeView.setOrientation(SubsamplingScaleImageView.ORIENTATION_USE_EXIF);
         // draweeView.setImage(ImageSource.uri(imageModel.getImagePath()));
 
 
-        Glide.with(mContext).load(imageModel.getImagePath())
+        Glide.with(mContext).load(imageModel.getFilePath())
                 .placeholder(R.drawable.default_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
@@ -161,45 +159,45 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     }
 
     public void showTagsDropDown() {
-        final ListPopupWindow listPopupWindow = new ListPopupWindow(getActivity());
-        listPopupWindow.setModal(true);
-        listPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(),
-                R.drawable.abc_popup_background_mtrl_mult,
-                null));
-        listPopupWindow.setWidth(ListPopupWindow.WRAP_CONTENT);
-        listPopupWindow.setAdapter(imageTagsAdapter);
-        listPopupWindow.setAnchorView(getView().findViewById(R.id.imagereview_tag_spinner));
-        listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ImageTagsModel currentSelectedTag= (ImageTagsModel) parent.getAdapter().getItem(position);
+//        final ListPopupWindow listPopupWindow = new ListPopupWindow(getActivity());
+//        listPopupWindow.setModal(true);
+//        listPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(),
+//                R.drawable.abc_popup_background_mtrl_mult,
+//                null));
+//        listPopupWindow.setWidth(ListPopupWindow.WRAP_CONTENT);
+//        listPopupWindow.setAdapter(imageTagsAdapter);
+//        listPopupWindow.setAnchorView(getView().findViewById(R.id.imagereview_tag_spinner));
+//        listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                ImageTagsModel currentSelectedTag= (ImageTagsModel) parent.getAdapter().getItem(position);
 
-                if (((ImageReviewActivity) getActivity()).isSingleTagSelection() &&
-                        ((ImageReviewActivity) getActivity()).isAlreadySelectedTag(currentSelectedTag)) {
-                    Toast.makeText(getActivity(), "Already selected tag", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                ImageTagsModel lastSelectedModel = selectedTag;
-                selectedTag = currentSelectedTag;
-                ((ImageReviewActivity) getActivity()).setSelectedTagModel(lastSelectedModel, selectedTag);
+//                if (((ImageReviewActivity) getActivity()).isSingleTagSelection() &&
+//                        ((ImageReviewActivity) getActivity()).isAlreadySelectedTag(currentSelectedTag)) {
+//                    Toast.makeText(getActivity(), "Already selected tag", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                ImageTagsModel lastSelectedModel = selectedTag;
+//                selectedTag = currentSelectedTag;
+//                ((ImageReviewActivity) getActivity()).setSelectedTagModel(lastSelectedModel, selectedTag);
 
-                txtVwTagSpinner.setText(selectedTag.getTag_name());
-                ImageTagsModel tagModel = new ImageTagsModel();
-                tagModel.setTagId(selectedTag.getTagId());
-                tagModel.setTag_name(selectedTag.getTag_name());
-                imageModel.setTagsModel(tagModel);
-                ImageEditEvent event = new ImageEditEvent();
-                event.setModel(imageModel);
-                ((FragmentListener) getActivity()).getFragmentChanges(event);
-                listPopupWindow.dismiss();
-            }
-        });
-        txtVwTagSpinner.post(new Runnable() {
-            @Override
-            public void run() {
-                listPopupWindow.show();
-            }
-        });
+//                txtVwTagSpinner.setText(selectedTag.getTag_name());
+//                ImageTagsModel tagModel = new ImageTagsModel();
+//                tagModel.setTagId(selectedTag.getTagId());
+//                tagModel.setTag_name(selectedTag.getTag_name());
+//                imageModel.setTagsModel(tagModel);
+//                ImageEditEvent event = new ImageEditEvent();
+//                event.setModel(imageModel);
+//                ((FragmentListener) getActivity()).getFragmentChanges(event);
+//                listPopupWindow.dismiss();
+//            }
+//        });
+//        txtVwTagSpinner.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                listPopupWindow.show();
+//            }
+//        });
     }
 
 
@@ -224,19 +222,23 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             // draweeView.get
             //draweeView.setRotation(90.0f);
 
-            rotateImage(imageModel.getImagePath());
+            rotateImage(imageModel.getFilePath());
             // getImageFromFrescoView(imageModel.getImagePath());
 //            clearFrescoCache(Uri.fromFile(new File(imageModel.getImagePath())));
             //CommonUtils.setExifRotation(new File(imageModel.getImagePath()),0);
             //draweeView.setImageURI(Uri.fromFile(new File(imageModel.getImagePath())));
         } else if (v.getId() == R.id.imagereview_tag_spinner) {
-            showTagsDropDown();
+//            showTagsDropDown();
         }
         else if(v.getId()==R.id.imagereview_cropbtn){
-            cropFilePath=CommonUtils.getEmptyStoragePath(getActivity());
-            Uri inputUri=Uri.fromFile(new File(imageModel.getImagePath()));
-            Uri outputUri=Uri.fromFile(cropFilePath);
-            Crop.of(inputUri, outputUri).start(getActivity(),ImageReviewViewPagerFragment.this);
+            //TODO PRINCE
+//            getActivity().getSupportFragmentManager().beginTransaction().add(ScanFragment.instantiate())
+
+//            cropFilePath=Utils.getEmptyStoragePath(getActivity());
+//            Uri inputUri=Uri.fromFile(new File(imageModel.getFilePath()));
+//            Uri outputUri=Uri.fromFile(cropFilePath);
+            //ToDO_PRINCE
+//            Crop.of(inputUri, outputUri).start(getActivity(),ImageReviewViewPagerFragment.this);
         }
     }
 
@@ -316,14 +318,14 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             }
 
 
-            draweeView.setRotation(draweeView.getRotation() + 90.0f);
-            ImageEditEvent event = new ImageEditEvent();
-            event.setModel(imageModel);
-            event.setImageEventType(ImageEditEvent.EVENT_ROTATE);
-            ((FragmentListener) getActivity()).getFragmentChanges(event);
+//            draweeView.setRotation(draweeView.getRotation() + 90.0f);
+//            ImageEditEvent event = new ImageEditEvent();
+//            event.setModel(imageModel);
+//            event.setImageEventType(ImageEditEvent.EVENT_ROTATE);
+//            ((FragmentListener) getActivity()).getFragmentChanges(event);
 
 
-            // matrix.postRotate(rotate);
+//             matrix.postRotate(rotate);
             //Button btn_RotateImg = (Button) findViewById(R.id.btn_RotateImg);
            /* try {
                 b = loadBitmap(path, rotate, screenWidth, screenHeight);
@@ -388,7 +390,6 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
 
     public void rotateImage(String path) {
         File file = new File(path);
-        //Log.e("HIMANSHU",getMimeType(file.getPath()));
         ExifInterface exifInterface = null;
         try {
             exifInterface = new ExifInterface(file.getPath());
@@ -413,18 +414,24 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             e.printStackTrace();
         }
         getBitmap(path);
+        draweeView.setRotation(draweeView.getRotation() + 90.0f);
+        ImageEditEvent event = new ImageEditEvent();
+        event.setModel(imageModel);
+        event.setImageEventType(ImageEditEvent.EVENT_ROTATE);
+        ((FragmentListener) getActivity()).getFragmentChanges(event);
 
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
-        if (requestCode == Crop.REQUEST_CROP && resultCode == Activity.RESULT_OK) {
-            imageModel.setImagePath(cropFilePath.getAbsolutePath());
-            Glide.with(mContext).load(imageModel.getImagePath())
-                    .placeholder(R.drawable.default_placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .into(draweeView);
-        }
+        //TODO_PRINCE
+//        if (requestCode == Crop.REQUEST_CROP && resultCode == Activity.RESULT_OK) {
+//            imageModel.setImagePath(cropFilePath.getAbsolutePath());
+//            Glide.with(mContext).load(imageModel.getImagePath())
+//                    .placeholder(R.drawable.default_placeholder)
+//                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                    .skipMemoryCache(true)
+//                    .into(draweeView);
+//        }
     }
 
 

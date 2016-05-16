@@ -9,4 +9,7 @@
     <string name="scan">Save Croping</string>
     <string name="cantCrop">Cant crop the image, change the points</string>
     <string name="ok">Ok</string>
+    <string name="remove_img_title">Remove Image</string>
+    <string name="cancelDialog">Cancel</string>
+    <string name="okDialog">Ok</string>
 </resources>

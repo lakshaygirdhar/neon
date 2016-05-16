@@ -1,6 +1,7 @@
 package com.scanlibrary;
 
 
+import com.imageuploadlib.Utils.FileInfo;
 
 /**
  * Created by lakshaygirdhar on 4/12/15.
@@ -13,7 +14,7 @@ public class ImageEditEvent extends GeneralEvent {
     public static final int EVENT_TAG_CHANGED=4;
     public static final int EVENT_REPLACED_BY_GALLERY=5;
 
-    private ImageModel model;
+    private FileInfo model;
     private int position;
     private int imageEventType;
 
@@ -35,11 +36,11 @@ public class ImageEditEvent extends GeneralEvent {
         this.imageEventType = imageEventType;
     }
 
-    public ImageModel getModel() {
+    public FileInfo getModel() {
         return model;
     }
 
-    public void setModel(ImageModel model) {
+    public void setModel(FileInfo model) {
         this.model = model;
     }
 }

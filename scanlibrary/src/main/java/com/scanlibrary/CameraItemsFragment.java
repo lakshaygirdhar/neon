@@ -35,9 +35,14 @@ import java.util.ArrayList;
 /**
  * Created by Lakshay on 13-02-2015.
  */
-public class CameraItemsFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemLongClickListener, UpdateSelection {
+public class CameraItemsFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemLongClickListener, UpdateSelection, AdapterView.OnItemClickListener {
 
     private static final String TAG = "CameraFragment";
+
+    public static final int CODE_CAMERA = 148;
+    public static final int CODE_GALLERY = 256;
+    private static final int OPEN_IMAGE_VIEW_PAGER_SCREEN = 102;
+
     private static final String UPLOADED_IMAGEGS = "alreadyUploaded";
     private static final String SELECTED_IMAGES = "alreadySelected";
     public static final String IMG_LOAD_DEF_BIG = "IMG_LOAD_DEF_BIG";
@@ -61,6 +66,18 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
     private ArrayList<FileInfo> deletedImages;
     private ArrayList<FileInfo> cameraItemsFiles;
     private Context context;
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getActivity(), ImageReviewActivity.class);
+//        intent.putExtra(Constants.IMAGE_TAGS_FOR_REVIEW, mImageTags);
+        intent.putExtra(ScanConstants.IMAGE_MODEL_FOR__REVIEW, cameraItemsFiles);
+        intent.putExtra(ScanConstants.IMAGE_REVIEW_POSITION, position);
+//        intent.putExtra(Constants.SINGLE_TAG_SELECTION,singleTagSelection);
+//        intent.putExtra(Constants.ALREADY_SELECTED_TAGS,alreadySelectedTags);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivityForResult(intent, OPEN_IMAGE_VIEW_PAGER_SCREEN);
+    }
 
 
     public interface ImagesHandler {
@@ -186,6 +203,7 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
 
         gvPhotos.setAdapter(photosGridAdapter);
         gvPhotos.setOnItemLongClickListener(this);
+        gvPhotos.setOnItemClickListener(this);;
         gvPhotos.setOnDropListener(new DynamicGridView.OnDropListener() {
             @Override
             public void onActionDrop() {
@@ -215,13 +233,13 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
         cameraItemsFiles.clear();
     }
 
-    private ArrayList<FileInfo> cameraList;
-    private ArrayList<FileInfo> galleryList;
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+    ArrayList<FileInfo> cameraList;
+    ArrayList<FileInfo> galleryList;
         switch (requestCode) {
-            case ScanConstants.CODE_CAMERA:
+            case CODE_CAMERA:
                 if (data != null) {
                     cameraList = (ArrayList<FileInfo>) data.getSerializableExtra(ScanConstants.CAMERA_IMAGES);
                     updateGrid(cameraList, ADD_PHOTOS);
@@ -229,7 +247,7 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
                 }
                 break;
 
-            case ScanConstants.CODE_GALLERY:
+            case CODE_GALLERY:
                 if (data != null) {
                     galleryList = (ArrayList<FileInfo>) data.getSerializableExtra(GalleryActivity.GALLERY_SELECTED_PHOTOS);
                     setSource(galleryList, FileInfo.SOURCE.PHONE_GALLERY);
@@ -298,7 +316,7 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
             intent.putExtra(GalleryActivity.MAX_COUNT, maxPhotos - cameraItemsFiles.size());
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(PHOTO_PARAMS, params);
-            startActivityForResult(intent, ScanConstants.CODE_CAMERA);
+            startActivityForResult(intent, CODE_CAMERA);
         } else if (v.getId() == R.id.addPhotoGallary) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                     && !CommonUtils.checkForPermission(context,
@@ -315,7 +333,7 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
             intent1.putExtra(PHOTO_PARAMS, params);
             //intent1.putExtra(GalleryActivity.MAX_COUNT, maxPhotos-cameraItemsFiles.size());
             intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivityForResult(intent1, ScanConstants.CODE_GALLERY);
+            startActivityForResult(intent1, CODE_GALLERY);
 
         } else if (v.getId() == R.id.done) {
 //            if (cameraItemsFiles.size() > maxPhotos) {
@@ -323,8 +341,8 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
 //                return;
 //            }
 //            imagesHandler.outputImages(cameraItemsFiles, deletedImages);
-            cameraList.addAll(galleryList);
-            getActivity().setResult(ScanConstants.MULTIPLE_CAPTURED, new Intent().putExtra(ScanConstants.CAMERA_IMAGES,cameraList));
+
+            getActivity().setResult(ScanConstants.MULTIPLE_CAPTURED, new Intent().putExtra(ScanConstants.CAMERA_IMAGES,cameraItemsFiles));
             getActivity().finish();
         } else if (v.getId() == R.id.ivBack) {
             try {

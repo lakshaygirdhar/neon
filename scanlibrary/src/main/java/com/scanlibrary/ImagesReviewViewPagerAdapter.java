@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
 
+import com.imageuploadlib.Utils.FileInfo;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -14,16 +16,16 @@ import java.util.LinkedHashMap;
  */
 public class ImagesReviewViewPagerAdapter extends FragmentStatePagerAdapter {
     private static final int NUM_PAGES = 20;
-    ArrayList<ImageModel> imageList;
+    ArrayList<FileInfo> imageList;
     ArrayList<ImageReviewViewPagerFragment> fragmentList;
-    ArrayList<ImageTagsModel> imageTags;
+//    ArrayList<ImageTagsModel> imageTags;
     FragmentManager mFragmentManager;
 
-    public ImagesReviewViewPagerAdapter(FragmentManager fm,ArrayList<ImageModel> imageList,ArrayList<ImageTagsModel> imageMap) {
+    public ImagesReviewViewPagerAdapter(FragmentManager fm, ArrayList<FileInfo> imageList/*,ArrayList<ImageTagsModel> imageMap*/) {
         super(fm);
         mFragmentManager=fm;
         this.imageList=imageList;
-        this.imageTags = imageMap;
+//        this.imageTags = imageMap;
         updatePagerItems(imageList);
     }
 
@@ -43,18 +45,18 @@ public class ImagesReviewViewPagerAdapter extends FragmentStatePagerAdapter {
         }
     }
 
-    public void updatePagerItems(ArrayList<ImageModel> pagerItems){
+    public void updatePagerItems(ArrayList<FileInfo> pagerItems){
 
         if(fragmentList!=null)
             fragmentList.clear();
         else
             fragmentList=new ArrayList<>();
         for (int i = 0; i < pagerItems.size(); i++) {
-            fragmentList.add(ImageReviewViewPagerFragment.create(i,imageList.get(i),imageTags));
+            fragmentList.add(ImageReviewViewPagerFragment.create(i,imageList.get(i)/*,imageTags*/));
         }
     }
 
-    public void setPagerItems(ArrayList<ImageModel> pagerItems) {
+    public void setPagerItems(ArrayList<FileInfo> pagerItems) {
         this.imageList=pagerItems;
         if (fragmentList != null)
             for (int i = 0; i < imageList.size(); i++) {

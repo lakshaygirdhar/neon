@@ -7,8 +7,7 @@ import android.os.Environment;
  */
 public class ScanConstants {
 
-    public static final int CODE_CAMERA = 148;
-    public static final int CODE_GALLERY = 256;
+
     public static final String CAMERA_IMAGES = "captured_images";
     public static final String CAPTURED_IMAGE_PATH = "capturedImagePath";
 
@@ -31,5 +30,4 @@ public class ScanConstants {
     public static final String IMAGE_REVIEW_POSITION = "imageReviewPosition";
     public static final String SINGLE_TAG_SELECTION = "singleTagSelection";
     public static final String ALREADY_SELECTED_TAGS = "alreadySelectedTags";
-
 }

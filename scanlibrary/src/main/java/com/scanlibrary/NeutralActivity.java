@@ -86,8 +86,6 @@ public class NeutralActivity extends FragmentActivity implements CameraItemsFrag
 
     }
 
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

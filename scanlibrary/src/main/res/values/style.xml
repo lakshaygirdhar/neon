@@ -10,4 +10,9 @@
         <item name="android:imeOptions">actionDone</item>
         <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
     </style>
+
+    <style name="TextAppearance.FontPath" parent="android:TextAppearance">
+        <!-- Custom Attr-->
+        <!--<item name="fontPath">fonts/nunito_regular.ttf</item>-->
+    </style>
 </resources>
