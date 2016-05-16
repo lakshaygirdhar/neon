@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -40,7 +41,8 @@ import java.util.ArrayList;
  * Created by himanshu on 23/12/15.
  */
 public class ImageReviewViewPagerFragment extends Fragment implements View.OnClickListener {
-
+    private static final String TAG = "ImageReviewViewPager";
+    private static final int CROPPING_REQUEST_CODE = 3001;
     /**
      * The argument key for the page number this fragment represents.
      */
@@ -64,6 +66,8 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     private int screenWidth, screenHeight;
     private Context mContext;
     private ImageView cropBtn;
+    private String imagePathForCropping;
+    private String imagePathForCropped;
 
 
     @Override
@@ -232,6 +236,11 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         }
         else if(v.getId()==R.id.imagereview_cropbtn){
             //TODO PRINCE
+
+            imagePathForCropping = imageModel.getFilePath();
+            Intent intent = new Intent(getActivity(),ScanActivity.class);
+            intent.putExtra(ScanConstants.IMAGE_FILE_FOR_CROPPING, new File(imageModel.getFilePath()));
+            startActivityForResult(intent,CROPPING_REQUEST_CODE);
 //            getActivity().getSupportFragmentManager().beginTransaction().add(ScanFragment.instantiate())
 
 //            cropFilePath=Utils.getEmptyStoragePath(getActivity());
@@ -424,14 +433,21 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
         //TODO_PRINCE
-//        if (requestCode == Crop.REQUEST_CROP && resultCode == Activity.RESULT_OK) {
-//            imageModel.setImagePath(cropFilePath.getAbsolutePath());
-//            Glide.with(mContext).load(imageModel.getImagePath())
-//                    .placeholder(R.drawable.default_placeholder)
-//                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                    .skipMemoryCache(true)
-//                    .into(draweeView);
-//        }
+        if (resultCode == ScanConstants.SINGLE_CAPTURED) {
+            String imagePath = result.getStringExtra(ScanConstants.CAPTURED_IMAGE_PATH);
+            Log.i(TAG,"onActivityResult "+imagePath);
+            imageModel.setFilePath(imagePath);
+            Intent intent = new Intent();
+            intent.setAction(ScanConstants.UPDATE_IMAGE_LIST);
+            intent.putExtra(ScanConstants.IMAGE_INDEX_SENT_FOR_CROPPING,mPageNumber);
+            intent.putExtra(ScanConstants.IMAGE_RECEIVED_AFTER_CROPPING,imageModel);
+            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+            Glide.with(mContext).load(imagePath)
+                    .placeholder(R.drawable.default_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(draweeView);
+        }
     }
 
 

@@ -57,6 +57,7 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
     private ArrayList<String> outputImages = new ArrayList<>();
     private CameraPriorityFragment fragment;
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -74,14 +75,19 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
         setContentView(R.layout.camera_priority_items);
 
         photoParams = (PhotoParams) getIntent().getSerializableExtra(CameraItemsFragment.PHOTO_PARAMS);
+        if (null != photoParams) {
+            fragment = CameraPriorityFragment.getInstance(photoParams);
+            FragmentManager manager = getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        } else {
+            scanFragmentForCropping((File)getIntent().getSerializableExtra(ScanConstants.IMAGE_FILE_FOR_CROPPING));
+        }
 //        if(photoParams.getEnableCapturedReview() != null && photoParams.getEnableCapturedReview()){
 //            fragment = CameraPriorityFragment2.getInstance(photoParams, this);
 //            FragmentManager manager = getSupportFragmentManager();
 //            manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 //        } else {
-        fragment = CameraPriorityFragment.getInstance(photoParams);
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
 //        }
     }
 
@@ -318,6 +324,10 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
 
     @Override
     public void sendPictureForCropping(File file) {
+        scanFragmentForCropping(file);
+    }
+
+    private void scanFragmentForCropping(File file) {
         ScanFragment fragment = new ScanFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ScanConstants.SELECTED_BITMAP, Uri.fromFile(file));
@@ -408,6 +418,15 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
         else if (resultCode == RESULT_CANCELED) {
             FragmentManager manager = getSupportFragmentManager();
             manager.popBackStack(ScanFragment.class.toString(),FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            if (null == photoParams) {
+                finish();
+            }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

@@ -30,4 +30,12 @@ public class ScanConstants {
     public static final String IMAGE_REVIEW_POSITION = "imageReviewPosition";
     public static final String SINGLE_TAG_SELECTION = "singleTagSelection";
     public static final String ALREADY_SELECTED_TAGS = "alreadySelectedTags";
+    public static final String IMAGE_FILE_FOR_CROPPING = "imageFileForCropping";
+    public static final String UPDATE_IMAGE_LIST = "updateImageList";
+
+    public static final String IMAGE_INDEX_SENT_FOR_CROPPING = "imageIndexSentForCropping";
+    public static final String IMAGE_RECEIVED_AFTER_CROPPING = "imageReceivedAfterCropping";
+
+    public static final int RESULT_FROM_IMAGE_REVIEW_ACTIVITY = 5001;
+
 }

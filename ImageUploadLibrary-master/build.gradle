@@ -53,7 +53,6 @@ dependencies {
     compile project(':dynamicgrid')
     compile project(':GalleryLibrary')
     compile 'com.karumi:expandableselector:1.0.0'
-    compile 'com.cesards.android:cropimageview:1.0.2.1'
 //    compile project(':scanlibrary')
 }
 

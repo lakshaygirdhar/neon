@@ -19,7 +19,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.cesards.cropimageview.CropImageView;
 import com.imageuploadlib.R;
 import com.imageuploadlib.Utils.Constants;
 

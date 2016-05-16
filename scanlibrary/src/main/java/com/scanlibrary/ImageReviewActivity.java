@@ -1,7 +1,12 @@
 package com.scanlibrary;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.imageuploadlib.Utils.FileInfo;
 
 import java.io.File;
@@ -24,8 +32,10 @@ import java.util.HashSet;
  */
 public class ImageReviewActivity extends AppCompatActivity implements View.OnClickListener, FragmentListener {
 
+
+
     private ImagesReviewViewPagerAdapter mPagerAdapter;
-//    private ArrayList<ImageTagsModel> mImageTags;
+    //    private ArrayList<ImageTagsModel> mImageTags;
     private ArrayList<FileInfo> imagesList;
 
     private TextView mDoneButton;
@@ -35,6 +45,12 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
     private boolean isViewDirty = false;
     private ImageView viewPagerRightBtn;
     private ImageView viewPagerLeftBtn;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+    private UpdateImageListReceiver mUpdateImageListReceiver;
 //    private boolean singleTagSelection;
 
 //    private HashSet<ImageTagsModel> alreadySelectedTags = new HashSet<>();
@@ -123,6 +139,14 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ScanConstants.UPDATE_IMAGE_LIST);
+        mUpdateImageListReceiver = new UpdateImageListReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mUpdateImageListReceiver,filter);
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     ArrayList<ImageModel> tempImageList;
@@ -230,11 +254,52 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mUpdateImageListReceiver);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "ImageReview Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.scanlibrary/http/host/path")
+        );
+//        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "ImageReview Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.scanlibrary/http/host/path")
+        );
+//        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 
     /*  @Override
@@ -278,4 +343,13 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
 
         return super.onOptionsItemSelected(item);
     }*/
+
+    class UpdateImageListReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ImageReviewActivity.this.setResult(ScanConstants.RESULT_FROM_IMAGE_REVIEW_ACTIVITY,intent);
+            finish();
+        }
+    }
 }

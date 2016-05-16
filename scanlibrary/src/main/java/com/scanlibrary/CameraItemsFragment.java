@@ -264,6 +264,17 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
             case Constants.REQUEST_PERMISSION_READ_EXTERNAL_STORAGE:
                 onClick(getView().findViewById(R.id.addPhotoGallary));
                 break;
+            case OPEN_IMAGE_VIEW_PAGER_SCREEN:
+                if (resultCode == ScanConstants.RESULT_FROM_IMAGE_REVIEW_ACTIVITY) {
+                    if (null != data) {
+                        int index = data.getIntExtra(ScanConstants.IMAGE_INDEX_SENT_FOR_CROPPING,0);
+                        cameraItemsFiles.set(index,(FileInfo) data.getSerializableExtra(ScanConstants.IMAGE_RECEIVED_AFTER_CROPPING));
+                        photosGridAdapter.set(cameraItemsFiles);
+                        photosGridAdapter.notifyDataSetChanged();
+                        gvPhotos.invalidate();
+                    }
+                }
+                break;
         }
     }
 

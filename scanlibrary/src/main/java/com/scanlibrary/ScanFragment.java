@@ -198,15 +198,19 @@ public class ScanFragment extends Fragment {
                     showErrorDialog();
                 }
             } else if (v.getId() == R.id.cancel) {
-                File file = new File(getUri().getPath());
-                if (file.exists()) {
-                    file.delete();
-                    mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,getUri()));
-                    Log.i(TAG,"file deleted : "+getUri().getPath());
+                if (null != photoParams) {
+                    File file = new File(getUri().getPath());
+                    if (file.exists()) {
+                        file.delete();
+                        mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,getUri()));
+                        Log.i(TAG,"file deleted : "+getUri().getPath());
+                    } else {
+                        Log.i(TAG,"file not deleted : "+getUri().getPath());
+                    }
+                    getActivity().onBackPressed();
                 } else {
-                    Log.i(TAG,"file not deleted : "+getUri().getPath());
+                    getActivity().finish();
                 }
-                getActivity().onBackPressed();
             }
         }
     }
