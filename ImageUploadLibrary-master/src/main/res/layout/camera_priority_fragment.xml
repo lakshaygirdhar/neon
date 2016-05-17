@@ -105,7 +105,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/gallery" />
+                android:src="@drawable/gallery"
+                android:visibility="gone"/>
 
         </RelativeLayout>
 

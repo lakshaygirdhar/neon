@@ -78,7 +78,7 @@ public class GalleryActivity extends BaseActivityGallery implements AdapterView.
                 MediaStore.Images.ImageColumns.DATA
         };
         Cursor mCursor ;
-        if(mPhotoParams != null && mPhotoParams.isEnableRestrictedExtension()) {
+        if(mPhotoParams != null && mPhotoParams.isRestrictedExtensionEnabled()) {
             mCursor = getContentResolver().query(uri, PROJECTION_BUCKET,MediaStore.Images.Media.MIME_TYPE+" in (?, ?)", new String[] {"image/jpeg", "image/png"}, null);
         } else {
             mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, "\"1) GROUP BY 1,(1\"", null, null);

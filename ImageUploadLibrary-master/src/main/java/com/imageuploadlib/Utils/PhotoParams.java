@@ -24,7 +24,9 @@ public class PhotoParams implements Serializable {
     private ArrayList<?> imagePathList;
     private Boolean enableCapturedReview;
     private Boolean enableExtraBrightness;
-    private boolean enableRestrictedExtension;
+    private boolean restrictedExtensionEnabled;
+    private CameraFacing cameraFace;
+    private boolean galleryFromCameraEnabled;
 
     public enum FolderOptions {
         PUBLIC_DIR, PUBLIC_DIR_DCIM, PUBLIC_DIR_SOCIAL, PUBLIC_DIR_ALL;
@@ -35,6 +37,26 @@ public class PhotoParams implements Serializable {
 
     public enum CameraOrientation {
         LANDSCAPE, PORTRAIT, BOTH;
+    }
+
+    public enum CameraFacing {
+        FRONT, BACK
+    }
+
+    public boolean isGalleryFromCameraEnabled() {
+        return galleryFromCameraEnabled;
+    }
+
+    public void setGalleryFromCameraEnabled(boolean galleryFromCameraEnabled) {
+        this.galleryFromCameraEnabled = galleryFromCameraEnabled;
+    }
+
+    public CameraFacing getCameraFace() {
+        return cameraFace;
+    }
+
+    public void setCameraFace(CameraFacing cameraFace) {
+        this.cameraFace = cameraFace;
     }
 
     public PhotoParams() {
@@ -158,11 +180,11 @@ public class PhotoParams implements Serializable {
         this.enableExtraBrightness = enableExtraBrightness;
     }
 
-    public boolean isEnableRestrictedExtension() {
-        return enableRestrictedExtension;
+    public boolean isRestrictedExtensionEnabled() {
+        return restrictedExtensionEnabled;
     }
 
-    public void setEnableRestrictedExtension(boolean enableRestrictedExtension) {
-        this.enableRestrictedExtension = enableRestrictedExtension;
+    public void setRestrictedExtensionEnabled(boolean restrictedExtensionEnabled) {
+        this.restrictedExtensionEnabled = restrictedExtensionEnabled;
     }
 }

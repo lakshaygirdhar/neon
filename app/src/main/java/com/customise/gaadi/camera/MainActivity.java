@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.imageuploadlib.Utils.Constants;
 import com.imageuploadlib.Utils.FileInfo;
 import com.imageuploadlib.Utils.PhotoParams;
 import com.scanlibrary.PhotosLibrary;
@@ -25,12 +24,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         PhotoParams params = new PhotoParams();
-        params.setMode(PhotoParams.MODE.NEUTRAL);
+        params.setMode(PhotoParams.MODE.CAMERA_PRIORITY);
         params.setOrientation(PhotoParams.CameraOrientation.LANDSCAPE);
         params.setNoOfPhotos(2);
-        params.setEnableCapturedReview(false);
+        params.setEnableCapturedReview(true);
         params.setEnableExtraBrightness(false);
-        params.setEnableRestrictedExtension(true);
+        params.setRestrictedExtensionEnabled(true);
+        params.setCameraFace(PhotoParams.CameraFacing.FRONT);
+        params.setGalleryFromCameraEnabled(false);
         PhotosLibrary.collectPhotos(this,params,REQUEST_CODE);
     }
 

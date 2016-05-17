@@ -88,6 +88,8 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     private ImageView mFlash;
     private boolean enableCapturedReview;
     private float mDist;
+    private PhotoParams.CameraFacing cameraFacing;
+    private boolean isGalleryEnabled;
 
 
     public interface PictureTakenListener {
@@ -124,6 +126,8 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
         maxNumberOfImages = mPhotoParams.getNoOfPhotos();
         enableCapturedReview = mPhotoParams.getEnableCapturedReview();
         PhotoParams.CameraOrientation orientation = mPhotoParams.getOrientation();
+        cameraFacing = mPhotoParams.getCameraFace();
+        isGalleryEnabled = mPhotoParams.isGalleryFromCameraEnabled();
 
         //View to add rectangle on tap to focus
         drawingView = new DrawingView(mActivity);
@@ -145,6 +149,9 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
         mSwitchCamera = (ImageButton) fragmentView.findViewById(R.id.switchCamera);
         if(CommonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT) {
             mSwitchCamera.setVisibility(View.GONE);
+        }
+        if (!isGalleryEnabled) {
+            buttonGallery.setVisibility(View.GONE);
         }
 
         mFlashTorch.setOnClickListener(this);
@@ -225,7 +232,14 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                     permissionAlreadyRequested = true;
                     return;
                 }
-                mCamera = Camera.open();
+                if (cameraFacing == PhotoParams.CameraFacing.FRONT) {
+                    mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+                    mSwitchCamera.setVisibility(View.GONE);
+                    mFlashlayout.setVisibility(View.GONE);
+                    mFlash.setVisibility(View.GONE);
+                } else {
+                    mCamera = Camera.open();
+                }
 
                 //To set hardware camera rotation
                 setCameraRotation();
@@ -293,7 +307,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                     if (maxNumberOfImages == 1)
                         buttonGallery.setEnabled(false);
                     if (maxNumberOfImages > 1 || maxNumberOfImages == 0) {
-                        buttonDone.setVisibility(View.VISIBLE);
+//                        buttonDone.setVisibility(View.VISIBLE);
                         buttonDone.setOnClickListener(this);
                     }
                 }
@@ -559,8 +573,9 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                 scrollView.setVisibility(View.GONE);
             addInScrollView(fileInfo);
 
-            if (maxNumberOfImages > 0)
+            if (maxNumberOfImages > 0) {
                 updateView(imagesList.size() < maxNumberOfImages);
+            }
             mCamera.startPreview();
             readyToTakePicture = true;
             buttonCapture.setEnabled(true);
@@ -625,8 +640,10 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                 imagesList.remove(info);
                 if (maxNumberOfImages > 0)
                     updateView(imagesList.size() < maxNumberOfImages);
-                if (imagesList.size() < 1)
+                if (imagesList.size() < 1) {
+                    buttonDone.setVisibility(View.GONE);
                     scrollView.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -652,7 +669,13 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     }
 
     private void updateView(boolean status) {
-        enableDoneButton(!status);
+//        enableDoneButton(!status);
+        if (!status) {
+            buttonCapture.setVisibility(View.GONE);
+        } else {
+            buttonCapture.setVisibility(View.VISIBLE);
+        }
+        buttonDone.setVisibility(View.VISIBLE);
         tvImageName.setText(status ? imageName : "Press Done");
     }
 
