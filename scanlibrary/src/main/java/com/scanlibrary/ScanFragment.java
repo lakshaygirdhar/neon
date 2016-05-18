@@ -207,7 +207,8 @@ public class ScanFragment extends Fragment {
                     } else {
                         Log.i(TAG,"file not deleted : "+getUri().getPath());
                     }
-                    getActivity().onBackPressed();
+//                    getActivity().onBackPressed();
+                    getActivity().getSupportFragmentManager().popBackStackImmediate();
                 } else {
                     getActivity().finish();
                 }

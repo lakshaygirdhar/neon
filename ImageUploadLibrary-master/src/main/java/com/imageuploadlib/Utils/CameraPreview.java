@@ -215,10 +215,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             Log.e(TAG, e.getMessage());
         }
 
-        Camera.Parameters p = mCamera.getParameters();
-        p.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
 
-        mCamera.setParameters(p);
+        setParametersToCamera();
+        //mCamera.setParameters(p);
         try {
             mCamera.setPreviewDisplay(holder);
         } catch (IOException e) {
@@ -410,5 +409,68 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     public void setReadyListener(ReadyToTakePicture listener) {
         this.readyListener = listener;
+    }
+
+    public void setParametersToCamera(){
+        if(mCamera==null){
+            return;
+        }
+
+        Camera.Parameters parameters = mCamera.getParameters();
+        WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        mSupportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
+        mSupportedPictureSizes=mCamera.getParameters().getSupportedPictureSizes();
+        if (mSupportedPreviewSizes != null) {
+            mPreviewSize = getOptimalPreviewSizeByAspect(mSupportedPreviewSizes, width, height);
+            mPictureSize=getOptimalPreviewSize(mSupportedPictureSizes, width, height);
+            parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+            parameters.setPictureSize(mPictureSize.width,mPictureSize.height);
+        }
+
+        if (parameters.getMaxNumFocusAreas() > 0) {
+            parameters.setFocusAreas(null);
+        }
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        mCamera.setParameters(parameters);
+    }
+
+    private Camera.Size getOptimalPreviewSizeByAspect(List<Camera.Size> sizes, int w, int h) {
+        final double ASPECT_TOLERANCE = 0.01f;
+        double targetRatio = (double) w / h;
+        if (sizes == null) return null;
+
+        Camera.Size optimalSize = null;
+        double minDiff = Double.MAX_VALUE;
+
+        int targetHeight = h;
+
+        // Try to find an size match aspect ratio and size
+        for (Camera.Size size : sizes) {
+            //Log.e(TAG,size.height+" "+size.width);
+            double ratio = (double) size.width / size.height;
+            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
+            if (Math.abs(size.height - targetHeight) < minDiff) {
+                optimalSize = size;
+                minDiff = Math.abs(size.height - targetHeight);
+            }
+        }
+
+        // Cannot find the one match the aspect ratio, ignore the requirement
+        if (optimalSize == null) {
+            minDiff = Double.MAX_VALUE;
+            for (Camera.Size size : sizes) {
+                if (Math.abs(size.height - targetHeight) < minDiff) {
+                    optimalSize = size;
+                    minDiff = Math.abs(size.height - targetHeight);
+                }
+            }
+        }
+        // Log.e(TAG,"OPTIMAL "+optimalSize.height+" "+optimalSize.width);
+        return optimalSize;
     }
 }
