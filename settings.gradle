@@ -1,1 +1,1 @@
-include ':app',':dynamicgrid', ':ImageUploadLibrary-master' ,':scanlibrary'
+include ':app', ':ImageUploadLibrary-master' ,':scanlibrary'

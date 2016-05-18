@@ -1,4 +1,4 @@
-package org.askerov.dynamicgrid;
+package com.imageuploadlib.dynamicgrid;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -25,6 +25,8 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListAdapter;
+
+import com.imageuploadlib.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -261,8 +263,8 @@ public class DynamicGridView extends GridView {
 
     /**
      * Start edit mode with position. Useful for start edit mode in
-     * {@link android.widget.AdapterView.OnItemClickListener}
-     * or {@link android.widget.AdapterView.OnItemLongClickListener}
+     * {@link OnItemClickListener}
+     * or {@link OnItemLongClickListener}
      */
     public void startEditMode(int position) {
         if (!mIsEditModeEnabled)
@@ -1052,7 +1054,6 @@ public class DynamicGridView extends GridView {
     }
 
     /**
-     * A {@link org.askerov.dynamicgrid.DynamicGridView.SwitchCellAnimator} for versions KitKat and below.
      */
     private class KitKatSwitchCellAnimator implements SwitchCellAnimator {
 
@@ -1103,7 +1104,6 @@ public class DynamicGridView extends GridView {
     }
 
     /**
-     * A {@link org.askerov.dynamicgrid.DynamicGridView.SwitchCellAnimator} for versions L and above.
      */
     private class LSwitchCellAnimator implements SwitchCellAnimator {
 

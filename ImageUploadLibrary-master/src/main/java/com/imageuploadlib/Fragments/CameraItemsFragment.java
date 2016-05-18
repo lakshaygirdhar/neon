@@ -28,8 +28,8 @@ import com.imageuploadlib.Utils.CommonUtils;
 import com.imageuploadlib.Utils.Constants;
 import com.imageuploadlib.Utils.FileInfo;
 import com.imageuploadlib.Utils.PhotoParams;
+import com.imageuploadlib.dynamicgrid.DynamicGridView;
 
-import org.askerov.dynamicgrid.DynamicGridView;
 
 import java.util.ArrayList;
 

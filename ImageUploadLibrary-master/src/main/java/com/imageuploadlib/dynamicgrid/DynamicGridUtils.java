@@ -1,4 +1,4 @@
-package org.askerov.dynamicgrid;
+package com.imageuploadlib.dynamicgrid;
 
 import android.view.View;
 
