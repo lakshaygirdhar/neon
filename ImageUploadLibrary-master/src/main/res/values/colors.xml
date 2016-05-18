@@ -16,4 +16,7 @@
     <color name="toolbar_color">#DC592B</color>
     <color name="primary">#DC592B</color>
     <color name="primary_dark">#BA4824</color>
+    <color name="transparentBlackBg">#80000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="action_bar_title_color">@color/white</color>
 </resources>

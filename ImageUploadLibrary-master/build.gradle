@@ -51,7 +51,6 @@ dependencies {
     compile project.GOOGLE_PLAY_SERVICES
     compile project.GSON_LIBRARY
     compile project(':dynamicgrid')
-    compile project(':GalleryLibrary')
     compile 'com.karumi:expandableselector:1.0.0'
 //    compile project(':scanlibrary')
 }

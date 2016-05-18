@@ -45,9 +45,7 @@
             android:name=".Activity.NeutralActivity"
             android:label="@string/title_activity_neutral"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activity.BaseActivityGallery"
-            android:label="@string/title_activity_base" />
+        <activity android:name=".Activity.BaseActivityGallery" />
     </application>
 
 </manifest>

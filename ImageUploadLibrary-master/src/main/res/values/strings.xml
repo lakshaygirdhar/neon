@@ -21,4 +21,5 @@
     <string name="permission_error">Permission Error</string>
     <string name="you_need_to_allow_access_to">You need to allow access to %1$s.\nSettings->Apps->Gcloud->Permissions->%2$s</string>
     <string name="go_to_app_info">Go to App Info</string>
+    <color name="gray">#808080</color>
 </resources>
