@@ -6,6 +6,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.hardware.Camera;
@@ -42,6 +46,7 @@ import com.imageuploadlib.Utils.DrawingView;
 import com.imageuploadlib.Utils.FileInfo;
 import com.imageuploadlib.Utils.PhotoParams;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -149,6 +154,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
         mSwitchCamera = (ImageButton) fragmentView.findViewById(R.id.switchCamera);
         if(CommonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT) {
             mSwitchCamera.setVisibility(View.GONE);
+            useFrontFacingCamera = false;
         }
         if (!isGalleryEnabled) {
             buttonGallery.setVisibility(View.GONE);
@@ -493,9 +499,56 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
 
             try {
                 FileOutputStream fos = new FileOutputStream(pictureFile);
-                fos.write(data);
-                fos.close();
+//                fos.write(data);
+//                fos.close();
+                Bitmap bm=null;
 
+                // COnverting ByteArray to Bitmap - >Rotate and Convert back to Data
+                if (data != null) {
+                    int screenWidth = getResources().getDisplayMetrics().widthPixels;
+                    int screenHeight = getResources().getDisplayMetrics().heightPixels;
+                    bm = BitmapFactory.decodeByteArray(data, 0, (data != null) ? data.length : 0);
+                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        // Notice that width and height are reversed
+                        Bitmap scaled = Bitmap.createScaledBitmap(bm,screenHeight,screenWidth,true);
+                        int w = scaled.getWidth();
+                        int h = scaled.getHeight();
+                        // Setting post rotate to 90
+                        Matrix mtx = new Matrix();
+                        int cameraId;
+                        if (cameraFacing == PhotoParams.CameraFacing.FRONT) {
+                            cameraId = getBackFacingCameraId();
+                        } else {
+                            cameraId = initCameraId();
+                        }
+                        int CameraEyeValue = setPhotoOrientation(getActivity(),cameraId); // CameraID = 1 : front 0:back
+                        if(cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) { // As Front camera is Mirrored so Fliping the Orientation
+                            if (CameraEyeValue == 270) {
+                                mtx.postRotate(90);
+                            } else if (CameraEyeValue == 90) {
+                                mtx.postRotate(270);
+                            }
+                        }else{
+                            mtx.postRotate(CameraEyeValue); // CameraEyeValue is default to Display Rotation
+                        }
+
+                        bm = Bitmap.createBitmap(scaled, 0, 0, w, h, mtx, true);
+                    }else{// LANDSCAPE MODE
+                        //No need to reverse width and height
+                        Bitmap scaled = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
+                        bm=scaled;
+                    }
+                }
+                // COnverting the Die photo to Bitmap
+
+
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+                fos.write(byteArray);
+                //fos.write(data);
+                fos.close();
                 Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
                 mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                         pictureFileUri));
@@ -838,5 +891,54 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
         return result;
     }
 
+    public int setPhotoOrientation(Activity activity, int cameraId) {
+        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.getCameraInfo(cameraId, info);
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
+        }
+
+        int result;
+        // do something for phones running an SDK before lollipop
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360; // compensate the mirror
+        } else { // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+
+        return result;
+    }
+
+    private int getBackFacingCameraId() {
+        int cameraId = -1;
+        // Search for the front facing camera
+        int numberOfCameras = Camera.getNumberOfCameras();
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                cameraId = i;
+                break;
+            } else if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                cameraId = i;
+                break;
+            }
+        }
+        return cameraId;
+    }
 
 }

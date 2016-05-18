@@ -25,12 +25,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         PhotoParams params = new PhotoParams();
         params.setMode(PhotoParams.MODE.CAMERA_PRIORITY);
-        params.setOrientation(PhotoParams.CameraOrientation.LANDSCAPE);
+        params.setOrientation(PhotoParams.CameraOrientation.PORTRAIT);
         params.setNoOfPhotos(2);
         params.setEnableCapturedReview(true);
         params.setEnableExtraBrightness(false);
         params.setRestrictedExtensionEnabled(true);
-        params.setCameraFace(PhotoParams.CameraFacing.FRONT);
+        params.setCameraFace(PhotoParams.CameraFacing.BACK);
         params.setGalleryFromCameraEnabled(false);
         PhotosLibrary.collectPhotos(this,params,REQUEST_CODE);
     }
