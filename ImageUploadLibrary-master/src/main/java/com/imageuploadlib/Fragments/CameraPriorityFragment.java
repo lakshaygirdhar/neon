@@ -345,10 +345,10 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
 //            if (imagesList.size() == maxNumberOfImages)
 //                onClick(buttonCapture);
         } else if (v.getId() == R.id.buttonDone) {
-            if (enableCapturedReview) {
-                mPictureTakenListener.onPicturesCompleted();
-                return;
-            }
+//            if (enableCapturedReview ) {
+//                mPictureTakenListener.onPicturesCompleted();
+//                return;
+//            }
             if (imagesList.size() == 0) {
                 Toast.makeText(mActivity, "No Images Clicked", Toast.LENGTH_SHORT).show();
             } else {
@@ -587,7 +587,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
             if (progressDialog != null)
                 progressDialog.dismiss();
             if (file != null) {
-                if(!enableCapturedReview) {
+                if(!enableCapturedReview || mPhotoParams.getMode() == PhotoParams.MODE.NEUTRAL) {
                     updateCapturedPhotos(file);
                     return;
                 }

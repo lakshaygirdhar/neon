@@ -239,6 +239,9 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
 
             imagePathForCropping = imageModel.getFilePath();
             Intent intent = new Intent(getActivity(),ScanActivity.class);
+            if (imageModel.getFilePath().contains("file://")){
+                imageModel.setFilePath(imageModel.getFilePath().replace("file://",""));
+            }
             intent.putExtra(ScanConstants.IMAGE_FILE_FOR_CROPPING, new File(imageModel.getFilePath()));
             startActivityForResult(intent,CROPPING_REQUEST_CODE);
 //            getActivity().getSupportFragmentManager().beginTransaction().add(ScanFragment.instantiate())
