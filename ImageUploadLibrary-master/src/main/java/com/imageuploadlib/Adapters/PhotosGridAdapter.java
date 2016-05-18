@@ -15,8 +15,8 @@ import com.imageuploadlib.Interfaces.UpdateSelection;
 import com.imageuploadlib.R;
 import com.imageuploadlib.Utils.ApplicationController;
 import com.imageuploadlib.Utils.FileInfo;
+import com.imageuploadlib.dynamicgrid.BaseDynamicGridAdapter;
 
-import org.askerov.dynamicgrid.BaseDynamicGridAdapter;
 
 import java.util.ArrayList;
 
