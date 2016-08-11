@@ -32,3 +32,29 @@ dependencies {
     compile project(':Neon')
     compile 'com.google.android.gms:play-services-appindexing:7.5.0'
 }
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'Neon'
+
+    publishedGroupId = 'com.gaadi.library'
+    libraryName = 'Neon'
+    artifact = 'scanlibrary'
+
+    libraryDescription = 'A library for selection of images from android device camera or gallery'
+
+    siteUrl = 'https://github.com/lakshaygirdhar/neon'
+    gitUrl = 'https://github.com/lakshaygirdhar/neon'
+
+    libraryVersion = '1.0.1'
+
+    developerId = 'lakshay'
+    developerName = 'Lakshay Girdhar'
+    developerEmail = 'lakshay148@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

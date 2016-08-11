@@ -28,23 +28,8 @@ public class NeutralActivity extends FragmentActivity implements CameraItemsFrag
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_neutral);
-        Bundle extras = getIntent().getExtras();
 
-        // gaHelper = new GAHelper(this);
         PhotoParams params = (PhotoParams) getIntent().getSerializableExtra(CameraItemsFragment.PHOTO_PARAMS);
-
-//        if (params != null) {
-//            selectedImages = params.getImagePathList();
-//        } else {
-//            params = new PhotoParams();
-//        }
-      /*  if (extras != null) {
-            propId = extras.getString(Constants.STOCK_ID);
-            selectedImages = (ArrayList<?>) getIntent().getExtras().getSerializable(KEY_ARRAYLIST_IMAGES);
-        }*/
-
-
-//        params.setOrientation(PhotoParams.CameraOrientation.LANDSCAPE);
 
         cameraItemsFragment = CameraItemsFragment.newInstance(this, params, this, selectedImages,
                 R.drawable.image_load_default_big, R.drawable.image_load_default_small);
