@@ -1,7 +1,7 @@
 package com.scanlibrary;
 
 
-import com.imageuploadlib.Utils.FileInfo;
+import com.gaadi.Utils.FileInfo;
 
 /**
  * Created by lakshaygirdhar on 4/12/15.

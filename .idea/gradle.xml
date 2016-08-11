@@ -8,7 +8,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/ImageUploadLibrary-master" />
+            <option value="$PROJECT_DIR$/Neon" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/scanlibrary" />
           </set>
@@ -16,7 +16,7 @@
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/ImageUploadLibrary-master" />
+            <option value="$PROJECT_DIR$/Neon" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/scanlibrary" />
           </set>

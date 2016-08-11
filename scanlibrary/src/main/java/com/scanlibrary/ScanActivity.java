@@ -15,19 +15,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.imageuploadlib.Activity.GalleryActivity;
-import com.imageuploadlib.Activity.ReviewImageActivity;
-import com.imageuploadlib.Fragments.CameraItemsFragment;
-import com.imageuploadlib.Fragments.CameraPriorityFragment;
-import com.imageuploadlib.Utils.CameraPreview;
-import com.imageuploadlib.Utils.Constants;
-import com.imageuploadlib.Utils.DrawingView;
-import com.imageuploadlib.Utils.FileInfo;
-import com.imageuploadlib.Utils.PhotoParams;
+import com.gaadi.Activity.GalleryActivity;
+import com.gaadi.Activity.ReviewImageActivity;
+import com.gaadi.Fragments.CameraItemsFragment;
+import com.gaadi.Fragments.CameraPriorityFragment;
+import com.gaadi.Utils.CameraPreview;
+import com.gaadi.Utils.Constants;
+import com.gaadi.Utils.DrawingView;
+import com.gaadi.Utils.FileInfo;
+import com.gaadi.Utils.PhotoParams;
 
 import java.io.File;
 import java.io.IOException;

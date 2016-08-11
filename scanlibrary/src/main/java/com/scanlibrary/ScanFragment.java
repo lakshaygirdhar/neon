@@ -24,9 +24,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.support.v4.app.Fragment;
 
-import com.imageuploadlib.Utils.CommonUtils;
-import com.imageuploadlib.Utils.Constants;
-import com.imageuploadlib.Utils.PhotoParams;
+import com.gaadi.Utils.CommonUtils;
+import com.gaadi.Utils.Constants;
+import com.gaadi.Utils.PhotoParams;
 
 import java.io.File;
 import java.io.IOException;

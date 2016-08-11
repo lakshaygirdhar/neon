@@ -11,7 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.os.EnvironmentCompat;
 import android.util.Log;
 
-import com.imageuploadlib.Utils.Constants;
+import com.gaadi.Utils.Constants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
-import com.imageuploadlib.Utils.CommonUtils;
-import com.imageuploadlib.Utils.Constants;
-import com.imageuploadlib.Utils.PhotoParams;
+import com.gaadi.Utils.CommonUtils;
+import com.gaadi.Utils.Constants;
+import com.gaadi.Utils.PhotoParams;
 
 /**
  * Created by Lakshay on 21-05-2015.

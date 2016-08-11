@@ -29,6 +29,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':ImageUploadLibrary-master')
+    compile project(':Neon')
     compile 'com.google.android.gms:play-services-appindexing:7.5.0'
 }

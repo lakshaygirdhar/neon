@@ -20,12 +20,9 @@ import android.widget.TextView;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.imageuploadlib.Utils.FileInfo;
+import com.gaadi.Utils.FileInfo;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
-
 
 /**
  * Created by lakshaygirdhar on 25/12/15.

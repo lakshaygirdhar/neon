@@ -3,13 +3,10 @@ package com.scanlibrary;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 
-
-import com.imageuploadlib.Utils.FileInfo;
+import com.gaadi.Utils.FileInfo;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 /**
  * Created by lakshaygirdhar on 27/12/15.

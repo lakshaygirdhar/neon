@@ -127,7 +127,7 @@
         <!--android:horizontalSpacing="@dimen/horizontal_space_images"-->
         <!--android:layout_height="wrap_content"></GridView>-->
 
-        <com.imageuploadlib.dynamicgrid.DynamicGridView
+        <com.gaadi.dynamicgrid.DynamicGridView
             android:id="@+id/gvPhotos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -138,7 +138,7 @@
             android:numColumns="2"
             android:verticalSpacing="@dimen/gv_vertical_spacing">
 
-        </com.imageuploadlib.dynamicgrid.DynamicGridView>
+        </com.gaadi.dynamicgrid.DynamicGridView>
 
         <!--<Button-->
         <!--android:id="@+id/bUploadPhotos"-->

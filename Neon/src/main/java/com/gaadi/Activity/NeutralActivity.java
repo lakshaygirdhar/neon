@@ -1,4 +1,4 @@
-package com.scanlibrary;
+package com.gaadi.Activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +10,8 @@ import com.gaadi.Utils.ApplicationController;
 import com.gaadi.Utils.Constants;
 import com.gaadi.Utils.FileInfo;
 import com.gaadi.Utils.PhotoParams;
+import com.gaadi.Fragments.CameraItemsFragment;
+import com.imageuploadlib.R;
 
 import java.util.ArrayList;
 
@@ -33,18 +35,18 @@ public class NeutralActivity extends FragmentActivity implements CameraItemsFrag
         // gaHelper = new GAHelper(this);
         PhotoParams params = (PhotoParams) getIntent().getSerializableExtra(CameraItemsFragment.PHOTO_PARAMS);
 
-//        if (params != null) {
-//            selectedImages = params.getImagePathList();
-//        } else {
-//            params = new PhotoParams();
-//        }
+        if (params != null) {
+            selectedImages = params.getImagePathList();
+        } else {
+            params = new PhotoParams();
+        }
       /*  if (extras != null) {
             propId = extras.getString(Constants.STOCK_ID);
             selectedImages = (ArrayList<?>) getIntent().getExtras().getSerializable(KEY_ARRAYLIST_IMAGES);
         }*/
 
 
-//        params.setOrientation(PhotoParams.CameraOrientation.LANDSCAPE);
+        params.setOrientation(PhotoParams.CameraOrientation.LANDSCAPE);
 
         cameraItemsFragment = CameraItemsFragment.newInstance(this, params, this, selectedImages,
                 R.drawable.image_load_default_big, R.drawable.image_load_default_small);
@@ -83,8 +85,8 @@ public class NeutralActivity extends FragmentActivity implements CameraItemsFrag
     }
 
     @Override
-    public void gaHandler(String screen, String category, String action, String label, ArrayList<FileInfo> images) {
-
+    public void gaHandler(String screen, String category, String action, String label, Long value) {
+        //gaHelper.sendEvent(GAHelper.TrackerName.APP_TRACKER, screen, category, action, label, value);
     }
 
     @Override
