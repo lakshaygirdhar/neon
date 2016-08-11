@@ -60,12 +60,12 @@
                 android:src="@android:drawable/btn_star_big_on"/>
         </FrameLayout>
 
-        <com.scanlibrary.PolygonView
+        <com.gaadi.scanning.PolygonView
             android:id="@+id/polygonView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:visibility="gone"></com.scanlibrary.PolygonView>
+            android:visibility="gone"></com.gaadi.scanning.PolygonView>
     </FrameLayout>
 
 

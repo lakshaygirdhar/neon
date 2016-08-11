@@ -5,10 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.gaadi.Utils.FileInfo;
-import com.gaadi.Utils.PhotoParams;
-import com.scanlibrary.PhotosLibrary;
-import com.scanlibrary.ScanConstants;
+import com.gaadi.util.FileInfo;
+import com.gaadi.util.PhotoParams;
+import com.gaadi.PhotosLibrary;
+import com.gaadi.scanning.ScanConstants;
 
 import java.util.ArrayList;
 
