@@ -1,8 +1,8 @@
 package com.scanlibrary;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
@@ -15,13 +15,9 @@ import java.util.ArrayList;
 
 public class NeutralActivity extends FragmentActivity implements CameraItemsFragment.ImagesHandler {
 
-    public static final String KEY_ARRAYLIST_IMAGES = "images";
-    private static final String TAG = "PhotoUpload";
-    public static final String KEY_ARRAYLIST_DELETED_IMAGES = "deletedImages";
-    private ArrayList<?> selectedImages;
-    private String propId;
+    //    public static final String KEY_ARRAYLIST_IMAGES = "images";
+    //    public static final String KEY_ARRAYLIST_DELETED_IMAGES = "deletedImages";
     private CameraItemsFragment cameraItemsFragment;
-    //  GAHelper gaHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +27,7 @@ public class NeutralActivity extends FragmentActivity implements CameraItemsFrag
 
         PhotoParams params = (PhotoParams) getIntent().getSerializableExtra(CameraItemsFragment.PHOTO_PARAMS);
 
-        cameraItemsFragment = CameraItemsFragment.newInstance(this, params, this, selectedImages,
+        cameraItemsFragment = CameraItemsFragment.newInstance(this, params, this, null,
                 R.drawable.image_load_default_big, R.drawable.image_load_default_small);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.photoFragment, cameraItemsFragment).commit();
@@ -47,18 +43,18 @@ public class NeutralActivity extends FragmentActivity implements CameraItemsFrag
         super.onBackPressed();
     }
 
-    @Override
-    public void outputImages(ArrayList<FileInfo> files, ArrayList<FileInfo> deletedImages) {
-        Intent intent = new Intent();
-        Bundle args = new Bundle();
-        args.putSerializable(KEY_ARRAYLIST_IMAGES, files);
-        if (deletedImages != null) {
-            args.putSerializable(KEY_ARRAYLIST_DELETED_IMAGES, deletedImages);
-        }
-        intent.putExtras(args);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
+//    @Override
+//    public void outputImages(ArrayList<FileInfo> files, ArrayList<FileInfo> deletedImages) {
+//        Intent intent = new Intent();
+//        Bundle args = new Bundle();
+//        args.putSerializable(KEY_ARRAYLIST_IMAGES, files);
+//        if (deletedImages != null) {
+//            args.putSerializable(KEY_ARRAYLIST_DELETED_IMAGES, deletedImages);
+//        }
+//        intent.putExtras(args);
+//        setResult(RESULT_OK, intent);
+//        finish();
+//    }
 
     @Override
     public void dragImagesHandler(int first, int second) {
@@ -73,7 +69,7 @@ public class NeutralActivity extends FragmentActivity implements CameraItemsFrag
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull  String[] permissions,@NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == Constants.REQUEST_PERMISSION_CAMERA) {
             if (grantResults.length > 1

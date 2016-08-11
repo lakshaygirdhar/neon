@@ -2,6 +2,7 @@ package com.scanlibrary;
 
 /**
  * Created by lakshaygirdhar on 4/12/15.
+ *
  */
 public class GeneralEvent {
 
