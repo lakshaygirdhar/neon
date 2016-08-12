@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import com.imageuploadlib.R;
+import com.scanlibrary.R;
 
 
 public class BaseActivityGallery extends AppCompatActivity {

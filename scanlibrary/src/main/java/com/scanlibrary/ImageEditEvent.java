@@ -1,8 +1,6 @@
 package com.scanlibrary;
 
-
-import com.gaadi.Utils.FileInfo;
-
+import com.gaadi.neon.Utils.FileInfo;
 /**
  * Created by lakshaygirdhar on 4/12/15.
  */

@@ -15,13 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.gaadi.Utils.Constants;
-import com.gaadi.Utils.PhotoParams;
 import com.gaadi.Adapters.CapturedImagesAdapter;
 import com.gaadi.Fragments.CameraItemsFragment;
-import com.imageuploadlib.R;
 import com.gaadi.Utils.CameraPreview;
+import com.gaadi.Utils.Constants;
 import com.gaadi.Utils.FileInfo;
+import com.gaadi.Utils.PhotoParams;
+import com.scanlibrary.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;

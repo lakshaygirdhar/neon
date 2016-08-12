@@ -4,14 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.os.EnvironmentCompat;
 import android.util.Log;
 
-import com.gaadi.Utils.Constants;
+import com.gaadi.neon.Utils.Constants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -25,7 +22,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ *
  * Created by Prince Midha on 05/05/2016.
+ *
  */
 public class Utils {
 
@@ -138,34 +137,34 @@ public class Utils {
         else{
             result.add(mediaStorageDir.getAbsolutePath());
         }
-        final File[] externalCacheDirs = ContextCompat.getExternalFilesDirs(context,null);
-        if (externalCacheDirs == null || externalCacheDirs.length == 0)
-            return null;
-        if (externalCacheDirs.length == 1) {
-            if (externalCacheDirs[0] == null)
-                return null;
-            final String storageState = EnvironmentCompat.getStorageState(externalCacheDirs[0]);
-            if (!Environment.MEDIA_MOUNTED.equals(storageState))
-                return null;
-            if (!includePrimaryExternalStorage && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && Environment.isExternalStorageEmulated())
-                return null;
-        }
-
-        if (includePrimaryExternalStorage || externalCacheDirs.length == 1)
-        {
-            result.add(externalCacheDirs[0].getAbsolutePath());
-            //result.add(getRootOfInnerSdCardFolder(externalCacheDirs[0]));
-        }
-        for (int i = 1; i < externalCacheDirs.length; ++i) {
-            final File file = externalCacheDirs[i];
-            if (file == null)
-                continue;
-            final String storageState = EnvironmentCompat.getStorageState(file);
-            if (Environment.MEDIA_MOUNTED.equals(storageState)) {
-                result.add(externalCacheDirs[i].getAbsolutePath());
-                //  result.add(getRootOfInnerSdCardFolder(externalCacheDirs[i]));
-            }
-        }
+//        final File[] externalCacheDirs = ContextCompat.getExternalFilesDirs(context,null);
+//        if (externalCacheDirs == null || externalCacheDirs.length == 0)
+//            return null;
+//        if (externalCacheDirs.length == 1) {
+//            if (externalCacheDirs[0] == null)
+//                return null;
+//            final String storageState = EnvironmentCompat.getStorageState(externalCacheDirs[0]);
+//            if (!Environment.MEDIA_MOUNTED.equals(storageState))
+//                return null;
+//            if (!includePrimaryExternalStorage && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && Environment.isExternalStorageEmulated())
+//                return null;
+//        }
+//
+//        if (includePrimaryExternalStorage || externalCacheDirs.length == 1)
+//        {
+//            result.add(externalCacheDirs[0].getAbsolutePath());
+//            //result.add(getRootOfInnerSdCardFolder(externalCacheDirs[0]));
+//        }
+//        for (int i = 1; i < externalCacheDirs.length; ++i) {
+//            final File file = externalCacheDirs[i];
+//            if (file == null)
+//                continue;
+//            final String storageState = EnvironmentCompat.getStorageState(file);
+//            if (Environment.MEDIA_MOUNTED.equals(storageState)) {
+//                result.add(externalCacheDirs[i].getAbsolutePath());
+//                //  result.add(getRootOfInnerSdCardFolder(externalCacheDirs[i]));
+//            }
+//        }
         if (result.isEmpty())
             return null;
         return result;

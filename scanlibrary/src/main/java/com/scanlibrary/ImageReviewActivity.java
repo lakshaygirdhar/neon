@@ -16,11 +16,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
+import com.gaadi.neon.Utils.FileInfo;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.gaadi.Utils.FileInfo;
 
 import java.util.ArrayList;
 

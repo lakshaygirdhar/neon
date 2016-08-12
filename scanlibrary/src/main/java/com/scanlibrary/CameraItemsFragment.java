@@ -17,15 +17,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gaadi.Activity.GalleryActivity;
-import com.gaadi.Adapters.PhotosGridAdapter;
-import com.gaadi.Interfaces.UpdateSelection;
-import com.gaadi.Utils.ApplicationController;
-import com.gaadi.Utils.CommonUtils;
-import com.gaadi.Utils.Constants;
-import com.gaadi.Utils.FileInfo;
-import com.gaadi.Utils.PhotoParams;
-import com.gaadi.dynamicgrid.DynamicGridView;
+import com.gaadi.neon.Activity.GalleryActivity;
+import com.gaadi.neon.Adapters.PhotosGridAdapter;
+import com.gaadi.neon.Interfaces.UpdateSelection;
+import com.gaadi.neon.Utils.ApplicationController;
+import com.gaadi.neon.Utils.CommonUtils;
+import com.gaadi.neon.Utils.Constants;
+import com.gaadi.neon.Utils.FileInfo;
+import com.gaadi.neon.Utils.PhotoParams;
+import com.gaadi.neon.dynamicgrid.DynamicGridView;
 
 import java.util.ArrayList;
 

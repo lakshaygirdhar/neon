@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.gaadi.Utils.FileInfo;
+import com.gaadi.neon.Utils.FileInfo;
 
 import java.io.File;
 import java.io.IOException;

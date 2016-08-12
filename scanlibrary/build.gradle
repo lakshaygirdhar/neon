@@ -1,12 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
-    buildToolsVersion project.BUILD_TOOLS_VERSION
-
+    compileSdkVersion 23
+    buildToolsVersion '23.0.2'
     defaultConfig {
-        minSdkVersion Integer.parseInt(project.MIN_SDK_VERSION)
-        targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
+        minSdkVersion 16
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         ndk
@@ -25,12 +24,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':Neon')
-    compile 'com.google.android.gms:play-services-appindexing:7.5.0'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    //    compile 'com.google.android.gms:play-services-appindexing:7.5.0'
+    compile 'com.android.support:support-v4:23.2.0'
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    //    compile project.APP_COMPAT_LIBRARY
+    compile project.GLIDE_LIBRARY
+    compile project.GSON_LIBRARY
+    compile 'com.karumi:expandableselector:1.0.0'
+    compile 'com.google.android.gms:play-services:8.4.0'
+    //    compile 'com.android.support:support-v4:23.2.1'
+    //    compile 'com.android.support:support-v4:23.2.1'
 }
 ext {
     bintrayRepo = 'maven'

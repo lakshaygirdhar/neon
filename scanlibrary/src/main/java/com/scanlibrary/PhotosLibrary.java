@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
-import com.gaadi.Utils.CommonUtils;
-import com.gaadi.Utils.Constants;
-import com.gaadi.Utils.PhotoParams;
+import com.gaadi.neon.Utils.CommonUtils;
+import com.gaadi.neon.Utils.Constants;
+import com.gaadi.neon.Utils.PhotoParams;
 
 /**
  * Created by Lakshay on 21-05-2015.
@@ -23,16 +23,16 @@ public class PhotosLibrary {
             case CAMERA_PRIORITY:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                         && !CommonUtils.checkForPermission(context,
-                        new String[]{Manifest.permission.CAMERA,
+                                                           new String[]{Manifest.permission.CAMERA,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
+                                                           Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
                     return;
                 }
                 Intent newIntent = new Intent(context, ScanActivity.class);
                 newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 newIntent.putExtra("photoParams", params);
                 ((Activity) context).startActivityForResult(newIntent, requestCode);
-                ((Activity) context).overridePendingTransition(com.imageuploadlib.R.anim.slide_in_bottom, com.imageuploadlib.R.anim.do_nothing);
+                ((Activity) context).overridePendingTransition(com.scanlibrary.R.anim.slide_in_bottom, com.scanlibrary.R.anim.do_nothing);
                 break;
 
             case GALLERY_PRIORITY:

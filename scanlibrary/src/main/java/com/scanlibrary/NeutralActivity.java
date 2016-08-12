@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
-import com.gaadi.Utils.ApplicationController;
-import com.gaadi.Utils.Constants;
-import com.gaadi.Utils.FileInfo;
-import com.gaadi.Utils.PhotoParams;
+import com.gaadi.neon.Utils.ApplicationController;
+import com.gaadi.neon.Utils.Constants;
+import com.gaadi.neon.Utils.FileInfo;
+import com.gaadi.neon.Utils.PhotoParams;
 
 import java.util.ArrayList;
 
@@ -47,18 +47,18 @@ public class NeutralActivity extends FragmentActivity implements CameraItemsFrag
         super.onBackPressed();
     }
 
-    @Override
-    public void outputImages(ArrayList<FileInfo> files, ArrayList<FileInfo> deletedImages) {
-        Intent intent = new Intent();
-        Bundle args = new Bundle();
-        args.putSerializable(KEY_ARRAYLIST_IMAGES, files);
-        if (deletedImages != null) {
-            args.putSerializable(KEY_ARRAYLIST_DELETED_IMAGES, deletedImages);
-        }
-        intent.putExtras(args);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
+//    @Override
+//    public void outputImages(ArrayList<FileInfo> files, ArrayList<FileInfo> deletedImages) {
+//        Intent intent = new Intent();
+//        Bundle args = new Bundle();
+//        args.putSerializable(KEY_ARRAYLIST_IMAGES, files);
+//        if (deletedImages != null) {
+//            args.putSerializable(KEY_ARRAYLIST_DELETED_IMAGES, deletedImages);
+//        }
+//        intent.putExtras(args);
+//        setResult(RESULT_OK, intent);
+//        finish();
+//    }
 
     @Override
     public void dragImagesHandler(int first, int second) {

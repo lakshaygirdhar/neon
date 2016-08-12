@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.gaadi.Utils.FileInfo;
+import com.gaadi.neon.Utils.FileInfo;
 
 import java.util.ArrayList;
 

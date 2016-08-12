@@ -58,7 +58,7 @@
         android:background="@color/bottom_background_color"
         android:orientation="horizontal"
         android:padding="@dimen/bottom_bar_padding"
-        android:text="@string/done"></Button>
+        android:text="@string/done">/</Button>
 
 
     <FrameLayout

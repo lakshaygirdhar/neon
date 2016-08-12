@@ -24,9 +24,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.support.v4.app.Fragment;
 
-import com.gaadi.Utils.CommonUtils;
-import com.gaadi.Utils.Constants;
-import com.gaadi.Utils.PhotoParams;
+import com.gaadi.neon.Utils.CommonUtils;
+import com.gaadi.neon.Utils.Constants;
+import com.gaadi.neon.Utils.PhotoParams;
 
 import java.io.File;
 import java.io.IOException;
@@ -117,7 +117,7 @@ public class ScanFragment extends Fragment {
                         System.out.println("file not Deleted :" + uri);
                     }
                 }
-                bitmap = CommonUtils.doBrightness(bitmap,80);
+                bitmap = CommonUtils.doBrightness(bitmap, 80);
             }
             return bitmap;
         } catch (IOException e) {

@@ -1,1 +1,1 @@
-include ':app', ':Neon',':scanlibrary'
+include ':app', ':scanlibrary'

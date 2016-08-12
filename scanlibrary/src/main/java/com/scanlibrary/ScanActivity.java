@@ -18,15 +18,14 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.gaadi.Activity.GalleryActivity;
-import com.gaadi.Activity.ReviewImageActivity;
-import com.gaadi.Fragments.CameraItemsFragment;
-import com.gaadi.Fragments.CameraPriorityFragment;
-import com.gaadi.Utils.CameraPreview;
-import com.gaadi.Utils.Constants;
-import com.gaadi.Utils.DrawingView;
-import com.gaadi.Utils.FileInfo;
-import com.gaadi.Utils.PhotoParams;
+import com.gaadi.neon.Activity.GalleryActivity;
+import com.gaadi.neon.Activity.ReviewImageActivity;
+import com.gaadi.neon.Fragments.CameraPriorityFragment;
+import com.gaadi.neon.Utils.CameraPreview;
+import com.gaadi.neon.Utils.Constants;
+import com.gaadi.neon.Utils.DrawingView;
+import com.gaadi.neon.Utils.FileInfo;
+import com.gaadi.neon.Utils.PhotoParams;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +64,7 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(0, com.imageuploadlib.R.anim.slide_out_bottom);
+        overridePendingTransition(0, com.scanlibrary.R.anim.slide_out_bottom);
     }
 
     @Override

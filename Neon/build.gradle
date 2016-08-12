@@ -47,7 +47,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project.APP_COMPAT_LIBRARY
     compile project.GLIDE_LIBRARY
-    compile project.GOOGLE_PLAY_SERVICES
     compile project.GSON_LIBRARY
     compile 'com.karumi:expandableselector:1.0.0'
 //    compile project(':scanlibrary')
