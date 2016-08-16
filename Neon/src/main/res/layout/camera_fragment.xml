@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -16,25 +15,28 @@
             android:id="@+id/headerLayout"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/orange"
+            android:background="@color/primary"
             android:gravity="center_vertical">
 
             <ImageView
+                android:contentDescription="@null"
                 android:id="@+id/ivBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="7dp"
-                android:scaleType="center"
-                 />
+                android:layout_marginStart="7dp"
+                android:scaleType="center"/>
 
             <TextView
                 android:id="@+id/photosText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/ivBack"
-                android:text="Photos"
+                android:layout_toEndOf="@id/ivBack"
+                android:text="@string/photos"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -44,13 +46,15 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/photosText"
                 android:layout_marginLeft="5dip"
+                android:layout_marginStart="5dip"
                 android:layout_toRightOf="@+id/photosText"
+                android:layout_toEndOf="@+id/photosText"
                 android:background="@drawable/text_view_blue_border"
                 android:paddingBottom="2dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="2dp"
-                android:text="0"
+                android:text="@string/zero"
                 android:textColor="@color/textColor" />
 
         </RelativeLayout>
@@ -70,6 +74,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/text_view_middle_selector_gray_black"
                 android:drawablePadding="6dp"
@@ -78,7 +83,7 @@
                 android:padding="5dp"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
-                android:text="Take Photo"
+                android:text="@string/take_photo"
                 android:textColor="@color/textColor" />
 
 
@@ -87,6 +92,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/text_view_middle_selector_gray_black"
                 android:drawablePadding="6dp"
@@ -95,7 +101,7 @@
                 android:padding="5dp"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
-                android:text="Choose from Gallery"
+                android:text="@string/choose_gallery"
                 android:textColor="@color/textColor" />
 
             <!--<Button-->
@@ -136,9 +142,8 @@
             android:layout_margin="@dimen/default_margin"
             android:horizontalSpacing="@dimen/gv_horizontal_spacing"
             android:numColumns="2"
-            android:verticalSpacing="@dimen/gv_vertical_spacing">
+            android:verticalSpacing="@dimen/gv_vertical_spacing" />
 
-        </com.gaadi.neon.dynamicgrid.DynamicGridView>
 
         <!--<Button-->
         <!--android:id="@+id/bUploadPhotos"-->
@@ -159,9 +164,9 @@
                 style="@style/gc_dark_textview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/orange"
+                android:background="@color/primary"
                 android:gravity="center"
-                android:text="OK" />
+                android:text="@string/ok" />
         </RelativeLayout>
 
     </RelativeLayout>

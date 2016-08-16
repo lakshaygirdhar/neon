@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.activity.ReviewImageActivity;
+import com.gaadi.neon.fragment.CameraItemsFragment;
 import com.gaadi.neon.fragment.CameraPriorityFragment;
 import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.Constants;
