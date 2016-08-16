@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Created by Lakshay on 18-02-2015.
+ *
  */
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -42,6 +44,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private static final int DEGREES_270 = 270;
 
     private ReadyToTakePicture readyListener = null;
+
+    public CameraPreview(Context context){
+        super(context);
+    }
 
     public CameraPreview(Activity context, Camera camera) {
         super(context);

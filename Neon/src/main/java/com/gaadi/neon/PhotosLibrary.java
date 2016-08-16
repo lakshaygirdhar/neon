@@ -1,4 +1,4 @@
-package com.scanlibrary;
+package com.gaadi.neon;
 
 import android.Manifest;
 import android.app.Activity;
@@ -6,16 +6,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import com.gaadi.neon.activity.NeutralActivity;
 import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.PhotoParams;
+import com.scanlibrary.ScanActivity;
 
 /**
  * Created by Lakshay on 21-05-2015.
  *
  */
 public class PhotosLibrary {
-
 
     public static void collectPhotos(Context context, PhotoParams params, int requestCode) {
 
@@ -46,18 +47,4 @@ public class PhotosLibrary {
                 break;
         }
     }
-
-//    public static Fragment getPhotosFragment(PhotoParams params) {
-//        Fragment fragment = null;
-//        switch (params.getMode()) {
-//            case CAMERA_PRIORITY:
-//                fragment = CameraPriorityFragment.getInstance(params);
-//                break;
-//            case GALLERY_PRIORITY:
-//                break;
-//            case NEUTRAL:
-//                break;
-//        }
-//        return fragment;
-//    }
 }

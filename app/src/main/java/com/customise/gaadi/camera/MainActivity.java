@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.PhotoParams;
-import com.scanlibrary.PhotosLibrary;
+import com.gaadi.neon.PhotosLibrary;
 import com.scanlibrary.ScanConstants;
 
 import java.util.ArrayList;

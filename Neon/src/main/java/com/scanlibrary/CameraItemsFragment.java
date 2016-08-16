@@ -19,13 +19,13 @@ import android.widget.Toast;
 
 import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.adapter.PhotosGridAdapter;
+import com.gaadi.neon.dynamicgrid.DynamicGridView;
 import com.gaadi.neon.interfaces.UpdateSelection;
 import com.gaadi.neon.util.ApplicationController;
 import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.PhotoParams;
-import com.gaadi.neon.dynamicgrid.DynamicGridView;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,6 @@ import java.util.ArrayList;
 public class CameraItemsFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemLongClickListener, UpdateSelection,
         AdapterView.OnItemClickListener
 {
-
     private static final String TAG = "CameraItemsFragment";
 
     public static final String APP_SHARED_PREFERENCE = "com.gcloud.gaadi.prefs";
@@ -55,7 +54,6 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
     private PhotoParams params;
     public static int loadDefImgBig;
     public static int loadDefImgSmall;
-    private ImagesHandler imagesHandler;
     private RelativeLayout coachMarksLayout;
     private ArrayList<FileInfo> cameraItemsFiles;
     private Context context;
@@ -70,20 +68,11 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
         startActivityForResult(intent, OPEN_IMAGE_VIEW_PAGER_SCREEN);
     }
 
-    public interface ImagesHandler
-    {
-//        void outputImages(ArrayList<FileInfo> files, ArrayList<FileInfo> deletedImages);
 
-        void dragImagesHandler(int first, int second);
-
-        void gaHandler(String screen, String category, String action, String label, ArrayList<FileInfo> images);
-    }
-
-    public static CameraItemsFragment newInstance(Context context, PhotoParams params, ImagesHandler imagesHandler,
+    public static CameraItemsFragment newInstance(Context context, PhotoParams params,
                                                   ArrayList<?> uploadedImages, int loadDefaultResBig, int loadDefaultResSmall)
     {
         CameraItemsFragment fragment = new CameraItemsFragment();
-        fragment.imagesHandler = imagesHandler;
         Bundle bundle = new Bundle();
         bundle.putSerializable(PHOTO_PARAMS, params);
         bundle.putSerializable(SELECTED_IMAGES, uploadedImages);
@@ -231,7 +220,6 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
                     FileInfo old = cameraItemsFiles.remove(oldPosition);
                     cameraItemsFiles.add(newPosition, old);
                 }
-                imagesHandler.dragImagesHandler(oldPosition, newPosition);
             }
         });
     }
@@ -257,8 +245,6 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
                 {
                     cameraList = (ArrayList<FileInfo>) data.getSerializableExtra(ScanConstants.CAMERA_IMAGES);
                     updateGrid(cameraList, ADD_PHOTOS);
-                    imagesHandler.gaHandler(Constants.SCREEN_CAMERA_ITEMS, Constants.CATEGORY_CAMERA, Constants.IMAGE_CAPTURE,
-                                            cameraList.size() + "", cameraList);
                 }
                 break;
 
@@ -269,8 +255,6 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
                     setSource(galleryList, FileInfo.SOURCE.PHONE_GALLERY);
                     checkForDeletedFiles(cameraItemsFiles);
                     updateGrid(galleryList, ADD_PHOTOS);
-                    imagesHandler.gaHandler(Constants.SCREEN_CAMERA_ITEMS, Constants.CATEGORY_GALLERY, Constants.TAKE_FROM_GALLERY,
-                                            galleryList.size() + "", galleryList);
                 }
                 break;
 

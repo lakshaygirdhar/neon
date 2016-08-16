@@ -25,7 +25,7 @@
         <activity android:name="com.gaadi.neon.activity.FolderFiles"
                   android:screenOrientation="portrait" />
         <activity
-            android:name=".NeutralActivity"
+            android:name="com.gaadi.neon.activity.NeutralActivity"
             android:label="@string/title_activity_neutral"
             android:screenOrientation="portrait" />
 
