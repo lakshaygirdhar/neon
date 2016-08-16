@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.gaadi.neon.Utils.FileInfo;
-import com.gaadi.neon.Utils.PhotoParams;
+import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.PhotoParams;
 import com.scanlibrary.PhotosLibrary;
 import com.scanlibrary.ScanConstants;
 
