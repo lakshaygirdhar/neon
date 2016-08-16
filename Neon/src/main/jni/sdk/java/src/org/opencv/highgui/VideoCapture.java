@@ -1,10 +1,10 @@
 package sdk.java.src.org.opencv.highgui;
 
-import java.util.List;
-import java.util.LinkedList;
-
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
+
+import java.util.LinkedList;
+import java.util.List;
 
 // C++: class VideoCapture
 

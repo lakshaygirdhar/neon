@@ -4,10 +4,10 @@
 //
 package sdk.java.src.org.opencv.photo;
 
-import java.util.List;
-
 import org.opencv.core.Mat;
 import org.opencv.utils.Converters;
+
+import java.util.List;
 
 public class Photo {
 

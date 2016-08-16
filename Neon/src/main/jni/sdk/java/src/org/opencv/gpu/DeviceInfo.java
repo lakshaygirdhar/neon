@@ -1,7 +1,5 @@
 package sdk.java.src.org.opencv.gpu;
 
-import java.lang.String;
-
 // C++: class DeviceInfo
 public class DeviceInfo {
 

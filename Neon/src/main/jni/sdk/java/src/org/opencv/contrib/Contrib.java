@@ -4,12 +4,12 @@
 //
 package sdk.java.src.org.opencv.contrib;
 
-import java.util.List;
-
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.utils.Converters;
+
+import java.util.List;
 
 public class Contrib {
 

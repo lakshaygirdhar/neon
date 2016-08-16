@@ -4,8 +4,6 @@
 //
 package sdk.java.src.org.opencv.highgui;
 
-import java.lang.String;
-
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfInt;

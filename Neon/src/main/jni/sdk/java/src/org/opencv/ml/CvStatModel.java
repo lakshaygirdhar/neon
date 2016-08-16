@@ -4,8 +4,6 @@
 //
 package sdk.java.src.org.opencv.ml;
 
-import java.lang.String;
-
 // C++: class CvStatModel
 
 /**

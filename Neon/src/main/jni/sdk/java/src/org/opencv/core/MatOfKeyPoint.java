@@ -1,9 +1,9 @@
 package sdk.java.src.org.opencv.core;
 
+import org.opencv.features2d.KeyPoint;
+
 import java.util.Arrays;
 import java.util.List;
-
-import org.opencv.features2d.KeyPoint;
 
 public class MatOfKeyPoint extends Mat {
     // 32FC7

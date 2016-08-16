@@ -1,9 +1,9 @@
 package sdk.java.src.org.opencv.core;
 
+import org.opencv.features2d.DMatch;
+
 import java.util.Arrays;
 import java.util.List;
-
-import org.opencv.features2d.DMatch;
 
 public class MatOfDMatch extends Mat {
     // 32FC4

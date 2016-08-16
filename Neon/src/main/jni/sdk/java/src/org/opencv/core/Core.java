@@ -4,11 +4,10 @@
 //
 package sdk.java.src.org.opencv.core;
 
-import java.lang.String;
+import org.opencv.utils.Converters;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.opencv.utils.Converters;
 
 public class Core {
 

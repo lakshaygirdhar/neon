@@ -1,8 +1,5 @@
 package sdk.java.src.org.opencv.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
@@ -16,6 +13,9 @@ import org.opencv.core.Point3;
 import org.opencv.core.Rect;
 import org.opencv.features2d.DMatch;
 import org.opencv.features2d.KeyPoint;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Converters {
 

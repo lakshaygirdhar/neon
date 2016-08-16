@@ -4,12 +4,11 @@
 //
 package sdk.java.src.org.opencv.features2d;
 
-import java.lang.String;
-import java.util.List;
-
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfKeyPoint;
 import org.opencv.utils.Converters;
+
+import java.util.List;
 
 // C++: class javaFeatureDetector
 
