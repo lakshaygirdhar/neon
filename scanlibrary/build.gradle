@@ -47,7 +47,7 @@ ext {
 
     publishedGroupId = 'com.gaadi.library'
     libraryName = 'Neon'
-    artifact = 'scanlibrary'
+    artifact = 'scanLibrary'
 
     libraryDescription = 'A library for selection of images from android device camera or gallery'
 

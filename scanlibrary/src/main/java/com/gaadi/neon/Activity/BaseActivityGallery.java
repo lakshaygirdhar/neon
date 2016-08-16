@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import com.scanlibrary.R;
 
 public class BaseActivityGallery extends AppCompatActivity {
+
     protected FrameLayout frameLayout;
     protected Toolbar toolbar;
 
@@ -24,8 +25,6 @@ public class BaseActivityGallery extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-
     }
 
     protected void setTitleMsg(String msg) {
