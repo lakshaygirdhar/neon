@@ -16,7 +16,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gaadi.neon.adapter.CapturedImagesAdapter;
-import com.gaadi.neon.fragment.CameraItemsFragment;
+import com.gaadi.neon.fragment.NeutralFragment;
 import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
@@ -56,7 +56,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Ca
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_items);
         llActionsCamera = (LinearLayout) findViewById(R.id.llActionsCamera);
-        PhotoParams params = (PhotoParams) getIntent().getSerializableExtra(CameraItemsFragment.PHOTO_PARAMS);
+        PhotoParams params = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
         maxCount = getIntent().getIntExtra(GalleryActivity.MAX_COUNT, 0);
         if (params != null) {
             PhotoParams.CameraOrientation orientation = params.getOrientation();

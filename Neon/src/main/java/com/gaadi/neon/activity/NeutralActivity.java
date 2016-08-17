@@ -6,10 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
+import com.gaadi.neon.fragment.NeutralFragment;
 import com.gaadi.neon.util.ApplicationController;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.PhotoParams;
-import com.gaadi.neon.fragment.CameraItemsFragment;
 import com.scanlibrary.R;
 
 /**
@@ -21,15 +21,15 @@ import com.scanlibrary.R;
 
 public class NeutralActivity extends FragmentActivity
 {
-    private CameraItemsFragment cameraItemsFragment;
+    private NeutralFragment cameraItemsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_neutral);
 
-        PhotoParams params = (PhotoParams) getIntent().getSerializableExtra(CameraItemsFragment.PHOTO_PARAMS);
-        cameraItemsFragment = CameraItemsFragment.newInstance(this, params, null,
+        PhotoParams params = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
+        cameraItemsFragment = NeutralFragment.newInstance(this, params, null,
                 R.drawable.image_load_default_big, R.drawable.image_load_default_small);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.photoFragment, cameraItemsFragment).commit();

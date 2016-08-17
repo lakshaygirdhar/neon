@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.activity.ReviewImageActivity;
-import com.gaadi.neon.fragment.CameraItemsFragment;
+import com.gaadi.neon.fragment.NeutralFragment;
 import com.gaadi.neon.fragment.CameraPriorityFragment;
 import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.Constants;
@@ -34,7 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jhansi on 28/03/15.
+ * @author lakshaygirdhar
+ * @since 13-08-2016
+ * @version 1.0
  *
  */
 public class ScanActivity extends AppCompatActivity implements IScanner, View.OnTouchListener, CameraPriorityFragment.PictureTakenListener {
@@ -42,11 +44,10 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
     private static final String TAG = "CameraPriorityActivity";
     public static final int GALLERY_PICK = 99;
     private static final int REQUEST_REVIEW = 100;
-    public static final String FROM_PRIORITY_ACTIVITY = "fromPriorityActivity";
     private Camera camera;
-    PhotoParams photoParams;
-    public Boolean readyToTakePicture = false;
-    CameraPreview cameraPreview;
+    private PhotoParams photoParams;
+    public boolean readyToTakePicture;
+    private CameraPreview cameraPreview;
 
     //Things to be restored on config change
     private ArrayList<FileInfo> imagesList = new ArrayList<>();
@@ -74,7 +75,7 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_priority_items);
 
-        photoParams = (PhotoParams) getIntent().getSerializableExtra(CameraItemsFragment.PHOTO_PARAMS);
+        photoParams = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
         if (null != photoParams) {
             fragment = CameraPriorityFragment.getInstance(photoParams);
             FragmentManager manager = getSupportFragmentManager();
@@ -82,29 +83,8 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
         } else {
             scanFragmentForCropping((File)getIntent().getSerializableExtra(ScanConstants.IMAGE_FILE_FOR_CROPPING));
         }
-//        if(photoParams.getEnableCapturedReview() != null && photoParams.getEnableCapturedReview()){
-//            fragment = CameraPriorityFragment2.getInstance(photoParams, this);
-//            FragmentManager manager = getSupportFragmentManager();
-//            manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-//        } else {
-
-//        }
     }
 
-//    private void init() {
-//        PickImageFragment fragment = new PickImageFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putInt(ScanConstants.OPEN_INTENT_PREFERENCE, getPreferenceContent());
-//        fragment.setArguments(bundle);
-//        android.app.FragmentManager fragmentManager = getFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.add(R.id.content, fragment);
-//        fragmentTransaction.commit();
-//    }
-//
-//    protected int getPreferenceContent() {
-//        return getIntent().getIntExtra(ScanConstants.OPEN_INTENT_PREFERENCE, 0);
-//    }
 
     @Override
     protected void onResume() {

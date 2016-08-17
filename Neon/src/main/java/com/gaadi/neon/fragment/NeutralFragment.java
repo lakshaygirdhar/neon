@@ -37,7 +37,7 @@ import java.util.ArrayList;
  * Created by Lakshay on 13-02-2015.
  *
  */
-public class CameraItemsFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemLongClickListener, UpdateSelection,
+public class NeutralFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemLongClickListener, UpdateSelection,
         AdapterView.OnItemClickListener
 {
     private static final String TAG = "CameraItemsFragment";
@@ -73,10 +73,10 @@ public class CameraItemsFragment extends Fragment implements View.OnClickListene
     }
 
 
-    public static CameraItemsFragment newInstance(Context context, PhotoParams params,
+    public static NeutralFragment newInstance(Context context, PhotoParams params,
                                                   ArrayList<?> uploadedImages, int loadDefaultResBig, int loadDefaultResSmall)
     {
-        CameraItemsFragment fragment = new CameraItemsFragment();
+        NeutralFragment fragment = new NeutralFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(PHOTO_PARAMS, params);
         bundle.putSerializable(SELECTED_IMAGES, uploadedImages);
