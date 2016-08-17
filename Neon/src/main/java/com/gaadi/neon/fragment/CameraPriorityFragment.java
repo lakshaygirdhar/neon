@@ -31,7 +31,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,14 +54,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Lakshay on 31-08-2015.
+ * Created by Lakshay
+ * @since 13-08-2016
+ * @version 1.0
+ *
  */
+@SuppressWarnings("deprecation,unchecked")
 public class CameraPriorityFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, Camera.PictureCallback {
 
     private static final String TAG = "CameraPriorityFragment";
 	private static final int REQUEST_REVIEW = 100;
     private Activity mActivity;
-    private ProgressBar progressBar;
     private PhotoParams mPhotoParams;
     private String imageName;
     private int maxNumberOfImages;
@@ -76,32 +78,23 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     private CameraPreview mCameraPreview;
     private boolean readyToTakePicture = false;
     private FrameLayout mCameraLayout;
-	private String capturedFilePath = "";
     private View fragmentView;
 	private PictureTakenListener mPictureTakenListener;
     private boolean permissionAlreadyRequested = false;
-    private int FOCUS_AREA_SIZE = 200;
     public static final int GALLERY_PICK = 99;
-    private ArrayList<String> outputImages = new ArrayList<>();
-    /*
-    * @Prince- adding flash buttons.
-    * */
 
-    private ImageView mFlashON, mFlashOff, mFlashAuto, mFlashTorch, mSwitchCamera;
+    private ImageView mSwitchCamera;
     private LinearLayout mFlashlayout;
     private boolean useFrontFacingCamera;
     private ImageView mFlash;
     private boolean enableCapturedReview;
     private float mDist;
     private PhotoParams.CameraFacing cameraFacing;
-    private boolean isGalleryEnabled;
-
 
     public interface PictureTakenListener {
-        public void onPictureTaken(String filePath);
-        public void onGalleryPicsCollected(ArrayList<FileInfo> infos);
-        public void onPicturesCompleted();
-        public void sendPictureForCropping(File file);
+         void onPictureTaken(String filePath);
+         void onGalleryPicsCollected(ArrayList<FileInfo> infos);
+         void sendPictureForCropping(File file);
     }
 
     public static CameraPriorityFragment getInstance(PhotoParams photoParams) {
@@ -123,59 +116,61 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        fragmentView = LayoutInflater.from(mActivity).inflate(R.layout.camera_priority_fragment, null);
-        progressBar = (ProgressBar) fragmentView.findViewById(R.id.progressBar);
+        fragmentView = LayoutInflater.from(mActivity).inflate(R.layout.camera_priority_fragment, container, false);
 
         mPhotoParams = (PhotoParams) getArguments().getSerializable(Constants.PHOTO_PARAMS);
-        imageName = mPhotoParams.getImageName();
-        maxNumberOfImages = mPhotoParams.getNoOfPhotos();
-        enableCapturedReview = mPhotoParams.getEnableCapturedReview();
-        PhotoParams.CameraOrientation orientation = mPhotoParams.getOrientation();
-        cameraFacing = mPhotoParams.getCameraFace();
-        isGalleryEnabled = mPhotoParams.isGalleryFromCameraEnabled();
+        if(mPhotoParams != null){
+            imageName = mPhotoParams.getImageName();
+            maxNumberOfImages = mPhotoParams.getNoOfPhotos();
+            enableCapturedReview = mPhotoParams.getEnableCapturedReview();
+            PhotoParams.CameraOrientation orientation = mPhotoParams.getOrientation();
+            cameraFacing = mPhotoParams.getCameraFace();
+            boolean isGalleryEnabled = mPhotoParams.isGalleryFromCameraEnabled();
+            //View to add rectangle on tap to focus
+            drawingView = new DrawingView(mActivity);
 
-        //View to add rectangle on tap to focus
-        drawingView = new DrawingView(mActivity);
+            setOrientation(mActivity, orientation);
 
-        setOrientation(mActivity, orientation);
+            buttonCapture = (ImageView) fragmentView.findViewById(R.id.buttonCapture);
+            buttonGallery = (ImageView) fragmentView.findViewById(R.id.buttonGallery);
+            buttonDone = (ImageView) fragmentView.findViewById(R.id.buttonDone);
+            tvImageName = (TextView) fragmentView.findViewById(R.id.imageName);
 
-        buttonCapture = (ImageView) fragmentView.findViewById(R.id.buttonCapture);
-        buttonGallery = (ImageView) fragmentView.findViewById(R.id.buttonGallery);
-        buttonDone = (ImageView) fragmentView.findViewById(R.id.buttonDone);
-        tvImageName = (TextView) fragmentView.findViewById(R.id.imageName);
+            mFlash = (ImageButton)fragmentView.findViewById(R.id.flash);
+            mFlashlayout = (LinearLayout)fragmentView.findViewById(R.id.flashLayout);
+            ImageView mFlashAuto = (ImageButton) fragmentView.findViewById(R.id.auto);
+            ImageView mFlashON = (ImageButton) fragmentView.findViewById(R.id.on);
+            ImageView mFlashOff = (ImageButton) fragmentView.findViewById(R.id.off);
+            ImageView mFlashTorch = (ImageButton) fragmentView.findViewById(R.id.torch);
 
-        mFlash = (ImageButton)fragmentView.findViewById(R.id.flash);
-        mFlashlayout = (LinearLayout)fragmentView.findViewById(R.id.flashLayout);
-        mFlashAuto = (ImageButton) fragmentView.findViewById(R.id.auto);
-        mFlashON = (ImageButton) fragmentView.findViewById(R.id.on);
-        mFlashOff = (ImageButton) fragmentView.findViewById(R.id.off);
-        mFlashTorch = (ImageButton) fragmentView.findViewById(R.id.torch);
+            mSwitchCamera = (ImageButton) fragmentView.findViewById(R.id.switchCamera);
+            if(CommonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                mSwitchCamera.setVisibility(View.GONE);
+                useFrontFacingCamera = false;
+            }
+            if (!isGalleryEnabled) {
+                buttonGallery.setVisibility(View.GONE);
+            }
 
-        mSwitchCamera = (ImageButton) fragmentView.findViewById(R.id.switchCamera);
-        if(CommonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            mSwitchCamera.setVisibility(View.GONE);
-            useFrontFacingCamera = false;
+            mFlashTorch.setOnClickListener(this);
+            mFlashON.setOnClickListener(this);
+            mFlashOff.setOnClickListener(this);
+            mFlashAuto.setOnClickListener(this);
+            mSwitchCamera.setOnClickListener(this);
+
+            scrollView = (LinearLayout) fragmentView.findViewById(R.id.imageHolderView);
+
+            //for handling screen orientation
+            if (savedInstanceState != null) {
+                Log.e(Constants.TAG, "savedInstanceState not null");
+                imagesList = (ArrayList<FileInfo>) savedInstanceState.getSerializable(Constants.IMAGES_SELECTED);
+                addInScrollView(imagesList);
+            }
+            fragmentView.setOnTouchListener(this);
+
+        } else {
+            Toast.makeText(getContext(),getString(R.string.pass_params),Toast.LENGTH_SHORT).show();
         }
-        if (!isGalleryEnabled) {
-            buttonGallery.setVisibility(View.GONE);
-        }
-
-        mFlashTorch.setOnClickListener(this);
-        mFlashON.setOnClickListener(this);
-        mFlashOff.setOnClickListener(this);
-        mFlashAuto.setOnClickListener(this);
-        mSwitchCamera.setOnClickListener(this);
-
-        scrollView = (LinearLayout) fragmentView.findViewById(R.id.imageHolderView);
-
-        //for handling screen orientation
-        if (savedInstanceState != null) {
-            Log.e(Constants.TAG, "savedInstanceState not null");
-            imagesList = (ArrayList<FileInfo>) savedInstanceState.getSerializable(Constants.IMAGES_SELECTED);
-            addInScrollView(imagesList);
-        }
-        fragmentView.setOnTouchListener(this);
-
         return fragmentView;
     }
 
@@ -209,14 +204,13 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                     }
                 }
             } else if (requestCode == REQUEST_REVIEW) {
+                String capturedFilePath = "";
                 mPictureTakenListener.onPictureTaken(capturedFilePath);
             }
         } else {
             if (requestCode == REQUEST_REVIEW) {
                 readyToTakePicture = true;
                 buttonCapture.setEnabled(true);
-            } else if (requestCode == GALLERY_PICK) {
-                return;
             } else if (requestCode != 101) {
                 mActivity.setResult(resultCode);
                 mActivity.finish();
@@ -285,7 +279,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                     }
                     if (mPhotoParams.getImageName() != null && !"".equals(mPhotoParams.getImageName())) {
                         tvImageName.setVisibility(View.VISIBLE);
-                        tvImageName.setText(mPhotoParams.getImageName() + "");
+                        tvImageName.setText(String.valueOf(mPhotoParams.getImageName()));
                         tvImageName.setOnClickListener(CameraPriorityFragment.this);
                     }
                 }
@@ -341,9 +335,6 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
             intent.putExtra(Constants.PHOTO_PARAMS, mPhotoParams);
             startActivityForResult(intent, GALLERY_PICK);
 
-        } else if (v.getId() == R.id.imageName) {
-//            if (imagesList.size() == maxNumberOfImages)
-//                onClick(buttonCapture);
         } else if (v.getId() == R.id.buttonDone) {
 //            if (enableCapturedReview ) {
 //                mPictureTakenListener.onPicturesCompleted();
@@ -491,17 +482,13 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
         @Override
         protected File doInBackground(Void... params) {
             File pictureFile = Constants.getMediaOutputFile(Constants.TYPE_IMAGE);
-            Log.e(TAG, pictureFile.getAbsolutePath());
-            if (pictureFile == null) {
-                Log.d(TAG, "Error creating media file, check storage permissions: ");
+
+            if(pictureFile == null)
                 return null;
-            }
 
             try {
                 FileOutputStream fos = new FileOutputStream(pictureFile);
-//                fos.write(data);
-//                fos.close();
-                Bitmap bm=null;
+                Bitmap bm;
 
                 // COnverting ByteArray to Bitmap - >Rotate and Convert back to Data
                 if (data != null) {
@@ -510,7 +497,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                     bm = BitmapFactory.decodeByteArray(data, 0, (data != null) ? data.length : 0);
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                         // Notice that width and height are reversed
-                        Bitmap scaled = Bitmap.createScaledBitmap(bm,screenHeight,screenWidth,true);
+                        Bitmap scaled = Bitmap.createScaledBitmap(bm,screenWidth,screenHeight,true);
                         int w = scaled.getWidth();
                         int h = scaled.getHeight();
                         // Setting post rotate to 90
@@ -535,9 +522,10 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                         bm = Bitmap.createBitmap(scaled, 0, 0, w, h, mtx, true);
                     }else{// LANDSCAPE MODE
                         //No need to reverse width and height
-                        Bitmap scaled = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
-                        bm=scaled;
+                        bm = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
                     }
+                } else {
+                    return null;
                 }
                 // COnverting the Die photo to Bitmap
 
@@ -552,18 +540,6 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                 Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
                 mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                         pictureFileUri));
-
-//                int rotation = getExifRotation(pictureFile);
-//                Log.e(Constants.TAG, "Rotation : " + rotation);
-//                if(rotation > 0){
-//                    Matrix matrix = new Matrix();
-//                    matrix.preRotate(rotation);
-////                    BitmapFactory.Options options = new BitmapFactory.Options();
-//                    Bitmap bitmap = BitmapFactory.decodeFile(pictureFile.getPath());
-//                    Log.e(TAG, "bitmap size: " + bitmap.getByteCount());
-//                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-//                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-//                }
 
             } catch (FileNotFoundException e) {
                 Log.d(TAG, "File not found: " + e.getMessage());
@@ -685,7 +661,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
         final File file = new File(info.getFilePath());
         if (!file.exists())
             return null;
-        final View outerView = ((LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.camera_priority_overlay, null);
+        final View outerView = View.inflate(getContext(),R.layout.camera_priority_overlay,null);
         outerView.findViewById(R.id.ivRemoveImage).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -738,6 +714,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     }
 
     private Rect calculateTapArea(float x, float y, float coefficient) {
+        int FOCUS_AREA_SIZE = 200;
         int areaSize = Float.valueOf(FOCUS_AREA_SIZE * coefficient).intValue();
 
         int left = clamp((int) x - areaSize / 2, 0, mCameraPreview.getWidth() - areaSize);
@@ -776,11 +753,12 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     }
 
     public void handleFocus(MotionEvent event, Camera.Parameters params) {
-        int pointerId = event.getPointerId(0);
-        int pointerIndex = event.findPointerIndex(pointerId);
+        Log.d(TAG, "handleFocus: " + event);
+//        int pointerId = event.getPointerId(0);
+//        int pointerIndex = event.findPointerIndex(pointerId);
 // Get the pointer's current position
-        float x = event.getX(pointerIndex);
-        float y = event.getY(pointerIndex);
+//        float x = event.getX(pointerIndex);
+//        float y = event.getY(pointerIndex);
 
         List<String> supportedFocusModes = params.getSupportedFocusModes();
         if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {

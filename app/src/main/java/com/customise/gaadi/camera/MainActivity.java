@@ -24,16 +24,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         PhotoParams params = new PhotoParams();
         params.setMode(PhotoParams.MODE.NEUTRAL);
-        params.setOrientation(PhotoParams.CameraOrientation.PORTRAIT);
-        params.setNoOfPhotos(2);
-        params.setEnableCapturedReview(true);
-        params.setEnableExtraBrightness(false);
-        params.setRestrictedExtensionEnabled(true);
-        params.setCameraFace(PhotoParams.CameraFacing.BACK);
-        params.setGalleryFromCameraEnabled(false);
+//        params.setOrientation(PhotoParams.CameraOrientation.PORTRAIT);
+//        params.setNoOfPhotos(2);
+//        params.setEnableCapturedReview(true);
+//        params.setEnableExtraBrightness(false);
+//        params.setRestrictedExtensionEnabled(true);
+//        params.setCameraFace(PhotoParams.CameraFacing.BACK);
+//        params.setGalleryFromCameraEnabled(false);
         PhotosLibrary.collectPhotos(this,params,REQUEST_CODE);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

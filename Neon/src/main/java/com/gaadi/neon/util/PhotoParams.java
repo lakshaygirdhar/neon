@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Lakshay on 12-03-2015.
+ *
  */
 public class PhotoParams implements Serializable {
 
@@ -15,15 +16,14 @@ public class PhotoParams implements Serializable {
 
     private CameraOrientation orientation;
     private int noOfPhotos, requestCode = 11;
-    private ArrayList<String> imageList;
     private FolderOptions folderOptions;
-    private Boolean tagEnabled;
-    private Boolean metaEnabled;
+    private boolean tagEnabled;
+    private boolean metaEnabled;
     private String uploadApi;
     private MODE mode;
     private ArrayList<?> imagePathList;
-    private Boolean enableCapturedReview;
-    private Boolean enableExtraBrightness;
+    private boolean enableCapturedReview;
+    private boolean enableExtraBrightness;
     private boolean restrictedExtensionEnabled;
     private CameraFacing cameraFace;
     private boolean galleryFromCameraEnabled;
@@ -63,16 +63,13 @@ public class PhotoParams implements Serializable {
 
     }
 
-    public PhotoParams(String imageName) {
-        this.imageName = imageName;
-    }
 
     public void setImageName(String imageName) {
         this.imageName = imageName;
     }
 
 
-    public Boolean getEnableCapturedReview() {
+    public boolean getEnableCapturedReview() {
         return enableCapturedReview;
     }
 
@@ -132,7 +129,7 @@ public class PhotoParams implements Serializable {
         this.folderOptions = folderOptions;
     }
 
-    public Boolean getTagEnabled() {
+    public boolean getTagEnabled() {
         return tagEnabled;
     }
 
@@ -140,7 +137,7 @@ public class PhotoParams implements Serializable {
         this.tagEnabled = tagEnabled;
     }
 
-    public Boolean getMetaEnabled() {
+    public boolean getMetaEnabled() {
         return metaEnabled;
     }
 
@@ -172,7 +169,7 @@ public class PhotoParams implements Serializable {
         this.requestCode = requestCode;
     }
 
-    public Boolean getEnableExtraBrightness() {
+    public boolean getEnableExtraBrightness() {
         return enableExtraBrightness;
     }
 

@@ -318,11 +318,6 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
     }
 
     @Override
-    public void onPicturesCompleted() {
-
-    }
-
-    @Override
     public void sendPictureForCropping(File file) {
         scanFragmentForCropping(file);
     }
