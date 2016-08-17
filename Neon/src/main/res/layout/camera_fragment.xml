@@ -15,7 +15,7 @@
             android:id="@+id/headerLayout"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/primary"
+            android:background="@color/colorPrimary"
             android:gravity="center_vertical">
 
             <ImageView
@@ -104,12 +104,6 @@
                 android:text="@string/choose_gallery"
                 android:textColor="@color/textColor" />
 
-            <!--<Button-->
-            <!--android:layout_weight="1"-->
-            <!--android:id="@+id/bFromGallery"-->
-            <!--android:text="Choose From Gallery"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent" />-->
 
         </LinearLayout>
 
@@ -123,15 +117,6 @@
             android:contentDescription="@string/emptyString"
             android:paddingBottom="5dp" />
 
-        <!--<GridView-->
-        <!--android:layout_margin="@dimen/default_margin"-->
-        <!--android:id="@+id/gvPhotos"-->
-        <!--android:columnWidth="@dimen/grid_column_width"-->
-        <!--android:numColumns="auto_fit"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:verticalSpacing="@dimen/vertical_space_images"-->
-        <!--android:horizontalSpacing="@dimen/horizontal_space_images"-->
-        <!--android:layout_height="wrap_content"></GridView>-->
 
         <com.gaadi.neon.dynamicgrid.DynamicGridView
             android:id="@+id/gvPhotos"
@@ -145,12 +130,6 @@
             android:verticalSpacing="@dimen/gv_vertical_spacing" />
 
 
-        <!--<Button-->
-        <!--android:id="@+id/bUploadPhotos"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:text="Upload"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/default_button_height" />-->
 
         <RelativeLayout
             android:id="@+id/done"
@@ -164,9 +143,10 @@
                 style="@style/gc_dark_textview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/primary"
+                android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:text="@string/ok" />
+
         </RelativeLayout>
 
     </RelativeLayout>
@@ -175,7 +155,7 @@
         android:id="@+id/coachMarksImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#d9000000"
+        android:background="@color/tranparent_black"
         android:descendantFocusability="blocksDescendants"
         android:visibility="gone">
 

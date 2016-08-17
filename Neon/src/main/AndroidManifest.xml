@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:theme="@style/LibraryTheme"
+        android:theme="@style/AppCompatNoActionBarTheme"
         android:allowBackup="true"
         android:label="@string/app_name" >
 
@@ -20,20 +20,25 @@
             android:label="@string/app_name" />
 
         <activity android:name="com.gaadi.neon.activity.GalleryActivity"
+                  android:theme="@style/AppCompatNoActionBarTheme"
                   android:screenOrientation="portrait" />
 
         <activity android:name="com.gaadi.neon.activity.FolderFiles"
+                  android:theme="@style/AppCompatNoActionBarTheme"
                   android:screenOrientation="portrait" />
         <activity
             android:name="com.gaadi.neon.activity.NeutralActivity"
+            android:theme="@style/AppCompatNoActionBarTheme"
             android:label="@string/title_activity_neutral"
             android:screenOrientation="portrait" />
 
         <activity android:name="com.gaadi.neon.activity.ReviewImageActivity"
+                  android:theme="@style/AppCompatNoActionBarTheme"
                   android:screenOrientation="portrait" />
 
         <activity
             android:name=".ImageReviewActivity"
+            android:theme="@style/AppCompatNoActionBarTheme"
             android:screenOrientation="portrait" />
 
     </application>
