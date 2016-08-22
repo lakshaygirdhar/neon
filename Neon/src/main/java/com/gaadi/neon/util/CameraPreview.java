@@ -15,7 +15,7 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import com.gaadi.neon.activity.CameraActivity;
+import com.gaadi.neon.activity.CameraActivity1;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -255,7 +255,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceDestroyed(SurfaceHolder holder) {
 //        holder.removeCallback(this);
 //        mCamera.stopPreview();
-        CameraActivity.readyToTakePicture = false;
+        CameraActivity1.readyToTakePicture = false;
         if (readyListener != null)
             readyListener.readyToTakePicture(false);
 //        mCamera.release();

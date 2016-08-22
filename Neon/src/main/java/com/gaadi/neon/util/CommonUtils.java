@@ -12,12 +12,14 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -25,10 +27,12 @@ import android.view.animation.Transformation;
 
 import com.scanlibrary.R;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by Lakshay on 17-03-2015.
+ * Created by Lakshay
+ * @since 17-03-2015.
  */
 public class CommonUtils {
 
@@ -60,6 +64,121 @@ public class CommonUtils {
             return defaultValue;
         }
     }
+
+
+    private String verifyFolder(File file) {
+        File[] filesInFolder = file.listFiles();
+        if (filesInFolder != null && filesInFolder.length > 0) {
+            for (File file1 : filesInFolder) {
+                if (file1.getName().contains("jpg") || file1.getName().contains("jpeg") || file1.getName().contains("png")) {
+                    return file1.getAbsolutePath();
+                }
+            }
+        }
+        return "";
+    }
+
+
+    private ArrayList<FileInfo> getFolders() {
+
+        //Directory Pictures
+        File pathPictures = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        //Log.e(Constants.TAG, "External Path :" + pathPictures.toString());
+        ArrayList<FileInfo> files1 = getAllFoldersInfo(pathPictures);
+
+        //Directory DCIM
+        File pathDCIM = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        ArrayList<FileInfo> files2 = getAllFoldersInfo(pathDCIM);
+        files1.addAll(files2);
+
+        //SD-Card Mounted
+        String secStore = System.getenv("SECONDARY_STORAGE");
+        //Log.e(Constants.TAG, "Sec Store : "+secStore);
+        try {
+            if (secStore != null) {
+                int index = secStore.indexOf(":");
+                String externalStorage = "";
+                if (index > 0) {
+                    externalStorage = secStore.substring(0, index);
+
+                } else {
+                    externalStorage = secStore;
+                }
+                String externalStorageDCIM = externalStorage + "/DCIM";
+                File externalFile = new File(externalStorageDCIM);
+
+                ArrayList<FileInfo> externalFiles = getAllFoldersInfo(externalFile);
+                files1.addAll(externalFiles);
+
+            }
+
+        } catch (Exception e) {
+            //Log.e(Constants.TAG, e.getMessage());
+        }
+
+        //WhatsApp Images
+        File pathWhatsApp = new File(Environment.getExternalStorageDirectory() + "/WhatsApp/Media/WhatsApp Images");
+        Log.e(Constants.TAG, pathWhatsApp.getAbsolutePath());
+        ArrayList<FileInfo> files3 = getAllFoldersInfo(pathWhatsApp);
+        files1.addAll(files3);
+
+
+        //Download Directory
+        File pathDownload = new File(Environment.getExternalStorageDirectory() + "/Download");
+        Log.e(Constants.TAG, "pathDownload : " + pathDownload.getName());
+
+        ArrayList<FileInfo> files4 = getAllFoldersInfo(pathDownload);
+        files1.addAll(files4);
+
+        return files1;
+    }
+
+    private ArrayList<FileInfo> getAllFoldersInfo(File file) {
+
+        ArrayList<FileInfo> allFiles = new ArrayList<FileInfo>();
+        File[] contentPictures = file.listFiles();
+
+        if ((contentPictures == null) || (contentPictures.length == 0)) {
+            Log.e(Constants.TAG, "No Files found at the path mentioned");
+        } else {
+            Boolean makeSelfFolder = false;
+            for (File folder : contentPictures) {
+                if (!folder.isDirectory()) {
+                    makeSelfFolder = true;
+                }
+                String valid = verifyFolder(folder);
+                if (folder.getName().equals("Sent"))
+                    continue;
+                if (valid.length() > 0) {
+                    FileInfo fileInfo = new FileInfo();
+                    fileInfo.setDisplayName(folder.getName());
+                    fileInfo.setFileName(folder.getAbsolutePath());
+                    File[] imagesInFolder = folder.listFiles();
+                    if (imagesInFolder != null) {
+                        if (imagesInFolder.length == 0) {
+                            fileInfo.setFilePath(folder.getAbsolutePath());
+                        } else {
+                            fileInfo.setType(FileInfo.FILE_TYPE.FOLDER);
+                            fileInfo.setFileCount(imagesInFolder.length);
+                            fileInfo.setFilePath(imagesInFolder[imagesInFolder.length - 1].getAbsolutePath());
+                        }
+                        allFiles.add(fileInfo);
+                    }
+                }
+            }
+            if (makeSelfFolder) {
+                FileInfo selfFolder = new FileInfo();
+                selfFolder.setDisplayName(file.getName());
+                selfFolder.setType(FileInfo.FILE_TYPE.FOLDER);
+                selfFolder.setFileName(file.getAbsolutePath());
+                selfFolder.setFilePath(contentPictures[contentPictures.length - 1].getAbsolutePath());
+                allFiles.add(selfFolder);
+            }
+        }
+        return allFiles;
+    }
+
+
 
     public static ArrayList<FileInfo> removeFileInfo(ArrayList<FileInfo> source, FileInfo fileInfo) {
         for (FileInfo fileInfo1 : source) {

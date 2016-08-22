@@ -27,7 +27,7 @@ import java.util.ArrayList;
 /**
  * Created by Lakshay on 02-03-2015.
  */
-public class FolderFiles extends BaseActivityGallery implements View.OnClickListener, UpdateSelection, LoaderManager.LoaderCallbacks {
+public class FolderFiles extends BaseActivity implements View.OnClickListener, UpdateSelection, LoaderManager.LoaderCallbacks {
 
     public static final int RESULT_SKIP_FOLDERS = 10;
     public static final String SELECTED_FILES = "selectedFiles";

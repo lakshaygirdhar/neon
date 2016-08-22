@@ -28,7 +28,7 @@ import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.PhotoParams;
 import com.scanlibrary.ImageReviewActivity;
 import com.scanlibrary.R;
-import com.scanlibrary.ScanActivity;
+import com.scanlibrary.CameraActivity;
 import com.scanlibrary.ScanConstants;
 
 import java.util.ArrayList;
@@ -342,7 +342,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
                 return;
             }
             //            imagesHandler.gaHandler(Constants.SCREEN_CAMERA_ITEMS, Constants.CATEGORY_CAMERA, Constants.ACTION_CLICK, Constants.TAKE_PHOTO, 0L);
-            Intent intent = new Intent(getActivity(), ScanActivity.class);
+            Intent intent = new Intent(getActivity(), CameraActivity.class);
             intent.putExtra(GalleryActivity.MAX_COUNT, maxPhotos - cameraItemsFiles.size());
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(PHOTO_PARAMS, params);

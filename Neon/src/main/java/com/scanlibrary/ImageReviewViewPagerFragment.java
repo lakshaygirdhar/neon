@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.FileInfo;
 
 import java.io.File;
@@ -232,7 +233,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             //TODO PRINCE
 
             imagePathForCropping = imageModel.getFilePath();
-            Intent intent = new Intent(getActivity(),ScanActivity.class);
+            Intent intent = new Intent(getActivity(),CameraActivity.class);
             if (imageModel.getFilePath().contains("file://")){
                 imageModel.setFilePath(imageModel.getFilePath().replace("file://",""));
             }

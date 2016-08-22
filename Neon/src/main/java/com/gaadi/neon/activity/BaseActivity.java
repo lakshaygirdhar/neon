@@ -9,11 +9,17 @@ import android.widget.FrameLayout;
 
 import com.scanlibrary.R;
 
-public class BaseActivityGallery extends AppCompatActivity {
+/**
+ * @author lakshaygirdhar
+ * @since 13-08-2016
+ * @version 1.0
+ *
+ */
+
+public class BaseActivity extends AppCompatActivity {
 
     protected FrameLayout frameLayout;
     protected Toolbar toolbar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -34,7 +34,7 @@ import java.util.ArrayList;
 /**
  * Created by Lakshay on 18-02-2015.
  */
-public class CameraActivity extends Activity implements View.OnClickListener, Camera.PictureCallback {
+public class CameraActivity1 extends Activity implements View.OnClickListener, Camera.PictureCallback {
 
     private static final String TAG = "CameraActivity";
     public static final String CAMERA_IMAGES = "captured_images";
@@ -111,7 +111,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Ca
     public void onClick(View v) {
         if (v.getId() == R.id.button_capture) {
             if (imagesAdapter.getImageInfoArrayList().size() >= maxCount) {
-                Toast.makeText(CameraActivity.this, "Maximum no. of images allowed is " + maxCount, Toast.LENGTH_LONG).show();
+                Toast.makeText(CameraActivity1.this, "Maximum no. of images allowed is " + maxCount, Toast.LENGTH_LONG).show();
                 return;
             }
             if (readyToTakePicture) {

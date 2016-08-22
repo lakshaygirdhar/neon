@@ -10,7 +10,7 @@ import com.gaadi.neon.activity.NeutralActivity;
 import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.PhotoParams;
-import com.scanlibrary.ScanActivity;
+import com.scanlibrary.CameraActivity;
 
 /**
  * Created by Lakshay on 21-05-2015.
@@ -29,7 +29,7 @@ public class PhotosLibrary {
                                                            Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
                     return;
                 }
-                Intent newIntent = new Intent(context, ScanActivity.class);
+                Intent newIntent = new Intent(context, CameraActivity.class);
                 newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 newIntent.putExtra("photoParams", params);
                 ((Activity) context).startActivityForResult(newIntent, requestCode);

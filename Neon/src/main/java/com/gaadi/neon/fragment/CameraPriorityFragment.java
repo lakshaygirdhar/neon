@@ -76,11 +76,11 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     private ArrayList<FileInfo> imagesList = new ArrayList<>();
     private Camera mCamera;
     private CameraPreview mCameraPreview;
-    private boolean readyToTakePicture = false;
+    private boolean readyToTakePicture;
     private FrameLayout mCameraLayout;
     private View fragmentView;
 	private PictureTakenListener mPictureTakenListener;
-    private boolean permissionAlreadyRequested = false;
+    private boolean permissionAlreadyRequested;
     public static final int GALLERY_PICK = 99;
 
     private ImageView mSwitchCamera;

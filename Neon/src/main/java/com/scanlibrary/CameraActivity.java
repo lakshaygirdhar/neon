@@ -39,9 +39,9 @@ import java.util.List;
  * @version 1.0
  *
  */
-public class ScanActivity extends AppCompatActivity implements IScanner, View.OnTouchListener, CameraPriorityFragment.PictureTakenListener {
+public class CameraActivity extends AppCompatActivity implements IScanner, View.OnTouchListener, CameraPriorityFragment.PictureTakenListener {
 
-    private static final String TAG = "CameraPriorityActivity";
+    private static final String TAG = "ScanActivity";
     public static final int GALLERY_PICK = 99;
     private static final int REQUEST_REVIEW = 100;
     private Camera camera;
@@ -53,8 +53,8 @@ public class ScanActivity extends AppCompatActivity implements IScanner, View.On
     private ArrayList<FileInfo> imagesList = new ArrayList<>();
 
     private int FOCUS_AREA_SIZE = 200;
-    DrawingView drawingView;
-    FrameLayout camera_lLayout;
+    private DrawingView drawingView;
+    private FrameLayout camera_lLayout;
     private ArrayList<String> outputImages = new ArrayList<>();
     private CameraPriorityFragment fragment;
 
