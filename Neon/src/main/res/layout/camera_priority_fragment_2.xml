@@ -67,14 +67,14 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/camera_selector" />
+                android:src="@drawable/ic_camera" />
 
             <ImageView
                 android:id="@+id/buttonGallery"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/gallery_selector" />
+                android:src="@drawable/ic_camera_gallery" />
 
         </RelativeLayout>
 

@@ -85,13 +85,6 @@ public class CameraActivity extends AppCompatActivity implements IScanner, View.
         }
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -126,7 +119,7 @@ public class CameraActivity extends AppCompatActivity implements IScanner, View.
             final Rect focusRect = calculateTapArea(event.getX(), event.getY(), 1f);
 
             Camera.Parameters parameters = camera.getParameters();
-            if (parameters.getFocusMode() != Camera.Parameters.FOCUS_MODE_AUTO) {
+            if (! parameters.getFocusMode().equals(Camera.Parameters.FOCUS_MODE_AUTO)) {
                 parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
             }
             if (parameters.getMaxNumFocusAreas() > 0) {

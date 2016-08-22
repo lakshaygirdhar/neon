@@ -20,6 +20,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -37,12 +39,14 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gaadi.neon.activity.GalleryActivity;
+import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
 import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.DrawingView;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.PhotoParams;
+import com.gaadi.neon.util.PrefsUtils;
 import com.scanlibrary.R;
 
 import java.io.ByteArrayOutputStream;
@@ -71,6 +75,9 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     private DrawingView drawingView;
     private ImageView buttonCapture, buttonGallery, buttonDone;
     private TextView tvImageName;
+    private ImageView currentFlashMode;
+    private ArrayList<String> supportedFlashModes;
+    private RecyclerView rcvFlash;
 
     private LinearLayout scrollView;
     private ArrayList<FileInfo> imagesList = new ArrayList<>();
@@ -84,9 +91,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     public static final int GALLERY_PICK = 99;
 
     private ImageView mSwitchCamera;
-    private LinearLayout mFlashlayout;
     private boolean useFrontFacingCamera;
-    private ImageView mFlash;
     private boolean enableCapturedReview;
     private float mDist;
     private PhotoParams.CameraFacing cameraFacing;
@@ -131,17 +136,18 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
 
             setOrientation(mActivity, orientation);
 
+            LinearLayoutManager layoutManager
+                    = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+
+            currentFlashMode = (ImageView) fragmentView.findViewById(R.id.currentFlashMode);
+
+            rcvFlash = (RecyclerView)fragmentView.findViewById(R.id.flash_listview);
+            rcvFlash.setLayoutManager(layoutManager);
+
             buttonCapture = (ImageView) fragmentView.findViewById(R.id.buttonCapture);
             buttonGallery = (ImageView) fragmentView.findViewById(R.id.buttonGallery);
             buttonDone = (ImageView) fragmentView.findViewById(R.id.buttonDone);
             tvImageName = (TextView) fragmentView.findViewById(R.id.imageName);
-
-            mFlash = (ImageButton)fragmentView.findViewById(R.id.flash);
-            mFlashlayout = (LinearLayout)fragmentView.findViewById(R.id.flashLayout);
-            ImageView mFlashAuto = (ImageButton) fragmentView.findViewById(R.id.auto);
-            ImageView mFlashON = (ImageButton) fragmentView.findViewById(R.id.on);
-            ImageView mFlashOff = (ImageButton) fragmentView.findViewById(R.id.off);
-            ImageView mFlashTorch = (ImageButton) fragmentView.findViewById(R.id.torch);
 
             mSwitchCamera = (ImageButton) fragmentView.findViewById(R.id.switchCamera);
             if(CommonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT) {
@@ -152,10 +158,6 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                 buttonGallery.setVisibility(View.GONE);
             }
 
-            mFlashTorch.setOnClickListener(this);
-            mFlashON.setOnClickListener(this);
-            mFlashOff.setOnClickListener(this);
-            mFlashAuto.setOnClickListener(this);
             mSwitchCamera.setOnClickListener(this);
 
             scrollView = (LinearLayout) fragmentView.findViewById(R.id.imageHolderView);
@@ -185,6 +187,48 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
         mActivity.addContentView(drawingView, layoutParamsDrawing);
 
     }
+
+    private void setFlashLayoutAndMode() {
+        // flashLayout=(LinearLayout)view.findViewById(R.id.flashLayout);
+        currentFlashMode.setOnClickListener(this);
+        String flashMode = PrefsUtils.getStringSharedPreference(getActivity(), Constants.FLASH_MODE, "");
+        if (flashMode.equals("")) {
+            currentFlashMode.setImageResource(R.drawable.flash_off);
+        } else {
+            if (supportedFlashModes != null && supportedFlashModes.size() > 0) {
+                if (supportedFlashModes.contains(flashMode)) {
+                    setFlash(flashMode);
+                } else {
+                    setFlash(supportedFlashModes.get(0));
+                }
+            }
+        }
+    }
+
+    public void setFlash(String mode) {
+        Camera.Parameters parameters = mCamera.getParameters();
+        parameters.setFlashMode(mode);
+
+        if ("off".equals(mode)) {
+            currentFlashMode.setImageResource(R.drawable.flash_off);
+        } else if ("on".equals(mode)) {
+            currentFlashMode.setImageResource(R.drawable.flash_on);
+        } else if ("auto".equals(mode)) {
+            currentFlashMode.setImageResource(R.drawable.flash_auto);
+        } else if ("red-eye".equals(mode)) {
+            currentFlashMode.setImageResource(R.drawable.flash_red_eye);
+        } else if ("torch".equals(mode)) {
+            currentFlashMode.setImageResource(R.drawable.flash_torch);
+        }
+        else{
+            currentFlashMode.setImageResource(R.drawable.flash_off);
+        }
+        PrefsUtils.setStringSharedPreference(getActivity(), Constants.FLASH_MODE, mode);
+        //Toast.makeText(getActivity(),mode,Toast.LENGTH_LONG).show();
+        //currentFlashMode.setText("Flash:" + mode);
+        mCamera.setParameters(parameters);
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -235,14 +279,16 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                 if (cameraFacing == PhotoParams.CameraFacing.FRONT) {
                     mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
                     mSwitchCamera.setVisibility(View.GONE);
-                    mFlashlayout.setVisibility(View.GONE);
-                    mFlash.setVisibility(View.GONE);
                 } else {
                     mCamera = Camera.open();
                 }
 
                 //To set hardware camera rotation
                 setCameraRotation();
+                Camera.Parameters parameters = mCamera.getParameters();
+                createSupportedFlashList(parameters);
+
+                setFlashLayoutAndMode();
 
                 mCameraPreview = new CameraPreview(mActivity, mCamera);
                 mCameraPreview.setReadyListener(new CameraPreview.ReadyToTakePicture() {
@@ -291,10 +337,20 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
         }
     }
 
+    private void createSupportedFlashList(Camera.Parameters parameters) {
+        supportedFlashModes = (ArrayList<String>) parameters.getSupportedFlashModes();
+        Log.d(TAG, "createSupportedFlashList: " + supportedFlashModes.size());
+        if (supportedFlashModes == null) {
+            currentFlashMode.setVisibility(View.GONE);
+            rcvFlash.setVisibility(View.GONE);
+        } else {
+            currentFlashMode.setVisibility(View.VISIBLE);
+        }
+    }
+
+
     @Override
     public void onClick(View v) {
-
-        //Toast.makeText(this, (v.getId()==R.id.bDone ? "done": "capture"), Toast.LENGTH_SHORT).show();
         if (v.getId() == R.id.buttonCapture) {
             if (v.getTag().equals("capture")) {
                 if (readyToTakePicture) {
@@ -312,23 +368,13 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                     }
                 }
             } else if (v.getTag().equals("done")) {
-                //imagesList = imagesAdapter.getImageInfoArrayList();
-//                Log.e("CameraPriorityActivity", "onclick " + croppedImageCount);
                 if (imagesList.size() > 0) {
-//                    croppedImages.add(cropImage(imagesList.get(croppedImageCount)));
-//                    for (FileInfo info : imagesList) {
-//                        outputImages.add(info.getFilePath());
-//                    }
                     mPictureTakenListener.onGalleryPicsCollected(imagesList);
-
-//                    mActivity.setResult(mActivity.RESULT_OK, new Intent().putStringArrayListExtra(Constants.RESULT_IMAGES, outputImages));
-//                    mActivity.finish();
                 } else {
                     Toast.makeText(mActivity, "Please click atleast one photo", Toast.LENGTH_SHORT).show();
                 }
             }
         } else if (v.getId() == R.id.buttonGallery) {
-            //finish();
             Intent intent = new Intent(mActivity, GalleryActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(GalleryActivity.MAX_COUNT, maxNumberOfImages);
@@ -350,7 +396,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
             Camera.Parameters params = mCamera.getParameters();
             params.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
             mCamera.setParameters(params);
-        } else if (v.getId() == R.id.on) {
+        } /*else if (v.getId() == R.id.on) {
             Camera.Parameters params = mCamera.getParameters();
             params.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
             mCamera.setParameters(params);
@@ -364,24 +410,36 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
             Camera.Parameters params = mCamera.getParameters();
             params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
             mCamera.setParameters(params);
-        } else if (v.getId() == R.id.flash) {
-            mFlashlayout.setVisibility(View.VISIBLE);
-        } else if (v.getId() == R.id.switchCamera) {
+        } */else if (v.getId() == R.id.switchCamera) {
             int cameraFacing = initCameraId();
             if (cameraFacing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 stopCamera();
                 useFrontFacingCamera = true;
                 startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
-                mFlashlayout.setVisibility(View.GONE);
-                mFlash.setVisibility(View.GONE);
             } else {
                 stopCamera();
                 useFrontFacingCamera = false;
                 startCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
-                mFlashlayout.setVisibility(View.VISIBLE);
-                mFlash.setVisibility(View.VISIBLE);
             }
+        } else if (v.getId() == R.id.currentFlashMode) {
+            if(rcvFlash.getVisibility()==View.GONE)
+                createFlashModesDropDown();
+            else
+                rcvFlash.setVisibility(View.GONE);
         }
+    }
+
+    private void createFlashModesDropDown() {
+        FlashModeRecyclerHorizontalAdapter flashModeAdapter = new FlashModeRecyclerHorizontalAdapter(getActivity(), supportedFlashModes);
+        rcvFlash.setAdapter(flashModeAdapter);
+        rcvFlash.setVisibility(View.VISIBLE);
+        flashModeAdapter.setOnItemClickListener(new FlashModeRecyclerHorizontalAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                setFlash(supportedFlashModes.get(position));
+                rcvFlash.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -709,7 +767,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     }
 
     private void enableDoneButton(boolean enable) {
-        buttonCapture.setImageResource(enable ? R.drawable.camera_ok : R.drawable.camera_click);
+        buttonCapture.setImageResource(enable ? R.drawable.camera_switch : R.drawable.camera_click);
         buttonCapture.setTag(enable ? "done" : "capture");
     }
 

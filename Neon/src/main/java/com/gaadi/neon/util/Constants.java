@@ -40,6 +40,7 @@ public class Constants {
     public static final int REQUEST_PERMISSION_CAMERA = 104;
     public static final int REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 105;
     public static final String IMAGE_NAME = "imageName";
+    public static final String FLASH_MODE="flashMode";
     public static String NAVIGATION_DRAWER = "Navigation Drawers";
     public static String NOTIFICATIONS = "Notifications";
     public static String FLAG="Flag";

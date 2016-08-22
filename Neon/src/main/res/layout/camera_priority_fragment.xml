@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/camera_preview"
@@ -22,7 +22,29 @@
         android:background="#80000000"
         android:visibility="gone" />
 
-    <LinearLayout
+    <LinearLayout android:layout_centerVertical="true"
+                  android:layout_width="wrap_content"
+                  android:layout_marginLeft="10dp"
+                  android:gravity="center_vertical"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+
+        <ImageView android:padding="5dp"
+                   android:id="@+id/currentFlashMode"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_centerVertical="true"
+                   android:clickable="true"
+                   android:visibility="visible" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/flash_listview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <!--<LinearLayout
         android:id="@+id/flashLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,13 +74,16 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/star_on"
             android:layout_weight="1"/>
-    </LinearLayout>
+    </LinearLayout>-->
+
     <ImageButton
         android:id="@+id/switchCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/camera_ok"
-        android:layout_centerVertical="true" />
+        android:background="#00000000"
+        android:src="@drawable/camera_switch"
+        android:layout_alignParentBottom="true"
+         />
 
     <!--<ZoomControls-->
         <!--android:id="@+id/cameraZoomControls"-->
@@ -82,7 +107,7 @@
                 android:id="@+id/buttonDone"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/camera_done_selector"
+                android:src="@drawable/ic_camera_done"
                 android:layout_centerVertical="true"
                 android:visibility="gone" />
 
@@ -91,7 +116,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/camera_selector" />
+                android:src="@drawable/ic_camera" />
 
             <ImageView
                 android:id="@+id/buttonGallery"
@@ -99,7 +124,7 @@
                 android:layout_height="80dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/gallery_selector" />
+                android:src="@drawable/ic_camera_gallery" />
             <ImageButton
                 android:id="@+id/flash"
                 android:layout_width="wrap_content"

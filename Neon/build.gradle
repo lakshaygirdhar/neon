@@ -12,6 +12,7 @@ android {
                 {
                     moduleName "Scanner"
                 }
+        vectorDrawables.useSupportLibrary = true
     }
     sourceSets.main
             {
@@ -38,6 +39,7 @@ dependencies {
     compile project.GSON_LIBRARY
     compile 'com.karumi:expandableselector:1.0.0'
     compile 'com.google.android.gms:play-services:8.4.0'
+    compile project.RECYCLERVIEW
     //    compile 'com.android.support:support-v4:23.2.1'
     //    compile 'com.android.support:support-v4:23.2.1'
 }
