@@ -8,6 +8,7 @@
 
 
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/imageSelected"
         android:layout_width="match_parent"
         android:layout_height="@dimen/three_coloumn_height"
@@ -15,14 +16,8 @@
         android:src="@drawable/image_load_default_small" />
 
 
-    <!--    <CheckBox
-            android:id="@+id/cbSelectedImage"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />-->
-
-
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/vTransparentLayer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/three_coloumn_height"
@@ -32,10 +27,11 @@
         android:visibility="gone" />
 
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/selection_view"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/checkmark"
+        android:src="@drawable/ic_check"
         android:visibility="gone" />
 </RelativeLayout>

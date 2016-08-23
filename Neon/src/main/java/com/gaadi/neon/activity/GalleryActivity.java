@@ -46,7 +46,6 @@ public class GalleryActivity extends BaseActivity implements AdapterView.OnItemC
 
         if(getSupportActionBar() != null)
             getSupportActionBar().setTitle(getString(R.string.gallery));
-        toolbar.setTitle(getString(R.string.gallery));
 
         GridView gvFolders = (GridView) findViewById(R.id.gvFolders);
 
@@ -119,21 +118,11 @@ public class GalleryActivity extends BaseActivity implements AdapterView.OnItemC
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Intent intent = new Intent();
-        if (resultCode == FolderFiles.RESULT_SKIP_FOLDERS) {
-            intent.putExtra(GALLERY_SELECTED_PHOTOS, data.getExtras().getSerializable(FolderFiles.SELECTED_FILES));
+        if (resultCode == GalleryFiles.RESULT_SKIP_FOLDERS) {
+            intent.putExtra(GALLERY_SELECTED_PHOTOS, data.getExtras().getSerializable(GalleryFiles.SELECTED_FILES));
             setResult(RESULT_OK, intent);
             finish();
         }
-            // else if (resultCode == RESULT_OK && requestCode == 1001) {//Crop.REQUEST_CROP) {
-//            if (croppedImagesCount == (selectedFiles.size() - 1)) {
-//                intent.putStringArrayListExtra("cropped", croppedImages);
-//                setResult(RESULT_OK, intent);
-//                finish();
-//            } else
-//                for (FileInfo info : selectedFiles) {
-//                    croppedImages.add(info.getFilePath());
-//                }
-//        }
     }
 
     @Override
@@ -157,41 +146,10 @@ public class GalleryActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         FileInfo fileInfo = folders.get(position);
-        Intent intent = new Intent(this, FolderFiles.class);
+        Intent intent = new Intent(this, GalleryFiles.class);
         intent.putExtra(FOLDER_NAME, fileInfo.getDisplayName());
         if (maxCount > 0)
             intent.putExtra(MAX_COUNT, maxCount);
         startActivityForResult(intent, REQUEST_FOLDER_FILES);
     }
-
-//    private ArrayList<FileInfo> getFilesInFolder(File file) {
-//        ArrayList<FileInfo> allFiles = new ArrayList<>();
-//        File[] contentPictures = file.listFiles();
-//
-//        if (contentPictures == null || contentPictures.length == 0) {
-//            Log.e(TAG, "No Files found at the path mentioned");
-//        } else {
-//            for (int i = contentPictures.length - 1; i >= 0; i--) {
-//                File individualFile = contentPictures[i];
-//                if (individualFile.getName().contains("jpg") || individualFile.getName().contains("jpeg") || individualFile.getName().contains("png")) {
-//                    FileInfo fileInfo = new FileInfo();
-//                    fileInfo.setDisplayName(individualFile.getName());
-//                    fileInfo.setFilePath(individualFile.getAbsolutePath());
-//
-//                    if (checkIfAlreadyPresent(fileInfo))
-//                        fileInfo.setSelected(true);
-//                    allFiles.add(fileInfo);
-//                }
-//            }
-//        }
-//        return allFiles;
-//    }
-//
-//    public boolean checkIfAlreadyPresent(FileInfo fileInfo) {
-//        if (ApplicationController.selectedFiles != null && ApplicationController.selectedFiles.size() > 0) {
-//            if (ApplicationController.selectedFiles.contains(fileInfo.getFilePath()))
-//                return true;
-//        }
-//        return false;
-//    }
 }

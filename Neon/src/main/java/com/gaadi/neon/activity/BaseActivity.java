@@ -36,8 +36,9 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void setTitleMsg(String msg) {
-        toolbar.setTitle(msg);
-        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setTitle(msg);
+        setTitle(msg);
     }
 
     @Override

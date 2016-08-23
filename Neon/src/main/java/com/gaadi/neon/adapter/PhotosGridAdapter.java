@@ -20,11 +20,12 @@ import com.scanlibrary.R;
 import java.util.ArrayList;
 
 /**
- * Created by Lakshay on 20-02-2015.
+ * Created by Lakshay
+ * @since 20-02-2015
+ *
  */
 public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.OnClickListener {
 
-    private static final String TAG = "PhotosGridAdapter";
     private Context context;
     private UpdateSelection updateSelection;
     private int imgLoadDefBig, imgLoadDefSmall;
@@ -44,8 +45,8 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         PhotosHolder holder;
+
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.display_images, null);
@@ -55,12 +56,10 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
             holder.transparentView = convertView.findViewById(R.id.viewTransaparent);
             holder.tvProfile = (TextView) convertView.findViewById(R.id.tvProfilePhoto);
             convertView.setTag(holder);
-
-            //holder.image.setBackgroundDrawable(context.getResources().getDrawable(imgLoadDefSmall > 0 ? imgLoadDefSmall : R.drawable.default_placeholder));
-
         } else {
             holder = (PhotosHolder) convertView.getTag();
         }
+
         if (position == 0) {
             holder.tvProfile.setVisibility(View.VISIBLE);
             holder.transparentView.setVisibility(View.VISIBLE);

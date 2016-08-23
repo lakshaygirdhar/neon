@@ -24,7 +24,7 @@
                   android:theme="@style/AppCompatNoActionBarTheme"
                   android:screenOrientation="portrait" />
 
-        <activity android:name="com.gaadi.neon.activity.FolderFiles"
+        <activity android:name="com.gaadi.neon.activity.GalleryFiles"
                   android:theme="@style/AppCompatNoActionBarTheme"
                   android:screenOrientation="portrait" />
         <activity

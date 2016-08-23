@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/ivImageDisplay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,6 +13,7 @@
 
 
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/viewTransaparent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,11 +21,13 @@
         android:src="@color/tranparent_black" />
 
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/ivRemoveImage"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
-        android:src="@drawable/close" />
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_cancel" />
 
 
     <TextView

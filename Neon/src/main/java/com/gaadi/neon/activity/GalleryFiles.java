@@ -10,10 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.gaadi.neon.adapter.SelectFilesAdapter;
 import com.gaadi.neon.interfaces.UpdateSelection;
@@ -25,46 +22,36 @@ import com.scanlibrary.R;
 import java.util.ArrayList;
 
 /**
- * Created by Lakshay on 02-03-2015.
+ * Created by Lakshay
+ * @since 02-03-2015.
+ *
  */
-public class FolderFiles extends BaseActivity implements View.OnClickListener, UpdateSelection, LoaderManager.LoaderCallbacks {
+public class GalleryFiles extends BaseActivity implements UpdateSelection, LoaderManager.LoaderCallbacks {
 
     public static final int RESULT_SKIP_FOLDERS = 10;
     public static final String SELECTED_FILES = "selectedFiles";
-    ImageView doneButton;
-    ArrayList<FileInfo> files;
-    SelectFilesAdapter adapter;
-    private TextView tvFolderName;
-    ArrayList<FileInfo> folderSelectedFiles;
-    ArrayList<FileInfo> deletedFiles, addedFiles;
+    private SelectFilesAdapter adapter;
+    private ArrayList<FileInfo> folderSelectedFiles;
+    private ArrayList<FileInfo> deletedFiles, addedFiles;
+    private GridView folderFiles;
+    private MenuItem textViewDone;
     private Cursor mCursor;
-    GridView folderFiles;
-
-    MenuItem textViewDone;
-//    public static ArrayList<String> selectedFilesOnlyAdapter = new ArrayList<>();
 
     private String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " =? and " + MediaStore.Images.Media.SIZE + " >?";
     private Uri mUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-    String[] mProjection = {
+    private String[] mProjection = {
             "_data",
             "_id",
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
     };
     private String[] selectionArgs;
     private String order = MediaStore.Images.Media.DATE_TAKEN + " DESC";
-    private int maxCount = 0;
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        selectedFilesOnlyAdapter.clear();
-    }
+    private int maxCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.folder_files, frameLayout);
-
 
         folderSelectedFiles = new ArrayList<>();
         deletedFiles = new ArrayList<>();
@@ -78,7 +65,6 @@ public class FolderFiles extends BaseActivity implements View.OnClickListener, U
                 ApplicationController.selectedFiles.clear();
             }
         }
-
         selectionArgs = new String[]{folderName, String.valueOf(0)};
 
         if (folderName != null && folderName.equals(".thumbnails")) {
@@ -89,8 +75,11 @@ public class FolderFiles extends BaseActivity implements View.OnClickListener, U
             order = MediaStore.Images.Thumbnails.IMAGE_ID + " DESC";
         }
 
+        setTitleMsg(folderName);
+
         mCursor = getContentResolver().query(mUri, mProjection, selection, selectionArgs, order);
-        mCursor.moveToFirst();
+        if(mCursor != null)
+            mCursor.moveToFirst();
 
         adapter = new SelectFilesAdapter(this, mCursor, 0, this);
         folderFiles = (GridView) findViewById(R.id.gvFolderPhotos);
@@ -98,17 +87,14 @@ public class FolderFiles extends BaseActivity implements View.OnClickListener, U
         adapter.notifyDataSetChanged();
     }
 
-    private void setUpActionBar() {
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String folderName = extras.getString(GalleryActivity.FOLDER_NAME);
-            getSupportActionBar().setTitle(folderName);
-            setTitleMsg(folderName);
-        }
-
-        /**/
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        if(mCursor != null)
+            mCursor.close();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -136,26 +122,6 @@ public class FolderFiles extends BaseActivity implements View.OnClickListener, U
             finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View v) {
-     /*   if(v.getId()== R.id.tvDone)
-        {
-            folderSelectedFiles.addAll(addedFiles);
-            CommonUtils.removeFileInfo(folderSelectedFiles , deletedFiles);
-            if (maxCount == 0) {
-                if (ApplicationController.selectedFiles == null)
-                    ApplicationController.selectedFiles = new ArrayList<>();
-                addFilesToSelected(ApplicationController.selectedFiles, addedFiles);
-                removeFilesFromSelected(ApplicationController.selectedFiles, deletedFiles);
-                CommonUtils.removeFileInfo(ApplicationController.selectedFiles, deletedFiles, false);
-            }
-            Intent intent = new Intent();
-            intent.putExtra(SELECTED_FILES , folderSelectedFiles);
-            setResult(RESULT_SKIP_FOLDERS, intent);
-            finish();
-        }*/
     }
 
     @Override
