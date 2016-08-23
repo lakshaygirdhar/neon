@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,6 +58,7 @@ public class GalleryActivity extends BaseActivity implements AdapterView.OnItemC
         gvFolders.setAdapter(adapter);
 
         Uri uri = CommonUtils.getImageStoreUri();
+
         String[] PROJECTION_BUCKET = {
                 "" + MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
                 MediaStore.Images.ImageColumns.DATA
@@ -70,7 +70,7 @@ public class GalleryActivity extends BaseActivity implements AdapterView.OnItemC
             mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, "\"1) GROUP BY 1,(1\"", null, null);
         }
         if (mCursor == null) {
-            Toast.makeText(GalleryActivity.this, "Gallery cannot be opened.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GalleryActivity.this, getString(R.string.gallery_error), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -81,7 +81,6 @@ public class GalleryActivity extends BaseActivity implements AdapterView.OnItemC
         for (int i = 0; i < mCursor.getCount(); i++) {
             String bucketName = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
 
-            Log.e(Constants.TAG, bucketName);
             Integer count = mapFolders.get(bucketName);
             if (count != null && count != 0) {
                 mapFolders.put(bucketName, count + 1);
@@ -95,7 +94,6 @@ public class GalleryActivity extends BaseActivity implements AdapterView.OnItemC
         String selection = MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME + "= ?";
         String orderBy = MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC LIMIT 1";
         for (HashMap.Entry<String, Integer> entry : mapFolders.entrySet()) {
-            Log.e(Constants.TAG, "Folder : " + entry.getKey() + " Count : " + entry.getValue());
             FileInfo fileInfo = new FileInfo();
             fileInfo.setDisplayName(entry.getKey());
             fileInfo.setFileCount(entry.getValue());
@@ -105,7 +103,6 @@ public class GalleryActivity extends BaseActivity implements AdapterView.OnItemC
                 cursorImage.moveToFirst();
                 for (int j = 0; j < cursorImage.getCount(); j++) {
                     String imagePath = cursorImage.getString(cursorImage.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
-                    Log.e(Constants.TAG, "Image Path : " + imagePath);
                     fileInfo.setFilePath(imagePath);
                     cursorImage.moveToNext();
                 }

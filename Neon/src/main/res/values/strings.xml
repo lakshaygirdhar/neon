@@ -34,5 +34,6 @@
     <string name="take_photo">Take Photo</string>
     <string name="pass_params">Please pass photo params</string>
     <string name="gallery">Gallery</string>
+    <string name="gallery_error">Either No access or no gallery files present</string>
     <color name="gray">#808080</color>
 </resources>

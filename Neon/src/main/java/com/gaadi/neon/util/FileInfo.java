@@ -3,18 +3,19 @@ package com.gaadi.neon.util;
 import java.io.Serializable;
 
 /**
- * Created by Lakshay on 27-02-2015.
+ * Created by Lakshay
+ * @since 27-02-2015.
+ *
  */
 public class FileInfo implements Serializable {
 
-    private String filePath;;
+    private String filePath;
     private FILE_TYPE type;
     private String fileName;
     private String displayName;
-    private Boolean selected;
+    private boolean selected;
     private SOURCE source;
-    private Boolean fromServer = false;
-    int fileCount;
+    private int fileCount;
 
     public FileInfo() {
         this.selected = false;
@@ -28,14 +29,6 @@ public class FileInfo implements Serializable {
         this.source = source;
     }
 
-    public Boolean getFromServer() {
-        return fromServer;
-    }
-
-    public void setFromServer(Boolean fromServer) {
-        this.fromServer = fromServer;
-    }
-
     @Override
     public boolean equals(Object o) {
         boolean equals = super.equals(o);
@@ -47,7 +40,7 @@ public class FileInfo implements Serializable {
                 return true;
             }
         }
-        return equals;
+        return false;
     }
 
     public String getDisplayName() {

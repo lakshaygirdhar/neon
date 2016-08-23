@@ -1,6 +1,5 @@
 package com.gaadi.neon.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,12 +13,17 @@ import com.scanlibrary.R;
 
 import java.util.ArrayList;
 
+/**
+ * @author lakshaygirdhar
+ * @since 22-08-2016
+ * @version 1.0
+ */
+
 public class FlashModeRecyclerHorizontalAdapter extends RecyclerView.Adapter<FlashModeRecyclerHorizontalAdapter.ViewHolder> {
 
     private static final String TAG = "FlashModeRecycler";
     private Context mContext;
     private ArrayList<String> flashList;
-    private static final int REQUEST_CAMERA = 2;
     private OnItemClickListener mItemClickListener;
 
     public FlashModeRecyclerHorizontalAdapter(Context context, ArrayList<String> imageList) {
@@ -36,30 +40,30 @@ public class FlashModeRecyclerHorizontalAdapter extends RecyclerView.Adapter<Fla
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.flash_layout_row, null);
-        return new ViewHolder((Activity) mContext, view);
+        return new ViewHolder(view);
     }
 
-    public void updateItems(ArrayList<String> mImageModel) {
-        this.flashList.clear();
-        this.flashList.addAll(mImageModel);
-        notifyDataSetChanged();
-    }
+//    public void updateItems(ArrayList<String> mImageModel) {
+//        this.flashList.clear();
+//        this.flashList.addAll(mImageModel);
+//        notifyDataSetChanged();
+//    }
 
     public ArrayList<String> getItems(){
         return  flashList;
     }
 
-    public void addItems(ArrayList<String> mImageModel) {
-        // flashList.remove(0);
-        this.flashList.addAll(mImageModel);
-        // this.flashList.add()
-        notifyDataSetChanged();
-    }
+//    public void addItems(ArrayList<String> mImageModel) {
+//        // flashList.remove(0);
+//        this.flashList.addAll(mImageModel);
+//        // this.flashList.add()
+//        notifyDataSetChanged();
+//    }
 
-    public void removeItem(int position){
-        flashList.remove(position);
-        notifyDataSetChanged();
-    }
+//    public void removeItem(int position){
+//        flashList.remove(position);
+//        notifyDataSetChanged();
+//    }
 
 
     @Override
@@ -94,7 +98,7 @@ public class FlashModeRecyclerHorizontalAdapter extends RecyclerView.Adapter<Fla
         TextView text;
         ImageView icon;
 
-        public ViewHolder(Activity mContext, View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             text = (TextView) itemView.findViewById(R.id.colorValue);
             icon = (ImageView) itemView.findViewById(R.id.flash_icon);
