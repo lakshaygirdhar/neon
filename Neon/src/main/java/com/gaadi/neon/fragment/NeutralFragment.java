@@ -34,7 +34,8 @@ import com.scanlibrary.ScanConstants;
 import java.util.ArrayList;
 
 /**
- * Created by Lakshay on 13-02-2015.
+ * Created by Lakshay
+ * @since 13-02-2015
  *
  */
 public class NeutralFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemLongClickListener, UpdateSelection,
@@ -130,51 +131,6 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
         return rootView;
     }
 
-//    @SuppressWarnings("unchecked")
-//    private void addToSelectedFiles(ArrayList<?> selectedFiles)
-//    {
-//        if(selectedFiles != null && selectedFiles.size() > 0)
-//        {
-//            if(selectedFiles.get(0) instanceof FileInfo)
-//            {
-//                for(Object fileInfo : selectedFiles)
-//                {
-//                    FileInfo fileInfo1 = (FileInfo) fileInfo;
-//                    ApplicationController.selectedFiles.add(fileInfo1.getFilePath());
-//                }
-//            }
-//            else
-//            {
-//                ArrayList<String> selectedFiles1 = (ArrayList<String>) selectedFiles;
-//                ApplicationController.selectedFiles.addAll(selectedFiles1);
-//            }
-//        }
-//    }
-
-//    private ArrayList<?> createInfos(ArrayList<?> uploadedImages)
-//    {
-//        if(uploadedImages != null)
-//        {
-//            if(uploadedImages.get(0) instanceof FileInfo){
-//
-//                return uploadedImages;
-//            } else {
-//                ArrayList<FileInfo> files = new ArrayList<>();
-//                for(int i = 0; i < uploadedImages.size(); i++)
-//                {
-//                    FileInfo fileInfo = new FileInfo();
-//                    fileInfo.setFilePath((String) uploadedImages.get(i));
-//                    fileInfo.setType(FileInfo.FILE_TYPE.IMAGE);
-//                    fileInfo.setSelected(true);
-//                    fileInfo.setFromServer(true);
-//                    files.add(fileInfo);
-//                }
-//                return files;
-//            }
-//        }
-//        return null;
-//    }
-
     @Override
     public void onResume()
     {
@@ -195,7 +151,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
     private void setUpPhotosGrid(View rootView)
     {
         gvPhotos = (DynamicGridView) rootView.findViewById(R.id.gvPhotos);
-        photosGridAdapter = new PhotosGridAdapter(getActivity(), cameraItemsFiles, 2, this, loadDefImgBig, loadDefImgSmall);
+        photosGridAdapter = new PhotosGridAdapter(getActivity(), cameraItemsFiles, 2, this, loadDefImgSmall);
 
         gvPhotos.setAdapter(photosGridAdapter);
         gvPhotos.setOnItemLongClickListener(this);

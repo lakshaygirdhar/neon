@@ -37,5 +37,6 @@
     <string name="gallery_error">Either No access or no gallery files present</string>
     <string name="wrong_format">Wrong file format selected</string>
     <string name="selected_max_photos">Maximum no of photos selected already</string>
+    <string name="click_photo">Please click atleast one photo</string>
     <color name="gray">#808080</color>
 </resources>

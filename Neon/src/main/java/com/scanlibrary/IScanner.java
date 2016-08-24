@@ -3,7 +3,9 @@ package com.scanlibrary;
 import android.net.Uri;
 
 /**
- * Created by jhansi on 04/04/15.
+ * @author lakshaygirdhar
+ * @since 13-08-2016
+ *
  */
 public interface IScanner {
 

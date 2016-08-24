@@ -3,7 +3,7 @@ package com.gaadi.neon.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.LayoutInflater;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.gaadi.neon.dynamicgrid.BaseDynamicGridAdapter;
 import com.gaadi.neon.interfaces.UpdateSelection;
 import com.gaadi.neon.util.ApplicationController;
 import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.dynamicgrid.BaseDynamicGridAdapter;
 import com.scanlibrary.R;
 
 import java.util.ArrayList;
@@ -28,18 +28,16 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
 
     private Context context;
     private UpdateSelection updateSelection;
-    private int imgLoadDefBig, imgLoadDefSmall;
+    private int imgLoadDefSmall;
 
     public PhotosGridAdapter(Context context,
                              ArrayList<FileInfo> fileInfos,
                              int columnCount,
                              UpdateSelection updateSelection,
-                             int imgLoadDefBig,
                              int imgLoadDefSmall) {
         super(context, fileInfos, columnCount);
         this.context = context;
         this.updateSelection = updateSelection;
-        this.imgLoadDefBig = imgLoadDefBig;
         this.imgLoadDefSmall = imgLoadDefSmall;
     }
 
@@ -48,8 +46,7 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
         PhotosHolder holder;
 
         if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.display_images, null);
+            convertView = View.inflate(context,R.layout.display_images, null);
             holder = new PhotosHolder();
             holder.image = (ImageView) convertView.findViewById(R.id.ivImageDisplay);
             holder.removeImage = (ImageView) convertView.findViewById(R.id.ivRemoveImage);
@@ -63,8 +60,8 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
         if (position == 0) {
             holder.tvProfile.setVisibility(View.VISIBLE);
             holder.transparentView.setVisibility(View.VISIBLE);
-            holder.transparentView.setBackgroundColor(context.getResources().getColor(R.color.tranparent_black));
-            holder.image.setBackgroundColor(context.getResources().getColor(R.color.transparent_white));
+            holder.transparentView.setBackgroundColor(ContextCompat.getColor(context, R.color.tranparent_black));
+            holder.image.setBackgroundColor(ContextCompat.getColor(context , R.color.transparent_white));
 
         } else {
             holder.tvProfile.setVisibility(View.GONE);
