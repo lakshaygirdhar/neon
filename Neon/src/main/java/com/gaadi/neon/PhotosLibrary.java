@@ -5,21 +5,25 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.widget.Toast;
 
 import com.gaadi.neon.activity.NeutralActivity;
 import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.PhotoParams;
 import com.scanlibrary.CameraActivity;
+import com.scanlibrary.R;
 
 /**
- * Created by Lakshay on 21-05-2015.
+ * @author lakshaygirdhar
+ * @since 13-08-2016
  *
  */
 public class PhotosLibrary {
 
     public static void collectPhotos(Context context, PhotoParams params, int requestCode) {
 
+        if(params != null)
         switch (params.getMode()) {
             case CAMERA_PRIORITY:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
@@ -45,6 +49,11 @@ public class PhotosLibrary {
                 cameraNeutralIntent.putExtra("photoParams", params);
                 ((Activity) context).startActivityForResult(cameraNeutralIntent, requestCode);
                 break;
+
+            default:
+                Toast.makeText(context, context.getString(R.string.invalid_mode),Toast.LENGTH_SHORT).show();
         }
+        else
+            Toast.makeText(context, context.getString(R.string.pass_valid_params), Toast.LENGTH_SHORT).show();
     }
 }

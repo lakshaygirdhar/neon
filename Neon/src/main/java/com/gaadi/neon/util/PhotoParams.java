@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by Lakshay on 12-03-2015.
+ * @author lakshaygirdhar
+ * @since 13-08-2016
  *
  */
 public class PhotoParams implements Serializable {
@@ -12,15 +13,13 @@ public class PhotoParams implements Serializable {
 
     public static String DEFAULT_API = "";
     private String imageName;
-
-
     private CameraOrientation orientation;
     private int noOfPhotos, requestCode = 11;
     private FolderOptions folderOptions;
     private boolean tagEnabled;
     private boolean metaEnabled;
     private String uploadApi;
-    private MODE mode;
+    private MODE mode = MODE.NEUTRAL;
     private ArrayList<?> imagePathList;
     private boolean enableCapturedReview;
     private boolean enableExtraBrightness;

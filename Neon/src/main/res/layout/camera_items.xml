@@ -59,7 +59,7 @@
             android:layout_width="@dimen/camera_button_width"
             android:layout_height="@dimen/camera_button_height"
             android:background="@drawable/item_selected_background"
-            android:src="@drawable/camera_click" />
+            android:src="@drawable/ic_camera" />
 
         <ImageView
             android:id="@+id/bDone"

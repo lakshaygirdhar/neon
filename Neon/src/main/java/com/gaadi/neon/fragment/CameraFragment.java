@@ -30,7 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -64,10 +63,12 @@ import java.util.List;
  *
  */
 @SuppressWarnings("deprecation,unchecked")
-public class CameraPriorityFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, Camera.PictureCallback {
+public class CameraFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, Camera.PictureCallback {
+
+    public static final int GALLERY_PICK = 99;
 
     private static final String TAG = "CameraPriorityFragment";
-	private static final int REQUEST_REVIEW = 100;
+    private static final int REQUEST_REVIEW = 100;
     private Activity mActivity;
     private PhotoParams mPhotoParams;
     private String imageName;
@@ -77,8 +78,8 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     private TextView tvImageName;
     private ImageView currentFlashMode;
     private ArrayList<String> supportedFlashModes;
-    private RecyclerView rcvFlash;
 
+    private RecyclerView rcvFlash;
     private LinearLayout scrollView;
     private ArrayList<FileInfo> imagesList = new ArrayList<>();
     private Camera mCamera;
@@ -86,9 +87,8 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     private boolean readyToTakePicture;
     private FrameLayout mCameraLayout;
     private View fragmentView;
-	private PictureTakenListener mPictureTakenListener;
+    private PictureTakenListener mPictureTakenListener;
     private boolean permissionAlreadyRequested;
-    public static final int GALLERY_PICK = 99;
 
     private ImageView mSwitchCamera;
     private boolean useFrontFacingCamera;
@@ -102,8 +102,8 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
          void sendPictureForCropping(File file);
     }
 
-    public static CameraPriorityFragment getInstance(PhotoParams photoParams) {
-        CameraPriorityFragment fragment = new CameraPriorityFragment();
+    public static CameraFragment getInstance(PhotoParams photoParams) {
+        CameraFragment fragment = new CameraFragment();
         Bundle extras = new Bundle();
         extras.putSerializable(Constants.PHOTO_PARAMS, photoParams);
         fragment.setArguments(extras);
@@ -120,10 +120,9 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        fragmentView = LayoutInflater.from(mActivity).inflate(R.layout.camera_priority_fragment, container, false);
-
+        fragmentView = LayoutInflater.from(mActivity).inflate(R.layout.camera_fragment, container, false);
         mPhotoParams = (PhotoParams) getArguments().getSerializable(Constants.PHOTO_PARAMS);
+
         if(mPhotoParams != null){
             imageName = mPhotoParams.getImageName();
             maxNumberOfImages = mPhotoParams.getNoOfPhotos();
@@ -149,7 +148,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
             buttonDone = (ImageView) fragmentView.findViewById(R.id.buttonDone);
             tvImageName = (TextView) fragmentView.findViewById(R.id.imageName);
 
-            mSwitchCamera = (ImageButton) fragmentView.findViewById(R.id.switchCamera);
+            mSwitchCamera = (ImageView) fragmentView.findViewById(R.id.switchCamera);
             if(CommonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT) {
                 mSwitchCamera.setVisibility(View.GONE);
                 useFrontFacingCamera = false;
@@ -321,12 +320,12 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
                 public void run() {
                     if (maxNumberOfImages == 0) {
                         buttonDone.setVisibility(View.VISIBLE);
-                        buttonDone.setOnClickListener(CameraPriorityFragment.this);
+                        buttonDone.setOnClickListener(CameraFragment.this);
                     }
                     if (mPhotoParams.getImageName() != null && !"".equals(mPhotoParams.getImageName())) {
                         tvImageName.setVisibility(View.VISIBLE);
                         tvImageName.setText(String.valueOf(mPhotoParams.getImageName()));
-                        tvImageName.setOnClickListener(CameraPriorityFragment.this);
+                        tvImageName.setOnClickListener(CameraFragment.this);
                     }
                 }
             }, 1000);
@@ -387,7 +386,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
 //                return;
 //            }
             if (imagesList.size() == 0) {
-                Toast.makeText(mActivity, "No Images Clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, getString(R.string.no_images), Toast.LENGTH_SHORT).show();
             } else {
                 buttonCapture.setTag("done");
                 onClick(buttonCapture);
@@ -519,7 +518,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
         return true;
     }
 
-    
+
 
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
@@ -767,7 +766,7 @@ public class CameraPriorityFragment extends Fragment implements View.OnClickList
     }
 
     private void enableDoneButton(boolean enable) {
-        buttonCapture.setImageResource(enable ? R.drawable.camera_switch : R.drawable.camera_click);
+        buttonCapture.setImageResource(enable ? R.drawable.camera_switch : R.drawable.ic_camera);
         buttonCapture.setTag(enable ? "done" : "capture");
     }
 

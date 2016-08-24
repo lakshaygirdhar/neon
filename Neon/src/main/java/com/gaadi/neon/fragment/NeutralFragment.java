@@ -3,7 +3,6 @@ package com.gaadi.neon.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +24,9 @@ import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.PhotoParams;
+import com.scanlibrary.CameraActivity;
 import com.scanlibrary.ImageReviewActivity;
 import com.scanlibrary.R;
-import com.scanlibrary.CameraActivity;
 import com.scanlibrary.ScanConstants;
 
 import java.util.ArrayList;
@@ -59,7 +57,6 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
     private PhotoParams params;
     public static int loadDefImgBig;
     public static int loadDefImgSmall;
-    private RelativeLayout coachMarksLayout;
     private ArrayList<FileInfo> cameraItemsFiles;
     private Context context;
 
@@ -95,7 +92,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
                              @Nullable
                              Bundle savedInstanceState)
     {
-        final View rootView = inflater.inflate(R.layout.camera_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.neutral_fragment, container, false);
 
         cameraItemsFiles = new ArrayList<>();
         rootView.findViewById(R.id.addPhotoCamera).setOnClickListener(this);
@@ -104,20 +101,6 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
         rootView.findViewById(R.id.ivBack).setOnClickListener(this);
         tvCount = (TextView) rootView.findViewById(R.id.photosCount);
 
-        coachMarksLayout = (RelativeLayout) rootView.findViewById(R.id.coachMarksImage);
-        coachMarksLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                coachMarksLayout.setVisibility(View.GONE);
-
-                SharedPreferences prefs = getActivity().getSharedPreferences(APP_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-                SharedPreferences.Editor prefEditor = prefs.edit();
-                prefEditor.putBoolean("SHOW_COACH_MARKS", false);
-                prefEditor.apply();
-            }
-        });
 
         params = (PhotoParams) getArguments().getSerializable(PHOTO_PARAMS);
         loadDefImgBig = getArguments().getInt(IMG_LOAD_DEF_BIG);
@@ -136,16 +119,6 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
     {
         super.onResume();
         tvCount.setText(String.valueOf(cameraItemsFiles.size()));
-        SharedPreferences prefs = getActivity().getSharedPreferences(APP_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        boolean coachMarksEnable = prefs.getBoolean("SHOW_COACH_MARKS", true);
-        if(photosGridAdapter.getCount() >= 2 && coachMarksEnable)
-        {
-            coachMarksLayout.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            coachMarksLayout.setVisibility(View.GONE);
-        }
     }
 
     private void setUpPhotosGrid(View rootView)

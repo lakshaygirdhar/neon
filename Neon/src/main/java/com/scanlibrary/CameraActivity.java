@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.activity.ReviewImageActivity;
-import com.gaadi.neon.fragment.CameraPriorityFragment;
+import com.gaadi.neon.fragment.CameraFragment;
 import com.gaadi.neon.fragment.NeutralFragment;
 import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.Constants;
@@ -30,9 +30,9 @@ import java.util.ArrayList;
  *
  */
 @SuppressWarnings("deprecation,unchecked")
-public class CameraActivity extends AppCompatActivity implements IScanner, CameraPriorityFragment.PictureTakenListener {
+public class CameraActivity extends AppCompatActivity implements IScanner, CameraFragment.PictureTakenListener {
 
-    private static final String TAG = "ScanActivity";
+    private static final String TAG = "CameraActivity";
     public static final int GALLERY_PICK = 99;
     private static final int REQUEST_REVIEW = 100;
     private Camera camera;
@@ -55,7 +55,7 @@ public class CameraActivity extends AppCompatActivity implements IScanner, Camer
 
         photoParams = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
         if (null != photoParams) {
-            CameraPriorityFragment fragment = CameraPriorityFragment.getInstance(photoParams);
+            CameraFragment fragment = CameraFragment.getInstance(photoParams);
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
         } else {
@@ -81,7 +81,6 @@ public class CameraActivity extends AppCompatActivity implements IScanner, Camer
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         outState.putSerializable(Constants.IMAGES_SELECTED, imagesList);
     }
 
@@ -154,16 +153,11 @@ public class CameraActivity extends AppCompatActivity implements IScanner, Camer
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-
             if (requestCode == GALLERY_PICK) {
                 imagesList = (ArrayList<FileInfo>) data.getSerializableExtra(GalleryActivity.GALLERY_SELECTED_PHOTOS);
-                if (imagesList != null && imagesList.size() > 0) {
-                    Log.i(TAG,"iamgeList from gallery "+imagesList);
-                }
             } else {
                 if (requestCode == REQUEST_REVIEW) {
                     readyToTakePicture = true;
-
                     Intent intent = new Intent();
                     intent.putExtra(ScanConstants.CAPTURED_IMAGE_PATH,data.getStringExtra(Constants.IMAGE_PATH));
                     setResult(ScanConstants.SINGLE_CAPTURED,intent);
