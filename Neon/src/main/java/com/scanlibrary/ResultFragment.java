@@ -96,7 +96,7 @@ public class ResultFragment extends Fragment {
     private class BWButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            transformed = ((CameraActivity) getActivity()).getBWBitmap(original);
+            transformed = ((ScanActivity) getActivity()).getBWBitmap(original);
             scannedImageView.setImageBitmap(transformed);
         }
     }
@@ -104,7 +104,7 @@ public class ResultFragment extends Fragment {
     private class MagicColorButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            transformed = ((CameraActivity) getActivity()).getMagicColorBitmap(original);
+            transformed = ((ScanActivity) getActivity()).getMagicColorBitmap(original);
             scannedImageView.setImageBitmap(transformed);
         }
     }
@@ -120,7 +120,7 @@ public class ResultFragment extends Fragment {
     private class GrayButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            transformed = ((CameraActivity) getActivity()).getGrayBitmap(original);
+            transformed = ((ScanActivity) getActivity()).getGrayBitmap(original);
             scannedImageView.setImageBitmap(transformed);
         }
     }

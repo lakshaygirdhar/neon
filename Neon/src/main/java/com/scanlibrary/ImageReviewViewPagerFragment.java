@@ -233,7 +233,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             //TODO PRINCE
 
             imagePathForCropping = imageModel.getFilePath();
-            Intent intent = new Intent(getActivity(),CameraActivity.class);
+            Intent intent = new Intent(getActivity(),ScanActivity.class);
             if (imageModel.getFilePath().contains("file://")){
                 imageModel.setFilePath(imageModel.getFilePath().replace("file://",""));
             }

@@ -36,7 +36,7 @@ import java.util.ArrayList;
  */
 public class CameraActivity1 extends Activity implements View.OnClickListener, Camera.PictureCallback {
 
-    private static final String TAG = "CameraActivity";
+    private static final String TAG = "ScanActivity";
     public static final String CAMERA_IMAGES = "captured_images";
     private Camera camera;
     private ImageView capturedImageView;

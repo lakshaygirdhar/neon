@@ -242,7 +242,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 //            mCamera.setPreviewDisplay(holder);
 //            mCamera.setParameters(parameters);
 //            mCamera.startPreview();
-//            CameraActivity.readyToTakePicture = true;
+//            ScanActivity.readyToTakePicture = true;
             if (readyListener != null)
                 readyListener.readyToTakePicture(true);
 //

@@ -30,9 +30,9 @@ import java.util.ArrayList;
  *
  */
 @SuppressWarnings("deprecation,unchecked")
-public class CameraActivity extends AppCompatActivity implements IScanner, CameraFragment.PictureTakenListener {
+public class ScanActivity extends AppCompatActivity implements IScanner, CameraFragment.PictureTakenListener {
 
-    private static final String TAG = "CameraActivity";
+    private static final String TAG = "ScanActivity";
     public static final int GALLERY_PICK = 99;
     private static final int REQUEST_REVIEW = 100;
     private Camera camera;
