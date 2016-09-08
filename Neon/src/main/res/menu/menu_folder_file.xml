@@ -4,8 +4,7 @@
     <item
         android:id="@+id/menu_next"
         android:orderInCategory="100"
-        android:title="NEXT"
-
+        android:title="@string/next"
         android:actionViewClass="android.widget.TextView"
         app:showAsAction="always" />
 </menu>

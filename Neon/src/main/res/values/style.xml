@@ -15,7 +15,7 @@
     <style name="TextAppearance.FontPath" parent="android:TextAppearance">
     </style>
 
-    <style name="AppCompatNoActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="NeonAppCompatNoActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:colorAccent" tools:targetApi="21">@color/colorPrimary</item>
         <item name="android:textColorHighlight">@color/gray</item>
         <item name="android:textColorHint">@color/gray</item>
