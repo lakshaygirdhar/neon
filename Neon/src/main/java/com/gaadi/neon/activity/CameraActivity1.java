@@ -161,7 +161,7 @@ public class CameraActivity1 extends Activity implements View.OnClickListener, C
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
 
-        File pictureFile = Constants.getMediaOutputFile(Constants.TYPE_IMAGE);
+        File pictureFile = Constants.getMediaOutputFile(this,Constants.TYPE_IMAGE);
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                 Uri.parse("file://" + pictureFile.getAbsolutePath())));
         if (pictureFile == null) {

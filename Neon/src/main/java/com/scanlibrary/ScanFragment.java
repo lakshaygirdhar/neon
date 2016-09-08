@@ -36,8 +36,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by jhansi on 29/03/15.
+ * @author lakshaygirdhar
+ * @since  29/03/15.
+ *
  */
+@SuppressWarnings("deprecation,unchecked")
 public class ScanFragment extends Fragment {
 
     private final String TAG = "ScanFragment";

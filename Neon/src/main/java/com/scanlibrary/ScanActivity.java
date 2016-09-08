@@ -25,92 +25,37 @@ import java.util.ArrayList;
 
 /**
  * @author lakshaygirdhar
- * @since 13-08-2016
  * @version 1.0
- *
+ * @since 13-08-2016
  */
 @SuppressWarnings("deprecation,unchecked")
-public class ScanActivity extends AppCompatActivity implements IScanner, CameraFragment.PictureTakenListener {
+public class ScanActivity extends AppCompatActivity implements IScanner
+{
 
     private static final String TAG = "ScanActivity";
-    public static final int GALLERY_PICK = 99;
-    private static final int REQUEST_REVIEW = 100;
-    private Camera camera;
-    private PhotoParams photoParams;
-    public boolean readyToTakePicture;
-    private CameraPreview cameraPreview;
-    private ArrayList<FileInfo> imagesList = new ArrayList<>();
-    private ArrayList<String> outputImages = new ArrayList<>();
+    public static final int REQUEST_REVIEW = 100;
 
     @Override
-    public void finish() {
+    public void finish()
+    {
         super.finish();
         overridePendingTransition(0, com.scanlibrary.R.anim.slide_out_bottom);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_priority_items);
 
-        photoParams = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
-        if (null != photoParams) {
-            CameraFragment fragment = CameraFragment.getInstance(photoParams);
-            FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-        } else {
-            scanFragmentForCropping((File)getIntent().getSerializableExtra(ScanConstants.IMAGE_FILE_FOR_CROPPING));
-        }
+        scanFragmentForCropping((File) getIntent().getSerializableExtra(ScanConstants.IMAGE_FILE_FOR_CROPPING));
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        try {
-            camera.setPreviewCallback(null);
-            cameraPreview.getHolder().removeCallback(cameraPreview);
-            camera.stopPreview();
-            camera.release();
-            camera = null;
-            cameraPreview = null;
-        } catch (Exception e) {
-             Log.e(TAG, e.getMessage());
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(Constants.IMAGES_SELECTED, imagesList);
-    }
-
-    @Override
-    public void onPictureTaken(String filePath) {
-        outputImages.clear();
-        outputImages.add(filePath);
-        setResult(RESULT_OK, new Intent().putStringArrayListExtra(Constants.RESULT_IMAGES, outputImages));
-        finish();
-    }
-
-    @Override
-    public void onGalleryPicsCollected(ArrayList<FileInfo> infos) {
-        getSupportFragmentManager().popBackStackImmediate();
-        if(infos.size()>0) {
-            setResult(ScanConstants.MULTIPLE_CAPTURED, new Intent().putExtra(ScanConstants.CAMERA_IMAGES,infos));
-            finish();
-        } else {
-            Toast.makeText(this, getString(R.string.click_photo), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void sendPictureForCropping(File file) {
-        scanFragmentForCropping(file);
-    }
-
-    private void scanFragmentForCropping(File file) {
+    private void scanFragmentForCropping(File file)
+    {
         ScanFragment fragment = new ScanFragment();
         Bundle bundle = new Bundle();
+        PhotoParams photoParams = new PhotoParams();
         bundle.putParcelable(ScanConstants.SELECTED_BITMAP, Uri.fromFile(file));
         bundle.putSerializable(Constants.PHOTO_PARAMS, photoParams);
         fragment.setArguments(bundle);
@@ -122,12 +67,14 @@ public class ScanActivity extends AppCompatActivity implements IScanner, CameraF
     }
 
     @Override
-    public void onBitmapSelect(Uri uri) {
+    public void onBitmapSelect(Uri uri)
+    {
 
     }
 
     @Override
-    public void onScanFinish(Uri uri) {
+    public void onScanFinish(Uri uri)
+    {
         Intent intent = new Intent(this, ReviewImageActivity.class);
         intent.putExtra(Constants.IMAGE_PATH, uri.toString());
         startActivityForResult(intent, REQUEST_REVIEW);
@@ -143,39 +90,30 @@ public class ScanActivity extends AppCompatActivity implements IScanner, CameraF
 
     public native float[] getPoints(Bitmap bitmap);
 
-    static {
+    static
+    {
         System.loadLibrary("opencv_java");
         System.loadLibrary("Scanner");
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == GALLERY_PICK) {
-                imagesList = (ArrayList<FileInfo>) data.getSerializableExtra(GalleryActivity.GALLERY_SELECTED_PHOTOS);
-            } else {
-                if (requestCode == REQUEST_REVIEW) {
-                    readyToTakePicture = true;
-                    Intent intent = new Intent();
-                    intent.putExtra(ScanConstants.CAPTURED_IMAGE_PATH,data.getStringExtra(Constants.IMAGE_PATH));
-                    setResult(ScanConstants.SINGLE_CAPTURED,intent);
-                    finish();
-                }
-            }
-        }
-        else if (resultCode == RESULT_CANCELED) {
-            FragmentManager manager = getSupportFragmentManager();
-            manager.popBackStack(ScanFragment.class.toString(),FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            if (null == photoParams) {
-                finish();
-            }
+        if(requestCode == REQUEST_REVIEW)
+        {
+
+            Intent intent = new Intent();
+            intent.putExtra(ScanConstants.CAPTURED_IMAGE_PATH, data.getStringExtra(Constants.IMAGE_PATH));
+            setResult(ScanConstants.SINGLE_CAPTURED, intent);
+            finish();
         }
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         super.onBackPressed();
         finish();
     }

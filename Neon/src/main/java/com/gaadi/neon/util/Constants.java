@@ -1,7 +1,10 @@
 package com.gaadi.neon.util;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
+
+import com.scanlibrary.R;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -56,9 +59,9 @@ public class Constants {
         return itemsFragments;
     }
 
-    public static File getMediaOutputFile(int type) {
+    public static File getMediaOutputFile(Context context, int type) {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "Gaadi Gcloud");
+                Environment.DIRECTORY_PICTURES), context.getString(R.string.app_name));
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {

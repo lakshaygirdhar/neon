@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gaadi.neon.activity.CameraActivity;
 import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.adapter.PhotosGridAdapter;
 import com.gaadi.neon.dynamicgrid.DynamicGridView;
@@ -24,7 +25,6 @@ import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.PhotoParams;
-import com.scanlibrary.ScanActivity;
 import com.scanlibrary.ImageReviewActivity;
 import com.scanlibrary.R;
 import com.scanlibrary.ScanConstants;
@@ -39,12 +39,8 @@ import java.util.ArrayList;
 public class NeutralFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemLongClickListener, UpdateSelection,
         AdapterView.OnItemClickListener
 {
-    private static final String TAG = "CameraItemsFragment";
-
-    public static final String APP_SHARED_PREFERENCE = "com.gcloud.gaadi.prefs";
     public static final String ADD_PHOTOS = "addPhotos";
-    public static final int CODE_CAMERA = 148;
-    public static final int CODE_GALLERY = 256;
+    public static  int CODE_CAMERA = 148;
     private static final int OPEN_IMAGE_VIEW_PAGER_SCREEN = 102;
     private static final String SELECTED_IMAGES = "alreadySelected";
     public static final String IMG_LOAD_DEF_BIG = "IMG_LOAD_DEF_BIG";
@@ -70,9 +66,8 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
         startActivityForResult(intent, OPEN_IMAGE_VIEW_PAGER_SCREEN);
     }
 
-
     public static NeutralFragment newInstance(Context context, PhotoParams params,
-                                                  ArrayList<?> uploadedImages, int loadDefaultResBig, int loadDefaultResSmall)
+                                              ArrayList<?> uploadedImages, int loadDefaultResBig, int loadDefaultResSmall)
     {
         NeutralFragment fragment = new NeutralFragment();
         Bundle bundle = new Bundle();
@@ -173,7 +168,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
         assert getView() != null;
         switch(requestCode)
         {
-            case CODE_CAMERA:
+            case 148:
                 if(data != null)
                 {
                     cameraList = (ArrayList<FileInfo>) data.getSerializableExtra(ScanConstants.CAMERA_IMAGES);
@@ -181,7 +176,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
                 }
                 break;
 
-            case CODE_GALLERY:
+            case 256:
                 if(data != null)
                 {
                     galleryList = (ArrayList<FileInfo>) data.getSerializableExtra(GalleryActivity.GALLERY_SELECTED_PHOTOS);
@@ -217,7 +212,6 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
     //To remove files from main adapter which were unselected from the gallery folder.
     private void checkForDeletedFiles(ArrayList<FileInfo> cameraItemsFiles)
     {
-
         ArrayList<FileInfo> deleteFiles = new ArrayList<>();
         for(FileInfo fileInfo : cameraItemsFiles)
         {
@@ -271,7 +265,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
                 return;
             }
             //            imagesHandler.gaHandler(Constants.SCREEN_CAMERA_ITEMS, Constants.CATEGORY_CAMERA, Constants.ACTION_CLICK, Constants.TAKE_PHOTO, 0L);
-            Intent intent = new Intent(getActivity(), ScanActivity.class);
+            Intent intent = new Intent(getActivity(), CameraActivity.class);
             intent.putExtra(GalleryActivity.MAX_COUNT, maxPhotos - cameraItemsFiles.size());
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(PHOTO_PARAMS, params);
@@ -295,7 +289,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
             intent1.putExtra(PHOTO_PARAMS, params);
             //intent1.putExtra(GalleryActivity.MAX_COUNT, maxPhotos-cameraItemsFiles.size());
             intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivityForResult(intent1, CODE_GALLERY);
+            startActivityForResult(intent1, 256);
         }
         else if(v.getId() == R.id.done)
         {
@@ -319,7 +313,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
             }
             catch(Exception e)
             {
-                Log.d(TAG, "onClick: " + e.getLocalizedMessage());
+                Log.d("", "onClick: " + e.getLocalizedMessage());
             }
             finally
             {

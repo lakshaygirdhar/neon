@@ -41,7 +41,7 @@ public class Utils {
         Uri pictureFileUri = null;
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        File pictureFile = Constants.getMediaOutputFile(Constants.TYPE_IMAGE);
+        File pictureFile = Constants.getMediaOutputFile(context,Constants.TYPE_IMAGE);
         Log.e(TAG, pictureFile.getAbsolutePath());
         try {
             FileOutputStream fos = new FileOutputStream(pictureFile);
@@ -64,7 +64,7 @@ public class Utils {
     public static Uri insertCroppedBitmap(Context context, Bitmap pictureBitmap) {
 
         OutputStream fOut = null;
-        File file = Constants.getMediaOutputFile(Constants.TYPE_IMAGE); // the File to save to
+        File file = Constants.getMediaOutputFile(context,Constants.TYPE_IMAGE); // the File to save to
         try {
             fOut = new FileOutputStream(file);
         } catch (FileNotFoundException e) {
