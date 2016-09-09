@@ -16,6 +16,7 @@ import com.gaadi.neon.adapter.ImagesFoldersAdapter;
 import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.NeonConstants;
 import com.gaadi.neon.util.PhotoParams;
 import com.scanlibrary.R;
 
@@ -119,7 +120,7 @@ public class GalleryActivity extends BaseActivity implements AdapterView.OnItemC
         super.onActivityResult(requestCode, resultCode, data);
         Intent intent = new Intent();
         if (resultCode == GalleryFiles.RESULT_SKIP_FOLDERS) {
-            intent.putExtra(GALLERY_SELECTED_PHOTOS, data.getExtras().getSerializable(GalleryFiles.SELECTED_FILES));
+            intent.putExtra(NeonConstants.GALLERY_SELECTED_PHOTOS, data.getExtras().getSerializable(GalleryFiles.SELECTED_FILES));
             setResult(RESULT_OK, intent);
             finish();
         }

@@ -17,6 +17,7 @@ import com.gaadi.neon.interfaces.UpdateSelection;
 import com.gaadi.neon.util.ApplicationController;
 import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.NeonConstants;
 import com.scanlibrary.R;
 
 import java.util.ArrayList;
@@ -117,7 +118,7 @@ public class GalleryFiles extends BaseActivity implements UpdateSelection, Loade
                 CommonUtils.removeFileInfo(ApplicationController.selectedFiles, deletedFiles, false);
             }
             Intent intent = new Intent();
-            intent.putExtra(SELECTED_FILES, folderSelectedFiles);
+            intent.putExtra(GalleryFiles.SELECTED_FILES, folderSelectedFiles);
             setResult(RESULT_SKIP_FOLDERS, intent);
             finish();
         }

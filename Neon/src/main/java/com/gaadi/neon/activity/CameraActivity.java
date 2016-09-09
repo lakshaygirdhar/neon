@@ -64,7 +64,7 @@ public class CameraActivity extends AppCompatActivity implements CameraFragment.
     }
 
     @Override
-    public void onGalleryPicsCollected(ArrayList<FileInfo> infos)
+    public void onPicturesFinalized(ArrayList<FileInfo> infos)
     {
         getSupportFragmentManager().popBackStackImmediate();
         if(infos.size() > 0)

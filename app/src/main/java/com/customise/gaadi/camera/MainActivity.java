@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.PhotoParams;
 import com.gaadi.neon.PhotosLibrary;
+import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.NeonConstants;
+import com.gaadi.neon.util.PhotoParams;
 import com.scanlibrary.ScanConstants;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.d(TAG, "onActivityResult: " + requestCode);
         if (requestCode == REQUEST_CODE) {
             if (resultCode == ScanConstants.SINGLE_CAPTURED) {
                 String imagePath = data.getStringExtra(ScanConstants.CAPTURED_IMAGE_PATH);
@@ -49,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
                 ArrayList<FileInfo> images = (ArrayList<FileInfo>) data.getSerializableExtra(ScanConstants.CAMERA_IMAGES);
                 Log.i(TAG,"Selected images info "+ images.size());
             }
+
+            ArrayList<FileInfo> files = (ArrayList<FileInfo>) data.getSerializableExtra(NeonConstants.GALLERY_SELECTED_PHOTOS);
+            Log.d(TAG, "onActivityResult: " + files.size());
         }
     }
 }

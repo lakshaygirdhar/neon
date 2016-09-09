@@ -98,7 +98,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
 
     public interface PictureTakenListener {
          void onPictureTaken(String filePath);
-         void onGalleryPicsCollected(ArrayList<FileInfo> infos);
+         void onPicturesFinalized(ArrayList<FileInfo> infos);
          void sendPictureForCropping(File file);
     }
 
@@ -262,7 +262,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                     buttonCapture.setTag("done");
                     onClick(buttonCapture);
                     if(enableCapturedReview) {
-                        mPictureTakenListener.onGalleryPicsCollected(imagesList);
+                        mPictureTakenListener.onPicturesFinalized(imagesList);
                         imagesList.clear();
                     }
                 }
@@ -389,7 +389,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                 }
             } else if (v.getTag().equals("done")) {
                 if (imagesList.size() > 0) {
-                    mPictureTakenListener.onGalleryPicsCollected(imagesList);
+                    mPictureTakenListener.onPicturesFinalized(imagesList);
                 } else {
                     Toast.makeText(mActivity, "Please click atleast one photo", Toast.LENGTH_SHORT).show();
                 }
