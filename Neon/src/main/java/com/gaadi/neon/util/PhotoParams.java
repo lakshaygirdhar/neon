@@ -32,7 +32,7 @@ public class PhotoParams implements Serializable {
     }
 
 
-    public enum MODE {CAMERA_PRIORITY, NEUTRAL, GALLERY_PRIORITY;}
+    public enum MODE {CAMERA_PRIORITY, NEUTRAL, GALLERY_PRIORITY,CAMERA_ONLY,GALLERY_ONLY}
 
     public enum CameraOrientation {
         LANDSCAPE, PORTRAIT, BOTH;

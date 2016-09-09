@@ -69,7 +69,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
 
     private static final String TAG = "CameraPriorityFragment";
     private static final int REQUEST_REVIEW = 100;
-    private Activity mActivity;
     private PhotoParams mPhotoParams;
     private String imageName;
     private int maxNumberOfImages;
@@ -87,6 +86,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
     private boolean readyToTakePicture;
     private FrameLayout mCameraLayout;
     private View fragmentView;
+    private Activity mActivity;
     private PictureTakenListener mPictureTakenListener;
     private boolean permissionAlreadyRequested;
 
@@ -113,22 +113,22 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity = activity;
         mPictureTakenListener = (PictureTakenListener) activity;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragmentView = LayoutInflater.from(mActivity).inflate(R.layout.camera_fragment, container, false);
+        fragmentView = LayoutInflater.from(getContext()).inflate(R.layout.camera_fragment, container, false);
         mPhotoParams = (PhotoParams) getArguments().getSerializable(Constants.PHOTO_PARAMS);
-
+        mActivity = getActivity();
         if(mPhotoParams != null){
             imageName = mPhotoParams.getImageName();
             maxNumberOfImages = mPhotoParams.getNoOfPhotos();
             enableCapturedReview = mPhotoParams.getEnableCapturedReview();
             PhotoParams.CameraOrientation orientation = mPhotoParams.getOrientation();
             cameraFacing = mPhotoParams.getCameraFace();
+            Log.d(TAG, "onCreateView: " + cameraFacing);
             boolean isGalleryEnabled = mPhotoParams.isGalleryFromCameraEnabled();
             //View to add rectangle on tap to focus
             drawingView = new DrawingView(mActivity);
@@ -136,7 +136,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
             setOrientation(mActivity, orientation);
 
             LinearLayoutManager layoutManager
-                    = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                    = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
 
             currentFlashMode = (ImageView) fragmentView.findViewById(R.id.currentFlashMode);
 
@@ -176,6 +176,26 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
     }
 
     @Override
+    public void onPause()
+    {
+        super.onPause();
+        try
+        {
+            mCamera.setPreviewCallback(null);
+            mCameraPreview.getHolder().removeCallback(mCameraPreview);
+            mCamera.stopPreview();
+            mCamera.release();
+            mCamera = null;
+            mCameraPreview = null;
+        }
+        catch(Exception e)
+        {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -183,7 +203,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                 = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
                 ViewGroup.LayoutParams.FILL_PARENT);
 
-        mActivity.addContentView(drawingView, layoutParamsDrawing);
+        getActivity().addContentView(drawingView, layoutParamsDrawing);
 
     }
 
@@ -276,6 +296,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                     return;
                 }
                 if (cameraFacing == PhotoParams.CameraFacing.FRONT) {
+                    Log.d(TAG, "onResume: open front");
                     mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
                     mSwitchCamera.setVisibility(View.GONE);
                 } else {
@@ -284,6 +305,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
 
                 //To set hardware camera rotation
                 setCameraRotation();
+                Log.d(TAG, "onResume: setRotation " );
                 Camera.Parameters parameters = mCamera.getParameters();
                 createSupportedFlashList(parameters);
 
@@ -338,7 +360,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
 
     private void createSupportedFlashList(Camera.Parameters parameters) {
         supportedFlashModes = (ArrayList<String>) parameters.getSupportedFlashModes();
-        Log.d(TAG, "createSupportedFlashList: " + supportedFlashModes.size());
         if (supportedFlashModes == null) {
             currentFlashMode.setVisibility(View.GONE);
             rcvFlash.setVisibility(View.GONE);

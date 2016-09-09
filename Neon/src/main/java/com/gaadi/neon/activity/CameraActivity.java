@@ -1,17 +1,14 @@
 package com.gaadi.neon.activity;
 
 import android.content.Intent;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.gaadi.neon.fragment.CameraFragment;
 import com.gaadi.neon.fragment.NeutralFragment;
-import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.PhotoParams;
@@ -30,13 +27,10 @@ import java.util.ArrayList;
 @SuppressWarnings("deprecation,unchecked")
 public class CameraActivity extends AppCompatActivity implements CameraFragment.PictureTakenListener
 {
-    private static final String TAG = "CameraActivity";
     public static final int GALLERY_PICK = 99;
 
-    private Camera camera;
     private PhotoParams photoParams;
     public boolean readyToTakePicture;
-    private CameraPreview cameraPreview;
     private ArrayList<FileInfo> imagesList = new ArrayList<>();
     private ArrayList<String> outputImages = new ArrayList<>();
 
@@ -46,29 +40,11 @@ public class CameraActivity extends AppCompatActivity implements CameraFragment.
             Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.camera_priority_items);
         photoParams = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
         CameraFragment fragment = CameraFragment.getInstance(photoParams);
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-    }
-
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        try
-        {
-            camera.setPreviewCallback(null);
-            cameraPreview.getHolder().removeCallback(cameraPreview);
-            camera.stopPreview();
-            camera.release();
-            camera = null;
-            cameraPreview = null;
-        }
-        catch(Exception e)
-        {
-            Log.e(TAG, e.getMessage());
-        }
     }
 
     @Override

@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         PhotoParams params = new PhotoParams();
+        params.setMode(PhotoParams.MODE.GALLERY_ONLY);
         params.setCameraFace(PhotoParams.CameraFacing.FRONT);
 //        params.setMode(PhotoParams.MODE.NEUTRAL);
 //        params.setOrientation(PhotoParams.CameraOrientation.PORTRAIT);
