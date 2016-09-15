@@ -120,7 +120,7 @@ public class GalleryActivity extends BaseActivity implements AdapterView.OnItemC
         super.onActivityResult(requestCode, resultCode, data);
         Intent intent = new Intent();
         if (resultCode == GalleryFiles.RESULT_SKIP_FOLDERS) {
-            intent.putExtra(NeonConstants.GALLERY_SELECTED_PHOTOS, data.getExtras().getSerializable(GalleryFiles.SELECTED_FILES));
+            intent.putExtra(NeonConstants.GALLERY_SELECTED_IMAGES, data.getExtras().getSerializable(GalleryFiles.SELECTED_FILES));
             setResult(RESULT_OK, intent);
             finish();
         }

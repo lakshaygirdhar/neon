@@ -1,6 +1,7 @@
 package com.gaadi.neon.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -24,6 +25,7 @@ import com.gaadi.neon.util.ApplicationController;
 import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.NeonConstants;
 import com.gaadi.neon.util.PhotoParams;
 import com.scanlibrary.ImageReviewActivity;
 import com.scanlibrary.R;
@@ -293,13 +295,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
         }
         else if(v.getId() == R.id.done)
         {
-            //            if (cameraItemsFiles.size() > maxPhotos) {
-            //                Toast.makeText(getActivity().getApplicationContext(), "Maximum photos can be : " + maxPhotos, Toast.LENGTH_SHORT).show();
-            //                return;
-            //            }
-            //            imagesHandler.outputImages(cameraItemsFiles, deletedImages);
-
-            getActivity().setResult(ScanConstants.MULTIPLE_CAPTURED, new Intent().putExtra(ScanConstants.CAMERA_IMAGES, cameraItemsFiles));
+            getActivity().setResult(Activity.RESULT_OK, new Intent().putExtra(NeonConstants.COLLECTED_IMAGES, cameraItemsFiles));
             getActivity().finish();
         }
         else if(v.getId() == R.id.ivBack)

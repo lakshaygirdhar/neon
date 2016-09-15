@@ -9,7 +9,6 @@ import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonConstants;
 import com.gaadi.neon.util.PhotoParams;
-import com.scanlibrary.ScanConstants;
 
 import java.util.ArrayList;
 
@@ -24,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         PhotoParams params = new PhotoParams();
-        params.setMode(PhotoParams.MODE.GALLERY_ONLY);
-        params.setCameraFace(PhotoParams.CameraFacing.FRONT);
+        params.setMode(PhotoParams.MODE.NEUTRAL);
+        params.setCameraFace(PhotoParams.CameraFacing.BACK);
 //        params.setMode(PhotoParams.MODE.NEUTRAL);
 //        params.setOrientation(PhotoParams.CameraOrientation.PORTRAIT);
 //        params.setNoOfPhotos(2);
@@ -41,18 +40,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: " + requestCode);
+        Log.d(TAG, "onActivityResult: " + requestCode + " responseCode : " + resultCode);
         if (requestCode == REQUEST_CODE) {
-            if (resultCode == ScanConstants.SINGLE_CAPTURED) {
-                String imagePath = data.getStringExtra(ScanConstants.CAPTURED_IMAGE_PATH);
-                Log.i(TAG , "Captured ImagePath "+imagePath);
-            } else if (resultCode == ScanConstants.MULTIPLE_CAPTURED) {
-                ArrayList<FileInfo> images = (ArrayList<FileInfo>) data.getSerializableExtra(ScanConstants.CAMERA_IMAGES);
+            if (resultCode == RESULT_OK) {
+                ArrayList<FileInfo> images = (ArrayList<FileInfo>) data.getSerializableExtra(NeonConstants.COLLECTED_IMAGES);
                 Log.i(TAG,"Selected images info "+ images.size());
             }
 
-            ArrayList<FileInfo> files = (ArrayList<FileInfo>) data.getSerializableExtra(NeonConstants.GALLERY_SELECTED_PHOTOS);
-            Log.d(TAG, "onActivityResult: " + files.size());
+//            ArrayList<FileInfo> files = (ArrayList<FileInfo>) data.getSerializableExtra(NeonConstants.GALLERY_SELECTED_IMAGES);
+//            Log.d(TAG, "onActivityResult: " + files.size());
         }
     }
 }

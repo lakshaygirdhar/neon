@@ -7,5 +7,6 @@ package com.gaadi.neon.util;
  */
 public class NeonConstants
 {
-    public static final String GALLERY_SELECTED_PHOTOS = "galleryPhotos";
+    public static final String GALLERY_SELECTED_IMAGES = "galleryPhotos";
+    public static final String COLLECTED_IMAGES = "images";
 }
