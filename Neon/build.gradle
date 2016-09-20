@@ -13,6 +13,7 @@ android {
                     moduleName "Scanner"
                 }
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     sourceSets.main
             {
@@ -31,17 +32,13 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    //    compile 'com.google.android.gms:play-services-appindexing:7.5.0'
     compile 'com.android.support:support-v4:23.2.0'
     compile 'com.android.support:appcompat-v7:23.2.0'
-    //    compile project.APP_COMPAT_LIBRARY
     compile project.GLIDE_LIBRARY
     compile project.GSON_LIBRARY
-    compile 'com.karumi:expandableselector:1.0.0'
-    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.google.android.gms:play-services:9.0.0'
     compile project.RECYCLERVIEW
-    //    compile 'com.android.support:support-v4:23.2.1'
-    //    compile 'com.android.support:support-v4:23.2.1'
+    compile 'com.android.support:multidex:1.0.0'
 }
 ext {
     bintrayRepo = 'maven'
@@ -56,7 +53,7 @@ ext {
     siteUrl = 'https://github.com/lakshaygirdhar/neon'
     gitUrl = 'https://github.com/lakshaygirdhar/neon'
 
-    libraryVersion = '1.1.5'
+    libraryVersion = '1.1.6'
 
     developerId = 'lakshay'
     developerName = 'Lakshay Girdhar'
