@@ -13,9 +13,6 @@ import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.PhotoParams;
 import com.scanlibrary.R;
-import com.scanlibrary.ScanActivity;
-import com.scanlibrary.ScanConstants;
-import com.scanlibrary.ScanFragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,7 +66,7 @@ public class CameraActivity extends AppCompatActivity implements CameraFragment.
         getSupportFragmentManager().popBackStackImmediate();
         if(infos.size() > 0)
         {
-            setResult(ScanConstants.MULTIPLE_CAPTURED, new Intent().putExtra(ScanConstants.CAMERA_IMAGES, infos));
+//            setResult(ScanConstants.MULTIPLE_CAPTURED, new Intent().putExtra(ScanConstants.CAMERA_IMAGES, infos));
             finish();
         }
         else
@@ -81,9 +78,9 @@ public class CameraActivity extends AppCompatActivity implements CameraFragment.
     @Override
     public void sendPictureForCropping(File file)
     {
-        Intent intent = new Intent(this, ScanActivity.class);
-        intent.putExtra(ScanConstants.IMAGE_FILE_FOR_CROPPING,file);
-        startActivityForResult(intent,ScanActivity.REQUEST_REVIEW);
+//        Intent intent = new Intent(this, ScanActivity.class);
+//        intent.putExtra(ScanConstants.IMAGE_FILE_FOR_CROPPING,file);
+//        startActivityForResult(intent,ScanActivity.REQUEST_REVIEW);
     }
 
     @Override
@@ -103,12 +100,12 @@ public class CameraActivity extends AppCompatActivity implements CameraFragment.
         }
         else if(resultCode == RESULT_CANCELED)
         {
-            FragmentManager manager = getSupportFragmentManager();
-            manager.popBackStack(ScanFragment.class.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            if(null == photoParams)
-            {
-                finish();
-            }
+//            FragmentManager manager = getSupportFragmentManager();
+//            manager.popBackStack(ScanFragment.class.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//            if(null == photoParams)
+//            {
+//                finish();
+//            }
         }
     }
 }

@@ -27,9 +27,7 @@ import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonConstants;
 import com.gaadi.neon.util.PhotoParams;
-import com.scanlibrary.ImageReviewActivity;
 import com.scanlibrary.R;
-import com.scanlibrary.ScanConstants;
 
 import java.util.ArrayList;
 
@@ -61,11 +59,11 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
-        Intent intent = new Intent(getActivity(), ImageReviewActivity.class);
-        intent.putExtra(ScanConstants.IMAGE_MODEL_FOR__REVIEW, cameraItemsFiles);
-        intent.putExtra(ScanConstants.IMAGE_REVIEW_POSITION, position);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivityForResult(intent, OPEN_IMAGE_VIEW_PAGER_SCREEN);
+//        Intent intent = new Intent(getActivity(), ImageReviewActivity.class);
+//        intent.putExtra(ScanConstants.IMAGE_MODEL_FOR__REVIEW, cameraItemsFiles);
+//        intent.putExtra(ScanConstants.IMAGE_REVIEW_POSITION, position);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        startActivityForResult(intent, OPEN_IMAGE_VIEW_PAGER_SCREEN);
     }
 
     public static NeutralFragment newInstance(Context context, PhotoParams params,
@@ -173,7 +171,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
             case 148:
                 if(data != null)
                 {
-                    cameraList = (ArrayList<FileInfo>) data.getSerializableExtra(ScanConstants.CAMERA_IMAGES);
+                    cameraList = (ArrayList<FileInfo>) data.getSerializableExtra("");
                     updateGrid(cameraList, ADD_PHOTOS);
                 }
                 break;
@@ -196,17 +194,17 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
                 onClick(getView().findViewById(R.id.addPhotoGallary));
                 break;
             case OPEN_IMAGE_VIEW_PAGER_SCREEN:
-                if(resultCode == ScanConstants.RESULT_FROM_IMAGE_REVIEW_ACTIVITY)
-                {
-                    if(null != data)
-                    {
-                        int index = data.getIntExtra(ScanConstants.IMAGE_INDEX_SENT_FOR_CROPPING, 0);
-                        cameraItemsFiles.set(index, (FileInfo) data.getSerializableExtra(ScanConstants.IMAGE_RECEIVED_AFTER_CROPPING));
-                        photosGridAdapter.set(cameraItemsFiles);
-                        photosGridAdapter.notifyDataSetChanged();
-                        gvPhotos.invalidate();
-                    }
-                }
+//                if(resultCode == ScanConstants.RESULT_FROM_IMAGE_REVIEW_ACTIVITY)
+//                {
+//                    if(null != data)
+//                    {
+//                        int index = data.getIntExtra(ScanConstants.IMAGE_INDEX_SENT_FOR_CROPPING, 0);
+//                        cameraItemsFiles.set(index, (FileInfo) data.getSerializableExtra(ScanConstants.IMAGE_RECEIVED_AFTER_CROPPING));
+//                        photosGridAdapter.set(cameraItemsFiles);
+//                        photosGridAdapter.notifyDataSetChanged();
+//                        gvPhotos.invalidate();
+//                    }
+//                }
                 break;
         }
     }
