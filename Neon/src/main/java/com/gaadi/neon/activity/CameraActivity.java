@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gaadi.neon.fragment.CameraFragment;
@@ -25,8 +26,7 @@ import java.util.ArrayList;
 public class CameraActivity extends AppCompatActivity implements CameraFragment.PictureTakenListener
 {
     public static final int GALLERY_PICK = 99;
-
-    private PhotoParams photoParams;
+    private static final String TAG = "CameraActivity";
     public boolean readyToTakePicture;
     private ArrayList<FileInfo> imagesList = new ArrayList<>();
     private ArrayList<String> outputImages = new ArrayList<>();
@@ -38,7 +38,7 @@ public class CameraActivity extends AppCompatActivity implements CameraFragment.
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_priority_items);
-        photoParams = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
+        PhotoParams photoParams = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
         CameraFragment fragment = CameraFragment.getInstance(photoParams);
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -66,7 +66,8 @@ public class CameraActivity extends AppCompatActivity implements CameraFragment.
         getSupportFragmentManager().popBackStackImmediate();
         if(infos.size() > 0)
         {
-//            setResult(ScanConstants.MULTIPLE_CAPTURED, new Intent().putExtra(ScanConstants.CAMERA_IMAGES, infos));
+            Log.d(TAG, "onPicturesFinalized: " + infos.get(0).getFilePath());
+            setResult(RESULT_OK, new Intent().putExtra(Constants.RESULT_IMAGES, infos));
             finish();
         }
         else

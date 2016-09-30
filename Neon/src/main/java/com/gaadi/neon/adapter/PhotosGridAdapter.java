@@ -3,7 +3,6 @@ package com.gaadi.neon.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -57,16 +56,16 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
             holder = (PhotosHolder) convertView.getTag();
         }
 
-        if (position == 0) {
-            holder.tvProfile.setVisibility(View.VISIBLE);
-            holder.transparentView.setVisibility(View.VISIBLE);
-            holder.transparentView.setBackgroundColor(ContextCompat.getColor(context, R.color.tranparent_black));
-            holder.image.setBackgroundColor(ContextCompat.getColor(context , R.color.transparent_white));
-
-        } else {
+//        if (position == 0) {
+//            holder.tvProfile.setVisibility(View.VISIBLE);
+//            holder.transparentView.setVisibility(View.VISIBLE);
+//            holder.transparentView.setBackgroundColor(ContextCompat.getColor(context, R.color.tranparent_black));
+//            holder.image.setBackgroundColor(ContextCompat.getColor(context , R.color.transparent_white));
+//
+//        } else {
             holder.tvProfile.setVisibility(View.GONE);
             holder.transparentView.setVisibility(View.GONE);
-        }
+//        }
         holder.removeImage.setTag(position);
         holder.removeImage.setOnClickListener(this);
 

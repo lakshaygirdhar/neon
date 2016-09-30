@@ -42,5 +42,6 @@
     <string name="invalid_mode">Please pass valid mode in params</string>
     <string name="no_images">No Images Clicked</string>
     <string name="next">NEXT</string>
+    <string name="profile_photo">Profile Photo</string>
     <color name="gray">#808080</color>
 </resources>

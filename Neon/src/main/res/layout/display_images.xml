@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/grid_column_width"
-    android:layout_height="@dimen/image_overlay_height"
-    android:orientation="vertical">
+                android:layout_width="@dimen/grid_column_width"
+                android:layout_height="@dimen/image_overlay_height"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical">
 
     <ImageView
         android:contentDescription="@null"
@@ -27,7 +28,7 @@
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_cancel" />
+        app:srcCompat="@drawable/ic_cancel" />
 
 
     <TextView
@@ -36,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="Profile Photo"
+        android:text="@string/profile_photo"
         android:textColor="@color/white" />
 
 </RelativeLayout>
