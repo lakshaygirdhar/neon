@@ -298,7 +298,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                 if (cameraFacing == PhotoParams.CameraFacing.FRONT) {
                     Log.d(TAG, "onResume: open front");
                     mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
-                    mSwitchCamera.setVisibility(View.GONE);
+//                    mSwitchCamera.setVisibility(View.GONE);
                 } else {
                     mCamera = Camera.open();
                 }
