@@ -12,6 +12,7 @@ import com.gaadi.neon.fragment.CameraFragment;
 import com.gaadi.neon.fragment.NeutralFragment;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.NeonConstants;
 import com.gaadi.neon.util.PhotoParams;
 import com.scanlibrary.R;
 
@@ -67,7 +68,7 @@ public class CameraActivity extends AppCompatActivity implements CameraFragment.
         if(infos.size() > 0)
         {
             Log.d(TAG, "onPicturesFinalized: " + infos.get(0).getFilePath());
-            setResult(RESULT_OK, new Intent().putExtra(Constants.RESULT_IMAGES, infos));
+            setResult(RESULT_OK, new Intent().putExtra(NeonConstants.COLLECTED_IMAGES, infos));
             finish();
         }
         else

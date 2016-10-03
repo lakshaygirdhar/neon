@@ -171,7 +171,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
             case 148:
                 if(data != null)
                 {
-                    cameraList = (ArrayList<FileInfo>) data.getSerializableExtra(Constants.RESULT_IMAGES);
+                    cameraList = (ArrayList<FileInfo>) data.getSerializableExtra(NeonConstants.COLLECTED_IMAGES);
                     updateGrid(cameraList, ADD_PHOTOS);
                 }
                 break;
