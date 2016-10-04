@@ -295,7 +295,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                     permissionAlreadyRequested = true;
                     return;
                 }
-                if (cameraFacing == PhotoParams.CameraFacing.FRONT) {
+                if (cameraFacing == PhotoParams.CameraFacing.FRONT && CommonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     Log.d(TAG, "onResume: open front");
                     mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
 //                    mSwitchCamera.setVisibility(View.GONE);

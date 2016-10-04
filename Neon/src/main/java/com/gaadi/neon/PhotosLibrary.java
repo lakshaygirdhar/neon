@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.gaadi.neon.activity.CameraActivity;
 import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.activity.NeutralActivity;
+import com.gaadi.neon.util.ApplicationController;
 import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.PhotoParams;
@@ -23,6 +24,9 @@ import com.scanlibrary.R;
 public class PhotosLibrary {
 
     public static void collectPhotos(Context context, PhotoParams params, int requestCode) {
+
+        if(ApplicationController.selectedFiles != null && ApplicationController.selectedFiles.size()>0)
+            ApplicationController.selectedFiles.clear();
 
         if(params != null)
         switch (params.getMode()) {

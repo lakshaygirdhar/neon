@@ -4,7 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/grid_column_width"
     android:layout_height="@dimen/three_coloumn_height"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <ImageView
@@ -32,6 +33,6 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/ic_check"
+        app:srcCompat="@drawable/ic_check"
         android:visibility="gone" />
 </RelativeLayout>

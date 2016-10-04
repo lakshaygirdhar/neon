@@ -12,11 +12,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
     }
-    sourceSets.main
-            {
-                jni.srcDirs = []
-                jniLibs.srcDir 'src/main/libs'
-            }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -50,7 +46,7 @@ ext {
     siteUrl = 'https://github.com/lakshaygirdhar/neon'
     gitUrl = 'https://github.com/lakshaygirdhar/neon'
 
-    libraryVersion = '2.0.3'
+    libraryVersion = '2.0.4'
 
     developerId = 'lakshay'
     developerName = 'Lakshay Girdhar'
