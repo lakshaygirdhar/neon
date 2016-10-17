@@ -412,11 +412,11 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                 buttonCapture.setTag("done");
                 onClick(buttonCapture);
             }
-        } else if (v.getId() == R.id.auto) {
+        } /*else if (v.getId() == R.id.auto) {
             Camera.Parameters params = mCamera.getParameters();
             params.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
             mCamera.setParameters(params);
-        } /*else if (v.getId() == R.id.on) {
+        }*/ /*else if (v.getId() == R.id.on) {
             Camera.Parameters params = mCamera.getParameters();
             params.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
             mCamera.setParameters(params);
