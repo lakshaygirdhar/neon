@@ -25,11 +25,8 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-//    compile 'com.android.support:support-v4:23.2.0'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile project.GLIDE_LIBRARY
-//    compile project.GSON_LIBRARY
-//    compile 'com.google.android.gms:play-services:9.6.1'
     compile project.RECYCLERVIEW
     compile 'com.android.support:multidex:1.0.1'
 }
