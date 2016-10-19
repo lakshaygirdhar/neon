@@ -1,5 +1,12 @@
 package com.gaadi.neon.fragment;
 
+/**
+ * @author lakshaygirdhar
+ * @version 1.0
+ * @since 19/10/16
+ *
+ */
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -35,9 +42,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
 import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.CommonUtils;
@@ -56,24 +60,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Lakshay
- * @since 13-08-2016
- * @version 1.0
- *
- */
 @SuppressWarnings("deprecation,unchecked")
-public class CameraFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, Camera.PictureCallback {
-
-    public static final int GALLERY_PICK = 99;
+public class CameraFragment1 extends Fragment implements View.OnClickListener, View.OnTouchListener, Camera.PictureCallback {
 
     private static final String TAG = "CameraFragment";
     private static final int REQUEST_REVIEW = 100;
     private PhotoParams mPhotoParams;
-    private String imageName;
     private int maxNumberOfImages;
     private DrawingView drawingView;
-    private ImageView buttonCapture, buttonGallery, buttonDone;
+
     private TextView tvImageName;
     private ImageView currentFlashMode;
     private ArrayList<String> supportedFlashModes;
@@ -95,14 +90,24 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
     private float mDist;
     private PhotoParams.CameraFacing cameraFacing;
 
-    public interface PictureTakenListener {
-         void onPictureTaken(String filePath);
-         void onPicturesFinalized(ArrayList<FileInfo> infos);
-         void sendPictureForCropping(File file);
+    public void clickPicture()
+    {
+        if (readyToTakePicture) {
+            if(mCamera != null) {
+                mCamera.takePicture(null, null, this);
+            }
+            readyToTakePicture = false;
+        }
     }
 
-    public static CameraFragment getInstance(PhotoParams photoParams) {
-        CameraFragment fragment = new CameraFragment();
+    public interface PictureTakenListener {
+        void onPictureTaken(String filePath);
+        void onPicturesFinalized(ArrayList<FileInfo> infos);
+        void sendPictureForCropping(File file);
+    }
+
+    public static CameraFragment1 getInstance(PhotoParams photoParams) {
+        CameraFragment1 fragment = new CameraFragment1();
         Bundle extras = new Bundle();
         extras.putSerializable(Constants.PHOTO_PARAMS, photoParams);
         fragment.setArguments(extras);
@@ -115,20 +120,24 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
         mPictureTakenListener = (PictureTakenListener) activity;
     }
 
+    public void startPreview(){
+        mCamera.startPreview();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragmentView = LayoutInflater.from(getContext()).inflate(R.layout.camera_fragment, container, false);
+        fragmentView = LayoutInflater.from(getContext()).inflate(R.layout.camera_fragment_layout, container, false);
         mPhotoParams = (PhotoParams) getArguments().getSerializable(Constants.PHOTO_PARAMS);
         mActivity = getActivity();
         if(mPhotoParams != null){
-            imageName = mPhotoParams.getImageName();
+
             maxNumberOfImages = mPhotoParams.getNoOfPhotos();
             enableCapturedReview = mPhotoParams.getEnableCapturedReview();
             PhotoParams.CameraOrientation orientation = mPhotoParams.getOrientation();
             cameraFacing = mPhotoParams.getCameraFace();
             Log.d(TAG, "onCreateView: " + cameraFacing);
-            boolean isGalleryEnabled = mPhotoParams.isGalleryFromCameraEnabled();
+
             //View to add rectangle on tap to focus
             drawingView = new DrawingView(mActivity);
 
@@ -142,9 +151,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
             rcvFlash = (RecyclerView)fragmentView.findViewById(R.id.flash_listview);
             rcvFlash.setLayoutManager(layoutManager);
 
-            buttonCapture = (ImageView) fragmentView.findViewById(R.id.buttonCapture);
-            buttonGallery = (ImageView) fragmentView.findViewById(R.id.buttonGallery);
-            buttonDone = (ImageView) fragmentView.findViewById(R.id.buttonDone);
+
             tvImageName = (TextView) fragmentView.findViewById(R.id.imageName);
 
             ImageView mSwitchCamera = (ImageView) fragmentView.findViewById(R.id.switchCamera);
@@ -152,24 +159,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                 mSwitchCamera.setVisibility(View.GONE);
                 useFrontFacingCamera = false;
             }
-            if (!isGalleryEnabled) {
-                buttonGallery.setVisibility(View.GONE);
-            }
 
             mSwitchCamera.setOnClickListener(this);
 
-            scrollView = (LinearLayout) fragmentView.findViewById(R.id.imageHolderView);
 
-            //for handling screen orientation
-            if (savedInstanceState != null) {
-                Log.e(Constants.TAG, "savedInstanceState not null");
-                imagesList = (ArrayList<FileInfo>) savedInstanceState.getSerializable(Constants.IMAGES_SELECTED);
-                addInScrollView(imagesList);
-            }
             fragmentView.setOnTouchListener(this);
 
         } else {
-            Toast.makeText(getContext(),getString(R.string.pass_params),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.pass_params), Toast.LENGTH_SHORT).show();
         }
         return fragmentView;
     }
@@ -200,7 +197,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
 
         ViewGroup.LayoutParams layoutParamsDrawing
                 = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-                ViewGroup.LayoutParams.FILL_PARENT);
+                                             ViewGroup.LayoutParams.FILL_PARENT);
 
         getActivity().addContentView(drawingView, layoutParamsDrawing);
     }
@@ -252,27 +249,12 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-
-            if (requestCode == GALLERY_PICK) {
-//                if (maxNumberOfImages == 0) {
-                imagesList = (ArrayList<FileInfo>) data.getSerializableExtra(GalleryActivity.GALLERY_SELECTED_PHOTOS);
-                if (imagesList != null && imagesList.size()>0) {
-                    buttonCapture.setTag("done");
-                    onClick(buttonCapture);
-                    if(enableCapturedReview) {
-                        mPictureTakenListener.onPicturesFinalized(imagesList);
-                        imagesList.clear();
-                    }
-                }
-            } else if (requestCode == REQUEST_REVIEW) {
+            if (requestCode == REQUEST_REVIEW) {
                 String capturedFilePath = "";
                 mPictureTakenListener.onPictureTaken(capturedFilePath);
             }
         } else {
-            if (requestCode == REQUEST_REVIEW) {
-                readyToTakePicture = true;
-                buttonCapture.setEnabled(true);
-            } else if (requestCode != 101) {
+             if (requestCode != 101) {
                 mActivity.setResult(resultCode);
                 mActivity.finish();
             }
@@ -288,7 +270,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                 if (!permissionAlreadyRequested && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                         && !CommonUtils.checkForPermission(mActivity,
                                                            new String[]{Manifest.permission.CAMERA,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                                                   Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                                            Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
                     permissionAlreadyRequested = true;
                     return;
@@ -296,7 +278,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                 if (cameraFacing == PhotoParams.CameraFacing.FRONT && CommonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     Log.d(TAG, "onResume: open front");
                     mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
-//                    mSwitchCamera.setVisibility(View.GONE);
+                    //                    mSwitchCamera.setVisibility(View.GONE);
                 } else {
                     mCamera = Camera.open();
                 }
@@ -324,34 +306,15 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
 
                 //set the screen layout to fullscreen
                 mActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                                               WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-                buttonCapture.setOnClickListener(this);
-                enableDoneButton(false);
-                buttonGallery.setOnClickListener(this);
+
 
             } catch (Exception e) {
                 Log.e("Camera Open Exception", "" + e.getMessage());
             }
 
-            //To make sure that name appears only after animation ends
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (maxNumberOfImages == 0) {
-                        buttonDone.setVisibility(View.VISIBLE);
-                        buttonDone.setOnClickListener(CameraFragment.this);
-                    }
-                    if (mPhotoParams.getImageName() != null && !"".equals(mPhotoParams.getImageName())) {
-                        tvImageName.setVisibility(View.VISIBLE);
-                        tvImageName.setText(String.valueOf(mPhotoParams.getImageName()));
-                        tvImageName.setOnClickListener(CameraFragment.this);
-                    }
-                }
-            }, 1000);
-
         } else {
-            enableDoneButton(false);
             Log.e(TAG, "camera not null");
         }
     }
@@ -369,66 +332,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.buttonCapture) {
-            if (v.getTag().equals("capture")) {
-                if (readyToTakePicture) {
-                    if(mCamera != null) {
-                        mCamera.takePicture(null, null, this);
-                    }
-                    readyToTakePicture = false;
-                    //llActionsCamera.setEnabled(false);
-//                    buttonCapture.setEnabled(false);
-                    if (maxNumberOfImages == 1)
-                        buttonGallery.setEnabled(false);
-                    if (maxNumberOfImages > 1 || maxNumberOfImages == 0) {
-//                        buttonDone.setVisibility(View.VISIBLE);
-                        buttonDone.setOnClickListener(this);
-                    }
-                }
-            } else if (v.getTag().equals("done")) {
-                if (imagesList.size() > 0) {
-                    mPictureTakenListener.onPicturesFinalized(imagesList);
-                } else {
-                    Toast.makeText(mActivity, getString(R.string.please_select_atleast_one), Toast.LENGTH_SHORT).show();
-                }
-            }
-        } else if (v.getId() == R.id.buttonGallery) {
-            Intent intent = new Intent(mActivity, GalleryActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra(GalleryActivity.MAX_COUNT, maxNumberOfImages);
-            intent.putExtra(Constants.PHOTO_PARAMS, mPhotoParams);
-            startActivityForResult(intent, GALLERY_PICK);
-
-        } else if (v.getId() == R.id.buttonDone) {
-//            if (enableCapturedReview ) {
-//                mPictureTakenListener.onPicturesCompleted();
-//                return;
-//            }
-            if (imagesList.size() == 0) {
-                Toast.makeText(mActivity, getString(R.string.no_images), Toast.LENGTH_SHORT).show();
-            } else {
-                buttonCapture.setTag("done");
-                onClick(buttonCapture);
-            }
-        } /*else if (v.getId() == R.id.auto) {
-            Camera.Parameters params = mCamera.getParameters();
-            params.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
-            mCamera.setParameters(params);
-        }*/ /*else if (v.getId() == R.id.on) {
-            Camera.Parameters params = mCamera.getParameters();
-            params.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-            mCamera.setParameters(params);
-
-        } else if (v.getId() == R.id.off) {
-            Camera.Parameters params = mCamera.getParameters();
-            params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-            mCamera.setParameters(params);
-
-        } else if (v.getId() == R.id.torch) {
-            Camera.Parameters params = mCamera.getParameters();
-            params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-            mCamera.setParameters(params);
-        } */else if (v.getId() == R.id.switchCamera) {
+        if (v.getId() == R.id.switchCamera) {
             int cameraFacing = initCameraId();
             if (cameraFacing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 stopCamera();
@@ -469,7 +373,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
 
 
             if (event.getPointerCount() > 1) {
-// handle multi-touch events
+                // handle multi-touch events
                 if (action == MotionEvent.ACTION_POINTER_DOWN) {
                     mDist = getFingerSpacing(event);
                 } else if (action == MotionEvent.ACTION_MOVE && params.isZoomSupported()) {
@@ -477,7 +381,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                     handleZoom(event, params);
                 }
             } else {
-// handle single touch events
+                // handle single touch events
                 if (action == MotionEvent.ACTION_UP) {
                     handleFocus(event, params);
                 }
@@ -486,39 +390,39 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                 return true;
             }
 
-//            Camera camera = mCamera.getCamera();
-//            mCamera.cancelAutoFocus();
+            //            Camera camera = mCamera.getCamera();
+            //            mCamera.cancelAutoFocus();
             final Rect focusRect = calculateTapArea(event.getX(), event.getY(), 1f);
 
-//            Camera.Parameters parameters = mCamera.getParameters();
-//            if (parameters.getFocusMode() != Camera.Parameters.FOCUS_MODE_AUTO) {
-//                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-//            }
-//            if (parameters.getMaxNumFocusAreas() > 0) {
-//                List<Camera.Area> mylist = new ArrayList<Camera.Area>();
-//                mylist.add(new Camera.Area(focusRect, 1000));
-//                parameters.setFocusAreas(mylist);
-//            }
+            //            Camera.Parameters parameters = mCamera.getParameters();
+            //            if (parameters.getFocusMode() != Camera.Parameters.FOCUS_MODE_AUTO) {
+            //                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+            //            }
+            //            if (parameters.getMaxNumFocusAreas() > 0) {
+            //                List<Camera.Area> mylist = new ArrayList<Camera.Area>();
+            //                mylist.add(new Camera.Area(focusRect, 1000));
+            //                parameters.setFocusAreas(mylist);
+            //            }
 
             try {
                 mCamera.autoFocus(null);
-//                mCamera.cancelAutoFocus();
-//                mCamera.setParameters(parameters);
-//                mCamera.startPreview();
-//                mCamera.autoFocus(new Camera.AutoFocusCallback() {
-//                    @Override
-//                    public void onAutoFocus(boolean success, Camera camera) {
-////                        if (camera.getParameters().getFocusMode() != Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE) {
-////                            Camera.Parameters parameters = camera.getParameters();
-////                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-////                            if (parameters.getMaxNumFocusAreas() > 0) {
-////                                parameters.setFocusAreas(null);
-////                            }
-////                            camera.setParameters(parameters);
-////                            camera.startPreview();   //causing crash here
-////                        }
-//                    }
-//                });
+                //                mCamera.cancelAutoFocus();
+                //                mCamera.setParameters(parameters);
+                //                mCamera.startPreview();
+                //                mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                //                    @Override
+                //                    public void onAutoFocus(boolean success, Camera camera) {
+                ////                        if (camera.getParameters().getFocusMode() != Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE) {
+                ////                            Camera.Parameters parameters = camera.getParameters();
+                ////                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                ////                            if (parameters.getMaxNumFocusAreas() > 0) {
+                ////                                parameters.setFocusAreas(null);
+                ////                            }
+                ////                            camera.setParameters(parameters);
+                ////                            camera.startPreview();   //causing crash here
+                ////                        }
+                //                    }
+                //                });
 
                 drawingView.setHaveTouch(true, focusRect);
                 drawingView.invalidate();
@@ -544,7 +448,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
         new ImagePostProcessing(mActivity, data).execute();
     }
 
-    private class ImagePostProcessing extends AsyncTask<Void, Void, File> {
+    private class ImagePostProcessing extends AsyncTask<Void, Void, File>
+    {
 
         private Context context;
         private byte[] data;
@@ -615,7 +520,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                 fos.close();
                 Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
                 mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        pictureFileUri));
+                                                   pictureFileUri));
 
             } catch (FileNotFoundException e) {
                 Log.d(TAG, "File not found: " + e.getMessage());
@@ -640,52 +545,20 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                 progressDialog.dismiss();
             if (file != null) {
                 if(!enableCapturedReview || mPhotoParams.getMode() == PhotoParams.MODE.NEUTRAL) {
-                    updateCapturedPhotos(file);
+                    mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
                     return;
                 }
                 mPictureTakenListener.sendPictureForCropping(file);
-//                capturedFilePath = file.getPath();
-//                Intent intent = new Intent(mActivity, ReviewImageActivity.class);
-//                intent.putExtra(Constants.IMAGE_NAME, mPhotoParams.getImageName());
-//                intent.putExtra(Constants.IMAGE_PATH, file.getPath());
-//                mActivity.startActivityForResult(intent, REQUEST_REVIEW);
                 mCamera.startPreview();
             } else {
-                Toast.makeText(context, "Camera Error. Kindly try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
                 readyToTakePicture = true;
-                buttonCapture.setEnabled(true);
                 mCamera.startPreview();
             }
         }
-
     }
 
-    //updates the listview with the photos clicked by the camera
-    private void updateCapturedPhotos(File pictureFile) {
-        FileInfo fileInfo = new FileInfo();
-        fileInfo.setFilePath(pictureFile.getAbsolutePath());
-        fileInfo.setFileName(pictureFile.getAbsolutePath().substring(pictureFile.getAbsolutePath().lastIndexOf("/") + 1));
-        fileInfo.setSource(FileInfo.SOURCE.PHONE_CAMERA);
-        imagesList.add(fileInfo);
-        if (maxNumberOfImages == 1) {
-            buttonCapture.setTag("done");
-            onClick(buttonCapture);
-        } else {
-            Log.e(Constants.TAG, "updateCapturedPhotos");
-            if (imagesList.size() >= 1)
-                scrollView.setVisibility(View.VISIBLE);
-            else
-                scrollView.setVisibility(View.GONE);
-            addInScrollView(fileInfo);
 
-            if (maxNumberOfImages > 0) {
-                updateView(imagesList.size() < maxNumberOfImages);
-            }
-            mCamera.startPreview();
-            readyToTakePicture = true;
-            buttonCapture.setEnabled(true);
-        }
-    }
 
 
     private void setCameraRotation() {
@@ -716,51 +589,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
         mCamera.setParameters(params);
     }
 
-    //It is called when configuration(orientation) of screen changes
-    private void addInScrollView(ArrayList<FileInfo> infos) {
-        if (infos != null && infos.size() > 0) {
-            for (FileInfo info : infos) {
-                scrollView.addView(createImageView(info));
-            }
-            scrollView.setVisibility(View.VISIBLE);
-        }
-        Log.e(Constants.TAG, "Add multiple items in scroll ");
-    }
-
-    private void addInScrollView(FileInfo info) {
-        Log.e(Constants.TAG, " add in scroll View ");
-        scrollView.addView(createImageView(info));
-        scrollView.setVisibility(View.VISIBLE);
-    }
-
-    private View createImageView(final FileInfo info) {
-        final File file = new File(info.getFilePath());
-        if (!file.exists())
-            return null;
-        final View outerView = View.inflate(getContext(),R.layout.camera_priority_overlay,null);
-        outerView.findViewById(R.id.ivRemoveImage).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scrollView.removeView(outerView);
-                imagesList.remove(info);
-                if (maxNumberOfImages > 0)
-                    updateView(imagesList.size() < maxNumberOfImages);
-                if (imagesList.size() < 1) {
-                    buttonDone.setVisibility(View.GONE);
-                    scrollView.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        Glide.with(this).load("file://" + info.getFilePath())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .crossFade()
-                .centerCrop()
-                .placeholder(R.drawable.image_load_default_small)
-                .into((ImageView) outerView.findViewById(R.id.ivCaptured));/**/
-        return outerView;
-    }
-
     private void setOrientation(Activity activity, PhotoParams.CameraOrientation orientation) {
         if (orientation != null) {
             if (orientation.equals(PhotoParams.CameraOrientation.LANDSCAPE)) {
@@ -773,21 +601,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
         }
     }
 
-    private void updateView(boolean status) {
-//        enableDoneButton(!status);
-        if (!status) {
-            buttonCapture.setVisibility(View.GONE);
-        } else {
-            buttonCapture.setVisibility(View.VISIBLE);
-        }
-        buttonDone.setVisibility(View.VISIBLE);
-        tvImageName.setText(status ? imageName : "Press Done");
-    }
 
-    private void enableDoneButton(boolean enable) {
-        buttonCapture.setImageResource(enable ? R.drawable.camera_switch : R.drawable.ic_camera);
-        buttonCapture.setTag(enable ? "done" : "capture");
-    }
+
 
     private Rect calculateTapArea(float x, float y, float coefficient) {
         int FOCUS_AREA_SIZE = 200;
@@ -797,7 +612,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
         int top = clamp((int) y - areaSize / 2, 0, mCameraPreview.getHeight() - areaSize);
 
         RectF rectF = new RectF(left, top, left + areaSize, top + areaSize);
-//        matrix.mapRect(rectF);
+        //        matrix.mapRect(rectF);
 
         return new Rect(Math.round(rectF.left), Math.round(rectF.top), Math.round(rectF.right), Math.round(rectF.bottom));
     }
@@ -830,18 +645,18 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
 
     public void handleFocus(MotionEvent event, Camera.Parameters params) {
         Log.d(TAG, "handleFocus: " + event);
-//        int pointerId = event.getPointerId(0);
-//        int pointerIndex = event.findPointerIndex(pointerId);
-// Get the pointer's current position
-//        float x = event.getX(pointerIndex);
-//        float y = event.getY(pointerIndex);
+        //        int pointerId = event.getPointerId(0);
+        //        int pointerIndex = event.findPointerIndex(pointerId);
+        // Get the pointer's current position
+        //        float x = event.getX(pointerIndex);
+        //        float y = event.getY(pointerIndex);
 
         List<String> supportedFocusModes = params.getSupportedFocusModes();
         if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
             mCamera.autoFocus(new Camera.AutoFocusCallback() {
                 @Override
                 public void onAutoFocus(boolean b, Camera camera) {
-// currently set to auto-focus on single touch
+                    // currently set to auto-focus on single touch
                 }
             });
         }
@@ -849,7 +664,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
 
     /** Determine the space between the first two fingers */
     private float getFingerSpacing(MotionEvent event) {
-// ...
+        // ...
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
         return (float)Math.sqrt(x * x + y * y);
@@ -902,17 +717,13 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
 
                 //set the screen layout to fullscreen
                 mActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                                               WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-                buttonCapture.setOnClickListener(this);
-                enableDoneButton(false);
-                buttonGallery.setOnClickListener(this);
 
             } catch (Exception e) {
                 Log.e("Camera Open Exception", "" + e.getMessage());
             }
         } else {
-            enableDoneButton(false);
             Log.e(TAG, "camera not null");
         }
     }
@@ -994,5 +805,4 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
         }
         return cameraId;
     }
-
 }

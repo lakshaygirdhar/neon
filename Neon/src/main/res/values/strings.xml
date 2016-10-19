@@ -43,5 +43,7 @@
     <string name="no_images">No Images Clicked</string>
     <string name="next">NEXT</string>
     <string name="profile_photo">Profile Photo</string>
+    <string name="please_select_atleast_one">Please click atleast one photo</string>
+    <string name="camera_error">Camera Error. Kindly try again !!</string>
     <color name="gray">#808080</color>
 </resources>

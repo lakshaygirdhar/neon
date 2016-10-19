@@ -1,185 +1,294 @@
 package com.gaadi.neon.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gaadi.neon.adapter.CapturedImagesAdapter;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.gaadi.neon.fragment.CameraFragment;
+import com.gaadi.neon.fragment.CameraFragment1;
 import com.gaadi.neon.fragment.NeutralFragment;
-import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.NeonConstants;
 import com.gaadi.neon.util.PhotoParams;
 import com.scanlibrary.R;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-
-//import android.hardware.camera2.CameraManager;
-
 /**
- * Created by Lakshay on 18-02-2015.
+ * @author lakshaygirdhar
+ * @version 1.0
+ * @since 8/9/16
+ *
  */
-public class CameraActivity1 extends Activity implements View.OnClickListener, Camera.PictureCallback {
-
-    private static final String TAG = "ScanActivity";
-    public static final String CAMERA_IMAGES = "captured_images";
-    private Camera camera;
-    private ImageView capturedImageView;
-    CameraPreview cameraPreview;
-    private LinearLayout llCapturedImages;
-    LinearLayout llActionsCamera;
-    int maxCount;
-
-    public static Boolean readyToTakePicture = false;
-
-    private ArrayList<FileInfo> imagesList = new ArrayList<FileInfo>();
-    private CapturedImagesAdapter imagesAdapter;
-    private ListView lvCaptureImages;
+@SuppressWarnings("deprecation,unchecked")
+public class CameraActivity1 extends AppCompatActivity implements CameraFragment.PictureTakenListener, View.OnClickListener
+{
+    public static final int GALLERY_PICK = 99;
+    private static final String TAG = "CameraActivity";
+    public boolean readyToTakePicture;
+    private ArrayList<FileInfo> imagesList = new ArrayList<>();
+    private ArrayList<String> outputImages = new ArrayList<>();
+    private ImageView buttonCapture;
+    private ImageView buttonDone;
+    private CameraFragment1 mFragment;
+    private PhotoParams photoParams;
+    private int maxNumberOfImages;
+    private LinearLayout scrollView;
+    private TextView tvImageName;
+    private String imageName;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(
+            @Nullable
+                    Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.camera_items);
-        llActionsCamera = (LinearLayout) findViewById(R.id.llActionsCamera);
-        PhotoParams params = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
-        maxCount = getIntent().getIntExtra(GalleryActivity.MAX_COUNT, 0);
-        if (params != null) {
-            PhotoParams.CameraOrientation orientation = params.getOrientation();
-            setOrientation(orientation);
+        setContentView(R.layout.camera_activity_layout);
+
+
+        buttonCapture = (ImageView) findViewById(R.id.buttonCapture);
+        ImageView buttonGallery = (ImageView) findViewById(R.id.buttonGallery);
+        buttonDone = (ImageView) findViewById(R.id.buttonDone);
+
+        scrollView = (LinearLayout) findViewById(R.id.imageHolderView);
+        tvImageName = (TextView) findViewById(R.id.tvImageName);
+
+        photoParams = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
+        maxNumberOfImages = photoParams.getNoOfPhotos();
+        imageName = photoParams.getImageName();
+
+        boolean isGalleryEnabled = photoParams.isGalleryFromCameraEnabled();
+        if (!isGalleryEnabled) {
+            buttonGallery.setVisibility(View.GONE);
         }
+
+        buttonCapture.setOnClickListener(this);
+        enableDoneButton(false);
+        buttonGallery.setOnClickListener(this);
+
+        //To make sure that name appears only after animation ends
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (maxNumberOfImages == 0) {
+                    buttonDone.setVisibility(View.VISIBLE);
+                    buttonDone.setOnClickListener(CameraActivity1.this);
+                }
+                if (photoParams.getImageName() != null && !"".equals(photoParams.getImageName())) {
+                    tvImageName.setVisibility(View.VISIBLE);
+                    tvImageName.setText(String.valueOf(photoParams.getImageName()));
+                    tvImageName.setOnClickListener(CameraActivity1.this);
+                }
+            }
+        }, 1000);
+
+        mFragment = CameraFragment1.getInstance(photoParams);
+        FragmentManager manager = getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
+
+        //for handling screen orientation
+        if (savedInstanceState != null) {
+            Log.e(Constants.TAG, "savedInstanceState not null");
+            imagesList = (ArrayList<FileInfo>) savedInstanceState.getSerializable(Constants.IMAGES_SELECTED);
+            addInScrollView(imagesList);
+        }
+    }
+
+    private void enableDoneButton(boolean enable) {
+        buttonCapture.setImageResource(enable ? R.drawable.camera_switch : R.drawable.ic_camera);
+        buttonCapture.setTag(enable ? "done" : "capture");
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (camera == null) {
-            try {
-                camera = Camera.open();
-
-                cameraPreview = new CameraPreview(this, camera);
-                FrameLayout camera_lLayout = (FrameLayout) findViewById(R.id.camera_preview);
-                camera_lLayout.addView(cameraPreview);
-
-                //set the screen layout to fullscreen
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-                findViewById(R.id.button_capture).setOnClickListener(this);
-                findViewById(R.id.bDone).setOnClickListener(this);
-                findViewById(R.id.bBack).setOnClickListener(this);
-
-                capturedImageView = (ImageView) findViewById(R.id.ivCaptured);
-                lvCaptureImages = (ListView) findViewById(R.id.lvCapturedImages);
-                imagesAdapter = new CapturedImagesAdapter(this, imagesList);
-                lvCaptureImages.setAdapter(imagesAdapter);
-                imagesAdapter.notifyDataSetChanged();
-            } catch (Exception e) {
-                Log.e("Camera Open Exception", "" + e.getMessage());
-            }
-        } else {
-            Log.e(TAG, "camera not null");
-        }
-    }
-
-    private void setOrientation(PhotoParams.CameraOrientation orientation) {
-        if (orientation != null) {
-            if (orientation.equals(PhotoParams.CameraOrientation.LANDSCAPE)) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            } else if (orientation.equals(PhotoParams.CameraOrientation.PORTRAIT)) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            }
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.button_capture) {
-            if (imagesAdapter.getImageInfoArrayList().size() >= maxCount) {
-                Toast.makeText(CameraActivity1.this, "Maximum no. of images allowed is " + maxCount, Toast.LENGTH_LONG).show();
-                return;
-            }
-            if (readyToTakePicture) {
-                camera.takePicture(null, null, this);
-                readyToTakePicture = false;
-                llActionsCamera.setEnabled(false);
-            }
-        } else if (v.getId() == R.id.bBack) {
-            finish();
-        } else if (v.getId() == R.id.bDone) {
-            Intent intent = new Intent();
-            intent.putExtra(CAMERA_IMAGES, imagesAdapter.getImageInfoArrayList());
-            setResult(RESULT_OK, intent);
-            finish();
-        }
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(Constants.IMAGES_SELECTED, imagesList);
     }
 
     //updates the listview with the photos clicked by the camera
-    private void updateCapturedPhotos(File pictureFile) {
+    private void updateCapturedPhotos(String filePath) {
         FileInfo fileInfo = new FileInfo();
-        fileInfo.setFilePath(pictureFile.getAbsolutePath());
-        fileInfo.setFileName(pictureFile.getAbsolutePath().substring(pictureFile.getAbsolutePath().lastIndexOf("/") + 1));
+        fileInfo.setFilePath(filePath);
+        fileInfo.setFileName(filePath.substring(filePath.lastIndexOf("/") + 1));
         fileInfo.setSource(FileInfo.SOURCE.PHONE_CAMERA);
-//        imagesList.add(imageInfo);
-        imagesAdapter.getImageInfoArrayList().add(fileInfo);
-        imagesAdapter.notifyDataSetChanged();
-        lvCaptureImages.smoothScrollToPosition(imagesAdapter.getCount() - 1);
-        camera.startPreview();
-    }
+        imagesList.add(fileInfo);
+        if (maxNumberOfImages == 1) {
+            buttonCapture.setTag("done");
+            onClick(buttonCapture);
+        } else {
+            Log.e(Constants.TAG, "updateCapturedPhotos");
+            if (imagesList.size() >= 1)
+                scrollView.setVisibility(View.VISIBLE);
+            else
+                scrollView.setVisibility(View.GONE);
+            addInScrollView(fileInfo);
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        try {
-            camera.setPreviewCallback(null);
-            cameraPreview.getHolder().removeCallback(cameraPreview);
-//            mPreview.getHolder().removeCallback(mPreview);
-            camera.stopPreview();
-            camera.release();
-            camera = null;
-        } catch (Exception e) {
-            //Log.e(TAG , e.getMessage());
-        }
-
-    }
-
-    @Override
-    public void onPictureTaken(byte[] data, Camera camera) {
-
-        File pictureFile = Constants.getMediaOutputFile(this,Constants.TYPE_IMAGE);
-        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                Uri.parse("file://" + pictureFile.getAbsolutePath())));
-        if (pictureFile == null) {
-            Log.d(TAG, "Error creating media file, check storage permissions: " +
-                    "");
-            return;
-        }
-        try {
-            FileOutputStream fos = new FileOutputStream(pictureFile);
-            fos.write(data);
-            fos.close();
-            updateCapturedPhotos(pictureFile);
+            if (maxNumberOfImages > 0) {
+                updateView(imagesList.size() < maxNumberOfImages);
+            }
+            mFragment.startPreview();
             readyToTakePicture = true;
-            llActionsCamera.setEnabled(true);
-        } catch (FileNotFoundException e) {
-            Log.d(TAG, "File not found: " + e.getMessage());
-        } catch (IOException e) {
-            Log.d(TAG, "Error accessing file: " + e.getMessage());
+            buttonCapture.setEnabled(true);
+        }
+    }
+
+    private void updateView(boolean status) {
+        if (!status) {
+            buttonCapture.setVisibility(View.GONE);
+        } else {
+            buttonCapture.setVisibility(View.VISIBLE);
+        }
+        buttonDone.setVisibility(View.VISIBLE);
+        tvImageName.setText(status ? imageName : "Press Done");
+    }
+
+
+    //It is called when configuration(orientation) of screen changes
+    private void addInScrollView(ArrayList<FileInfo> infos) {
+        if (infos != null && infos.size() > 0) {
+            for (FileInfo info : infos) {
+                scrollView.addView(createImageView(info));
+            }
+            scrollView.setVisibility(View.VISIBLE);
+        }
+        Log.e(Constants.TAG, "Add multiple items in scroll ");
+    }
+
+    private void addInScrollView(FileInfo info) {
+        Log.e(Constants.TAG, " add in scroll View ");
+        scrollView.addView(createImageView(info));
+        scrollView.setVisibility(View.VISIBLE);
+    }
+
+    private View createImageView(final FileInfo info) {
+        final File file = new File(info.getFilePath());
+        if (!file.exists())
+            return null;
+        final View outerView = View.inflate(this,R.layout.camera_priority_overlay,null);
+        outerView.findViewById(R.id.ivRemoveImage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scrollView.removeView(outerView);
+                imagesList.remove(info);
+                if (maxNumberOfImages > 0)
+                    updateView(imagesList.size() < maxNumberOfImages);
+                if (imagesList.size() < 1) {
+                    buttonDone.setVisibility(View.GONE);
+                    scrollView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        Glide.with(this).load("file://" + info.getFilePath())
+             .diskCacheStrategy(DiskCacheStrategy.ALL)
+             .crossFade()
+             .centerCrop()
+             .placeholder(R.drawable.image_load_default_small)
+             .into((ImageView) outerView.findViewById(R.id.ivCaptured));/**/
+        return outerView;
+    }
+
+    @Override
+    public void onPictureTaken(String filePath)
+    {
+        updateCapturedPhotos(filePath);
+        outputImages.clear();
+        outputImages.add(filePath);
+    }
+
+    @Override
+    public void onPicturesFinalized(ArrayList<FileInfo> infos)
+    {
+        getSupportFragmentManager().popBackStackImmediate();
+        if(infos.size() > 0)
+        {
+            Log.d(TAG, "onPicturesFinalized: " + infos.get(0).getFilePath());
+            setResult(RESULT_OK, new Intent().putExtra(NeonConstants.COLLECTED_IMAGES, infos));
+            finish();
+        }
+        else
+        {
+            Toast.makeText(this, getString(R.string.click_photo), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void sendPictureForCropping(File file)
+    {
+        //        Intent intent = new Intent(this, ScanActivity.class);
+        //        intent.putExtra(ScanConstants.IMAGE_FILE_FOR_CROPPING,file);
+        //        startActivityForResult(intent,ScanActivity.REQUEST_REVIEW);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK)
+        {
+            if(requestCode == GALLERY_PICK)
+            {
+                imagesList = (ArrayList<FileInfo>) data.getSerializableExtra(GalleryActivity.GALLERY_SELECTED_PHOTOS);
+            }
+            else
+            {
+                readyToTakePicture = true;
+            }
+        }
+        else if(resultCode == RESULT_CANCELED)
+        {
+            //            FragmentManager manager = getSupportFragmentManager();
+            //            manager.popBackStack(ScanFragment.class.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            //            if(null == photoParams)
+            //            {
+            //                finish();
+            //            }
+        }
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        if (v.getId() == R.id.buttonCapture) {
+            if (v.getTag().equals("capture")) {
+                mFragment.clickPicture();
+            } else if (v.getTag().equals("done")) {
+                if (imagesList.size() > 0) {
+                   onPicturesFinalized(imagesList);
+
+                    setResult(RESULT_OK, new Intent().putStringArrayListExtra(Constants.RESULT_IMAGES, outputImages));
+                    finish();
+                } else {
+                    Toast.makeText(this, getString(R.string.please_select_atleast_one), Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else if (v.getId() == R.id.buttonGallery) {
+            Intent intent = new Intent(this, GalleryActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra(GalleryActivity.MAX_COUNT, maxNumberOfImages);
+            intent.putExtra(Constants.PHOTO_PARAMS, photoParams);
+            startActivityForResult(intent, GALLERY_PICK);
+
+        } else if (v.getId() == R.id.buttonDone) {
+            if (imagesList.size() == 0) {
+                Toast.makeText(this, getString(R.string.no_images), Toast.LENGTH_SHORT).show();
+            } else {
+                buttonCapture.setTag("done");
+                onClick(buttonCapture);
+            }
         }
     }
 }

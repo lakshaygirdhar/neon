@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.gaadi.neon.fragment.CameraFragment;
+import com.gaadi.neon.fragment.CameraFragment1;
 import com.gaadi.neon.fragment.NeutralFragment;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
@@ -40,7 +41,7 @@ public class CameraActivity extends AppCompatActivity implements CameraFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_priority_items);
         PhotoParams photoParams = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
-        CameraFragment fragment = CameraFragment.getInstance(photoParams);
+        CameraFragment1 fragment = CameraFragment1.getInstance(photoParams);
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
