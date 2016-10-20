@@ -4,6 +4,49 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+    <RelativeLayout
+        android:id="@+id/rlTags"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_button_small_height"
+        android:background="@color/tranparent_black">
+
+        <TextView
+            android:id="@+id/tvTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tvPrev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:background="@color/black"
+            android:padding="@dimen/default_margin"
+            android:text="@string/prev"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvSkip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:background="@color/black"
+            android:padding="@dimen/default_margin"
+            android:text="@string/skip"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
@@ -80,7 +123,5 @@
 
             </LinearLayout>
         </HorizontalScrollView>
-
     </LinearLayout>
-
 </RelativeLayout>

@@ -38,8 +38,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
@@ -66,16 +64,12 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
     private static final String TAG = "CameraFragment";
     private static final int REQUEST_REVIEW = 100;
     private PhotoParams mPhotoParams;
-    private int maxNumberOfImages;
     private DrawingView drawingView;
 
-    private TextView tvImageName;
     private ImageView currentFlashMode;
     private ArrayList<String> supportedFlashModes;
 
     private RecyclerView rcvFlash;
-    private LinearLayout scrollView;
-    private ArrayList<FileInfo> imagesList = new ArrayList<>();
     private Camera mCamera;
     private CameraPreview mCameraPreview;
     private boolean readyToTakePicture;
@@ -132,7 +126,6 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
         mActivity = getActivity();
         if(mPhotoParams != null){
 
-            maxNumberOfImages = mPhotoParams.getNoOfPhotos();
             enableCapturedReview = mPhotoParams.getEnableCapturedReview();
             PhotoParams.CameraOrientation orientation = mPhotoParams.getOrientation();
             cameraFacing = mPhotoParams.getCameraFace();
@@ -151,18 +144,12 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
             rcvFlash = (RecyclerView)fragmentView.findViewById(R.id.flash_listview);
             rcvFlash.setLayoutManager(layoutManager);
 
-
-            tvImageName = (TextView) fragmentView.findViewById(R.id.imageName);
-
             ImageView mSwitchCamera = (ImageView) fragmentView.findViewById(R.id.switchCamera);
             if(CommonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT) {
                 mSwitchCamera.setVisibility(View.GONE);
                 useFrontFacingCamera = false;
             }
-
             mSwitchCamera.setOnClickListener(this);
-
-
             fragmentView.setOnTouchListener(this);
 
         } else {
@@ -203,7 +190,6 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
     }
 
     private void setFlashLayoutAndMode() {
-        // flashLayout=(LinearLayout)view.findViewById(R.id.flashLayout);
         currentFlashMode.setOnClickListener(this);
         String flashMode = PrefsUtils.getStringSharedPreference(getActivity(), Constants.FLASH_MODE, "");
         if (flashMode.equals("")) {
@@ -238,8 +224,6 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
             currentFlashMode.setImageResource(R.drawable.flash_off);
         }
         PrefsUtils.setStringSharedPreference(getActivity(), Constants.FLASH_MODE, mode);
-        //Toast.makeText(getActivity(),mode,Toast.LENGTH_LONG).show();
-        //currentFlashMode.setText("Flash:" + mode);
         mCamera.setParameters(parameters);
     }
 
@@ -278,7 +262,6 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
                 if (cameraFacing == PhotoParams.CameraFacing.FRONT && CommonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     Log.d(TAG, "onResume: open front");
                     mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
-                    //                    mSwitchCamera.setVisibility(View.GONE);
                 } else {
                     mCamera = Camera.open();
                 }
@@ -307,9 +290,6 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
                 //set the screen layout to fullscreen
                 mActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                                                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-
-
             } catch (Exception e) {
                 Log.e("Camera Open Exception", "" + e.getMessage());
             }

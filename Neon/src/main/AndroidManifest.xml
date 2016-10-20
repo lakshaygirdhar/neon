@@ -18,6 +18,10 @@
                   android:theme="@style/NeonAppCompatNoActionBarTheme"
                   android:screenOrientation="portrait" />
 
+        <activity android:name="com.gaadi.neon.activity.CameraActivity1"
+                  android:theme="@style/NeonAppCompatNoActionBarTheme"
+                  android:screenOrientation="portrait" />
+
         <activity android:name="com.gaadi.neon.activity.GalleryActivity"
                   android:theme="@style/NeonAppCompatNoActionBarTheme"
                   android:screenOrientation="portrait" />

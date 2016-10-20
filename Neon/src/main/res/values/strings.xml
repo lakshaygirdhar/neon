@@ -45,5 +45,7 @@
     <string name="profile_photo">Profile Photo</string>
     <string name="please_select_atleast_one">Please click atleast one photo</string>
     <string name="camera_error">Camera Error. Kindly try again !!</string>
+    <string name="prev">Previous</string>
+    <string name="skip">Skip</string>
     <color name="gray">#808080</color>
 </resources>

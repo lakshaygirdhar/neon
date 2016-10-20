@@ -10,11 +10,9 @@ import java.util.ArrayList;
  */
 public class PhotoParams implements Serializable {
 
-
-    public static String DEFAULT_API = "";
     private String imageName;
     private CameraOrientation orientation;
-    private int noOfPhotos, requestCode = 11;
+    private int noOfPhotos;
     private FolderOptions folderOptions;
     private boolean tagEnabled;
     private boolean metaEnabled;
@@ -27,7 +25,7 @@ public class PhotoParams implements Serializable {
     private CameraFacing cameraFace;
     private boolean galleryFromCameraEnabled;
 
-    public enum FolderOptions {
+    private enum FolderOptions {
         PUBLIC_DIR, PUBLIC_DIR_DCIM, PUBLIC_DIR_SOCIAL, PUBLIC_DIR_ALL;
     }
 
@@ -96,14 +94,6 @@ public class PhotoParams implements Serializable {
         this.mode = mode;
     }
 
-    public static String getDefaultApi() {
-        return DEFAULT_API;
-    }
-
-    public static void setDefaultApi(String defaultApi) {
-        DEFAULT_API = defaultApi;
-    }
-
     public int getNoOfPhotos() {
         return noOfPhotos;
     }
@@ -150,22 +140,6 @@ public class PhotoParams implements Serializable {
 
     public void setUploadApi(String uploadApi) {
         this.uploadApi = uploadApi;
-    }
-
-//    public ArrayList<String> getImageList() {
-//        return imageList;
-//    }
-
-//    public void setImageList (ArrayList<String> imageList) {
-//        this.imageList = imageList;
-//    }
-
-    public int getRequestCode() {
-        return requestCode;
-    }
-
-    public void setRequestCode(int requestCode) {
-        this.requestCode = requestCode;
     }
 
     public boolean getEnableExtraBrightness() {

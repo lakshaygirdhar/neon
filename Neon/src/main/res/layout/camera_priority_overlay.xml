@@ -4,6 +4,7 @@
     android:layout_height="100dp">
 
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/ivCaptured"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -12,9 +13,11 @@
         android:scaleType="fitXY" />
 
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/ivRemoveImage"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:src="@drawable/camera_cancel_selector" />
 </RelativeLayout>
