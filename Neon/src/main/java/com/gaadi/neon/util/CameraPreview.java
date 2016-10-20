@@ -222,7 +222,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
 
 
-        setParametersToCamera();
+        setParametersToCamera(width,height);
         //mCamera.setParameters(p);
         try {
             mCamera.setPreviewDisplay(holder);
@@ -417,31 +417,38 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         this.readyListener = listener;
     }
 
-    public void setParametersToCamera(){
+    public void setParametersToCamera(int width,int height){
         if(mCamera==null){
             return;
         }
 
         Camera.Parameters parameters = mCamera.getParameters();
-        WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
+//        WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
+//        Display display = wm.getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        int width = size.x;
+//        int height = size.y;
         mSupportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
-        mSupportedPictureSizes=mCamera.getParameters().getSupportedPictureSizes();
+        mSupportedPictureSizes = mCamera.getParameters().getSupportedPictureSizes();
+
         if (mSupportedPreviewSizes != null) {
             mPreviewSize = getOptimalPreviewSizeByAspect(mSupportedPreviewSizes, width, height);
-            mPictureSize=getOptimalPreviewSize(mSupportedPictureSizes, width, height);
             parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+        }
+
+        if(mSupportedPictureSizes != null){
+            mPictureSize = getOptimalPreviewSize(mSupportedPictureSizes, width, height);
             parameters.setPictureSize(mPictureSize.width,mPictureSize.height);
         }
 
         if (parameters.getMaxNumFocusAreas() > 0) {
             parameters.setFocusAreas(null);
         }
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+
+        if(parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO))
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+
         mCamera.setParameters(parameters);
     }
 
