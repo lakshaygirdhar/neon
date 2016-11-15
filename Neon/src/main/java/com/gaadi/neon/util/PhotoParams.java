@@ -1,5 +1,7 @@
 package com.gaadi.neon.util;
 
+import com.gaadi.neon.model.ImageTagModel;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -24,6 +26,28 @@ public class PhotoParams implements Serializable {
     private boolean restrictedExtensionEnabled;
     private CameraFacing cameraFace;
     private boolean galleryFromCameraEnabled;
+    private boolean cameraHorizontalPreviewEnabled;
+    private ArrayList<ImageTagModel> imageTags;
+
+    public ArrayList<ImageTagModel> getImageTags()
+    {
+        return imageTags;
+    }
+
+    public void setImageTags(ArrayList<ImageTagModel> imageTags)
+    {
+        this.imageTags = imageTags;
+    }
+
+    public boolean isCameraHorizontalPreviewEnabled()
+    {
+        return cameraHorizontalPreviewEnabled;
+    }
+
+    public void setCameraHorizontalPreviewEnabled(boolean cameraHorizontalPreviewEnabled)
+    {
+        this.cameraHorizontalPreviewEnabled = cameraHorizontalPreviewEnabled;
+    }
 
     private enum FolderOptions {
         PUBLIC_DIR, PUBLIC_DIR_DCIM, PUBLIC_DIR_SOCIAL, PUBLIC_DIR_ALL;

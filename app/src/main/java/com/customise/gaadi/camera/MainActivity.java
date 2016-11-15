@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId()){
             case R.id.bClickMe:
                 PhotoParams params = new PhotoParams();
-                params.setMode(PhotoParams.MODE.NEUTRAL);
-                params.setCameraFace(PhotoParams.CameraFacing.FRONT);
+                params.setMode(PhotoParams.MODE.CAMERA_ONLY);
+//                params.setCameraFace(PhotoParams.CameraFacing.FRONT);
                 //        params.setMode(PhotoParams.MODE.NEUTRAL);
                 //        params.setOrientation(PhotoParams.CameraOrientation.PORTRAIT);
                 //        params.setNoOfPhotos(2);

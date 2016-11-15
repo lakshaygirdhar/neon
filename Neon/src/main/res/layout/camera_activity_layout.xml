@@ -108,7 +108,7 @@
         </RelativeLayout>
 
         <HorizontalScrollView
-            android:id="@+id/horizontalScrollView"
+            android:id="@+id/hsvPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -118,7 +118,7 @@
                 android:layout_height="match_parent"
                 android:minWidth="600dp"
                 android:orientation="horizontal"
-                android:background="#80000000"
+                android:background="@color/tranparent_black"
                 android:visibility="gone">
 
             </LinearLayout>

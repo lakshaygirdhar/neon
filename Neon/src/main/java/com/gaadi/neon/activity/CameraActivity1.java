@@ -35,10 +35,8 @@ import java.util.ArrayList;
 public class CameraActivity1 extends AppCompatActivity implements CameraFragment1.PictureTakenListener, View.OnClickListener
 {
     public static final int GALLERY_PICK = 99;
-    private static final String TAG = "CameraActivity";
-    public boolean readyToTakePicture;
+    private static final String TAG = "CameraActivity1";
     private ArrayList<FileInfo> imagesList = new ArrayList<>();
-    private ArrayList<String> outputImages = new ArrayList<>();
     private ImageView buttonCapture;
     private ImageView buttonDone;
     private CameraFragment1 mFragment;
@@ -126,12 +124,7 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
     }
 
     //updates the listview with the photos clicked by the camera
-    private void updateCapturedPhotos(String filePath) {
-        FileInfo fileInfo = new FileInfo();
-        fileInfo.setFilePath(filePath);
-        fileInfo.setFileName(filePath.substring(filePath.lastIndexOf("/") + 1));
-        fileInfo.setSource(FileInfo.SOURCE.PHONE_CAMERA);
-        imagesList.add(fileInfo);
+    private void updateCapturedPhotos(FileInfo fileInfo) {
         if (maxNumberOfImages == 1) {
             buttonCapture.setTag("done");
             onClick(buttonCapture);
@@ -147,7 +140,6 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
                 updateView(imagesList.size() < maxNumberOfImages);
             }
             mFragment.startPreview();
-            readyToTakePicture = true;
             buttonCapture.setEnabled(true);
         }
     }
@@ -174,7 +166,6 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
     }
 
     private void addInScrollView(FileInfo info) {
-        Log.d(Constants.TAG, " add in scroll View ");
         scrollView.addView(createImageView(info));
         scrollView.setVisibility(View.VISIBLE);
     }
@@ -210,9 +201,14 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
     @Override
     public void onPictureTaken(String filePath)
     {
-        updateCapturedPhotos(filePath);
-        outputImages.clear();
-        outputImages.add(filePath);
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setFilePath(filePath);
+        fileInfo.setFileName(filePath.substring(filePath.lastIndexOf("/") + 1));
+        fileInfo.setSource(FileInfo.SOURCE.PHONE_CAMERA);
+        imagesList.add(fileInfo);
+
+        if(photoParams.isCameraHorizontalPreviewEnabled())
+            updateCapturedPhotos(fileInfo);
     }
 
     @Override
@@ -221,7 +217,6 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         getSupportFragmentManager().popBackStackImmediate();
         if(infos.size() > 0)
         {
-            Log.d(TAG, "onPicturesFinalized: " + infos.get(0).getFilePath());
             setResult(RESULT_OK, new Intent().putExtra(NeonConstants.COLLECTED_IMAGES, infos));
             finish();
         }
@@ -249,19 +244,6 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
             {
                 imagesList = (ArrayList<FileInfo>) data.getSerializableExtra(GalleryActivity.GALLERY_SELECTED_PHOTOS);
             }
-            else
-            {
-                readyToTakePicture = true;
-            }
-        }
-        else if(resultCode == RESULT_CANCELED)
-        {
-            //            FragmentManager manager = getSupportFragmentManager();
-            //            manager.popBackStack(ScanFragment.class.toString(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            //            if(null == photoParams)
-            //            {
-            //                finish();
-            //            }
         }
     }
 
@@ -274,9 +256,6 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
             } else if (v.getTag().equals("done")) {
                 if (imagesList.size() > 0) {
                    onPicturesFinalized(imagesList);
-
-                    setResult(RESULT_OK, new Intent().putStringArrayListExtra(Constants.RESULT_IMAGES, outputImages));
-                    finish();
                 } else {
                     Toast.makeText(this, getString(R.string.please_select_atleast_one), Toast.LENGTH_SHORT).show();
                 }
