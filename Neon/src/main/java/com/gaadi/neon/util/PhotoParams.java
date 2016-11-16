@@ -29,6 +29,58 @@ public class PhotoParams implements Serializable {
     private boolean cameraHorizontalPreviewEnabled;
     private ArrayList<ImageTagModel> imageTags;
 
+    private enum FolderOptions {
+        PUBLIC_DIR, PUBLIC_DIR_DCIM, PUBLIC_DIR_SOCIAL, PUBLIC_DIR_ALL;
+    }
+
+    public enum CameraOrientation {
+        LANDSCAPE, PORTRAIT, BOTH;
+    }
+
+    public enum CameraFacing {
+        FRONT, BACK
+    }
+
+    public boolean isTagEnabled()
+    {
+        return tagEnabled;
+    }
+
+    public void setTagEnabled(boolean tagEnabled)
+    {
+        this.tagEnabled = tagEnabled;
+    }
+
+    public boolean isMetaEnabled()
+    {
+        return metaEnabled;
+    }
+
+    public void setMetaEnabled(boolean metaEnabled)
+    {
+        this.metaEnabled = metaEnabled;
+    }
+
+    public boolean isEnableCapturedReview()
+    {
+        return enableCapturedReview;
+    }
+
+    public void setEnableCapturedReview(boolean enableCapturedReview)
+    {
+        this.enableCapturedReview = enableCapturedReview;
+    }
+
+    public boolean isEnableExtraBrightness()
+    {
+        return enableExtraBrightness;
+    }
+
+    public void setEnableExtraBrightness(boolean enableExtraBrightness)
+    {
+        this.enableExtraBrightness = enableExtraBrightness;
+    }
+
     public ArrayList<ImageTagModel> getImageTags()
     {
         return imageTags;
@@ -49,20 +101,7 @@ public class PhotoParams implements Serializable {
         this.cameraHorizontalPreviewEnabled = cameraHorizontalPreviewEnabled;
     }
 
-    private enum FolderOptions {
-        PUBLIC_DIR, PUBLIC_DIR_DCIM, PUBLIC_DIR_SOCIAL, PUBLIC_DIR_ALL;
-    }
-
-
     public enum MODE {CAMERA_PRIORITY, NEUTRAL, GALLERY_PRIORITY,CAMERA_ONLY,GALLERY_ONLY}
-
-    public enum CameraOrientation {
-        LANDSCAPE, PORTRAIT, BOTH;
-    }
-
-    public enum CameraFacing {
-        FRONT, BACK
-    }
 
     public boolean isGalleryFromCameraEnabled() {
         return galleryFromCameraEnabled;
@@ -87,15 +126,6 @@ public class PhotoParams implements Serializable {
 
     public void setImageName(String imageName) {
         this.imageName = imageName;
-    }
-
-
-    public boolean getEnableCapturedReview() {
-        return enableCapturedReview;
-    }
-
-    public void setEnableCapturedReview(Boolean enableCapturedReview) {
-        this.enableCapturedReview = enableCapturedReview;
     }
 
     public String getImageName() {
@@ -140,22 +170,6 @@ public class PhotoParams implements Serializable {
 
     public void setFolderOptions(FolderOptions folderOptions) {
         this.folderOptions = folderOptions;
-    }
-
-    public boolean getTagEnabled() {
-        return tagEnabled;
-    }
-
-    public void setTagEnabled(Boolean tagEnabled) {
-        this.tagEnabled = tagEnabled;
-    }
-
-    public boolean getMetaEnabled() {
-        return metaEnabled;
-    }
-
-    public void setMetaEnabled(Boolean metaEnabled) {
-        this.metaEnabled = metaEnabled;
     }
 
     public String getUploadApi() {

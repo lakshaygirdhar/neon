@@ -3,10 +3,8 @@ package com.gaadi.neon.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gaadi.neon.fragment.CameraFragment1;
 import com.gaadi.neon.fragment.NeutralFragment;
+import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonConstants;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 public class CameraActivity1 extends AppCompatActivity implements CameraFragment1.PictureTakenListener, View.OnClickListener
 {
     public static final int GALLERY_PICK = 99;
-    private static final String TAG = "CameraActivity1";
     private ArrayList<FileInfo> imagesList = new ArrayList<>();
     private ImageView buttonCapture;
     private ImageView buttonDone;
@@ -46,27 +44,23 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
     private TextView tvImageName;
     private String imageName;
     private ImageView buttonGallery;
+    private ImageTagModel currentTagModel;
+    private ArrayList<ImageTagModel> mTagList;
+    private int currentTag;
+    private TextView tvTag;
 
     @Override
     protected void onCreate(
-            @Nullable
                     Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_activity_layout);
 
-        buttonCapture = (ImageView) findViewById(R.id.buttonCapture);
-        buttonGallery = (ImageView) findViewById(R.id.buttonGallery);
-        buttonDone = (ImageView) findViewById(R.id.buttonDone);
-        scrollView = (LinearLayout) findViewById(R.id.imageHolderView);
-        tvImageName = (TextView) findViewById(R.id.tvImageName);
+        initialize();
 
-        photoParams = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
         customize();
 
-        buttonCapture.setOnClickListener(this);
         enableDoneButton(false);
-        buttonGallery.setOnClickListener(this);
 
         //To make sure that name appears only after animation ends
         new Handler().postDelayed(new Runnable() {
@@ -90,16 +84,32 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
 
         //for handling screen orientation
         if (savedInstanceState != null) {
-            Log.e(Constants.TAG, "savedInstanceState not null");
             imagesList = (ArrayList<FileInfo>) savedInstanceState.getSerializable(Constants.IMAGES_SELECTED);
             addInScrollView(imagesList);
         }
     }
 
+    private void initialize()
+    {
+        buttonCapture = (ImageView) findViewById(R.id.buttonCapture);
+        buttonGallery = (ImageView) findViewById(R.id.buttonGallery);
+        buttonDone = (ImageView) findViewById(R.id.buttonDone);
+        scrollView = (LinearLayout) findViewById(R.id.imageHolderView);
+        tvImageName = (TextView) findViewById(R.id.tvImageName);
+        tvTag = (TextView) findViewById(R.id.tvTag);
+
+        buttonCapture.setOnClickListener(this);
+        buttonGallery.setOnClickListener(this);
+    }
+
     private void customize()
     {
-        if(photoParams.getTagEnabled()){
-
+        photoParams = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
+        if(photoParams.isTagEnabled()){
+            tvImageName.setVisibility(View.GONE);
+            mTagList = photoParams.getImageTags();
+            currentTagModel = mTagList.get(currentTag);
+            setTag(currentTagModel);
         }
         maxNumberOfImages = photoParams.getNoOfPhotos();
         imageName = photoParams.getImageName();
@@ -109,6 +119,20 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         if (!isGalleryEnabled) {
             buttonGallery.setVisibility(View.GONE);
         }
+    }
+
+    public void setTag(ImageTagModel imageTagModel){
+        tvTag.setText(imageTagModel.getTagName());
+    }
+
+    public ImageTagModel getNextTag(){
+        currentTag++;
+        return mTagList.get(currentTag);
+    }
+
+    public ImageTagModel getPreviousTag(){
+        currentTag--;
+        return mTagList.get(currentTag);
     }
 
     private void enableDoneButton(boolean enable) {
@@ -129,8 +153,7 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
             buttonCapture.setTag("done");
             onClick(buttonCapture);
         } else {
-            Log.e(Constants.TAG, "updateCapturedPhotos");
-            if (imagesList.size() >= 1)
+            if (imagesList.size() >= 1 && photoParams.isCameraHorizontalPreviewEnabled())
                 scrollView.setVisibility(View.VISIBLE);
             else
                 scrollView.setVisibility(View.GONE);
@@ -162,7 +185,6 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
             }
             scrollView.setVisibility(View.VISIBLE);
         }
-        Log.e(Constants.TAG, "Add multiple items in scroll ");
     }
 
     private void addInScrollView(FileInfo info) {
