@@ -24,6 +24,9 @@ import com.scanlibrary.R;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 /**
  * @author lakshaygirdhar
  * @version 1.0
@@ -44,10 +47,11 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
     private TextView tvImageName;
     private String imageName;
     private ImageView buttonGallery;
-    private ImageTagModel currentTagModel;
     private ArrayList<ImageTagModel> mTagList;
     private int currentTag;
     private TextView tvTag;
+    private TextView tvNext;
+    private HashMap<ImageTagModel, List<FileInfo>> imagesWithTags;
 
     @Override
     protected void onCreate(
@@ -97,6 +101,9 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         scrollView = (LinearLayout) findViewById(R.id.imageHolderView);
         tvImageName = (TextView) findViewById(R.id.tvImageName);
         tvTag = (TextView) findViewById(R.id.tvTag);
+        tvNext = (TextView) findViewById(R.id.tvSkip);
+        findViewById(R.id.rlTags).setOnClickListener(this);
+        tvNext.setOnClickListener(this);
 
         buttonCapture.setOnClickListener(this);
         buttonGallery.setOnClickListener(this);
@@ -108,8 +115,8 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         if(photoParams.isTagEnabled()){
             tvImageName.setVisibility(View.GONE);
             mTagList = photoParams.getImageTags();
-            currentTagModel = mTagList.get(currentTag);
-            setTag(currentTagModel);
+            setTag(mTagList.get(currentTag));
+            imagesWithTags = new HashMap<>();
         }
         maxNumberOfImages = photoParams.getNoOfPhotos();
         imageName = photoParams.getImageName();
@@ -126,18 +133,23 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
     }
 
     public ImageTagModel getNextTag(){
-        currentTag++;
+        if(currentTag < mTagList.size() && !mTagList.get(currentTag).isMandatory()){
+            currentTag++;
+        } else {
+            tvNext.setText(getString(R.string.finish));
+        }
         return mTagList.get(currentTag);
     }
 
     public ImageTagModel getPreviousTag(){
-        currentTag--;
+        if(currentTag>0)
+            currentTag--;
         return mTagList.get(currentTag);
     }
 
     private void enableDoneButton(boolean enable) {
         buttonCapture.setImageResource(enable ? R.drawable.camera_switch : R.drawable.ic_camera);
-        buttonCapture.setTag(enable ? "done" : "capture");
+        buttonCapture.setTag(enable ? getString(R.string.done) : getString(R.string.capture));
     }
 
     @Override
@@ -227,10 +239,22 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         fileInfo.setFilePath(filePath);
         fileInfo.setFileName(filePath.substring(filePath.lastIndexOf("/") + 1));
         fileInfo.setSource(FileInfo.SOURCE.PHONE_CAMERA);
-        imagesList.add(fileInfo);
+        if(photoParams.isTagEnabled()){
 
-        if(photoParams.isCameraHorizontalPreviewEnabled())
-            updateCapturedPhotos(fileInfo);
+            if(imagesWithTags.get(mTagList.get(currentTag)) == null){
+                imagesWithTags.put(mTagList.get(currentTag), Collections.singletonList(fileInfo));
+            } else {
+                List<FileInfo> listFiles = (List<FileInfo>) mTagList.get(currentTag);
+                listFiles.add(fileInfo);
+                imagesWithTags.put(mTagList.get(currentTag),listFiles);
+            }
+        } else {
+            imagesList.add(fileInfo);
+            if(photoParams.isCameraHorizontalPreviewEnabled())
+                updateCapturedPhotos(fileInfo);
+        }
+
+
     }
 
     @Override
@@ -296,6 +320,8 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
                 buttonCapture.setTag("done");
                 onClick(buttonCapture);
             }
+        } else if(v.getId() == R.id.tvSkip){
+            setTag(getNextTag());
         }
     }
 }

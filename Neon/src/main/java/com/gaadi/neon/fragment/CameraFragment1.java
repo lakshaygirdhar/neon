@@ -126,7 +126,7 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
         mActivity = getActivity();
         if(mPhotoParams != null){
 
-            enableCapturedReview = mPhotoParams.getEnableCapturedReview();
+            enableCapturedReview = mPhotoParams.isEnableCapturedReview();
             PhotoParams.CameraOrientation orientation = mPhotoParams.getOrientation();
             cameraFacing = mPhotoParams.getCameraFace();
             Log.d(TAG, "onCreateView: " + cameraFacing);

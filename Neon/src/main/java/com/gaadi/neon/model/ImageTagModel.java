@@ -1,12 +1,13 @@
 package com.gaadi.neon.model;
 
+import java.io.Serializable;
 /**
  * @author lakshaygirdhar
  * @version 1.0
  * @since 15/11/16
  */
 
-public class ImageTagModel
+public class ImageTagModel implements Serializable
 {
     private String tagName;
     private boolean mandatory;
