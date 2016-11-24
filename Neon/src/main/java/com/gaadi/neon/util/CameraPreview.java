@@ -153,17 +153,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
-//    @Override
-//    public void surfaceCreated(SurfaceHolder holder) {
-//        try {
-//            Log.e(TAG , "surface created");
-//            mCamera.setPreviewDisplay(holder);
-//            mCamera.startPreview();
-//        } catch (IOException e) {
-//
-//            Log.e("Exception ", ""+e.getMessage().toString());
-//        }
-//    }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -172,17 +161,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             Log.e(TAG, "surface created");
             //set camera to continually auto-focus
             Camera.Parameters params = mCamera.getParameters();
-//            if (params.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
-//                params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-//            } else {
-//                Choose another supported mode
-//            }
             mCamera.stopPreview();
             Camera.Parameters p = mCamera.getParameters();
             p.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
 
-//            params.setPictureSize(mPictureSize.width, mPictureSize.height);
-            // params.setPictureSize(1280,720);
             mCamera.setParameters(params);
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
@@ -190,7 +172,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCamera.autoFocus(null);
 
         } catch (IOException e) {
-
             Log.e("Exception ", "" + e.getMessage().toString());
         }
     }

@@ -41,6 +41,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
+import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
@@ -57,6 +58,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("deprecation,unchecked")
 public class CameraFragment1 extends Fragment implements View.OnClickListener, View.OnTouchListener, Camera.PictureCallback {
@@ -97,7 +99,7 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
     public interface PictureTakenListener {
         void onPictureTaken(String filePath);
         void onPicturesFinalized(ArrayList<FileInfo> infos);
-        void sendPictureForCropping(File file);
+        void onPicturesFinalized(Map<ImageTagModel,List<FileInfo>> filesMap);
     }
 
     public static CameraFragment1 getInstance(PhotoParams photoParams) {
@@ -499,7 +501,6 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
                     readyToTakePicture = true;
                     return;
                 }
-                mPictureTakenListener.sendPictureForCropping(file);
                 mCamera.startPreview();
             } else {
                 Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();

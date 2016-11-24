@@ -49,5 +49,6 @@
     <string name="skip">Skip</string>
     <string name="finish">Finish</string>
     <string name="capture">capture</string>
+    <string name="tag_mandatory_error"> %1$s \n is mandatory </string>
     <color name="gray">#808080</color>
 </resources>

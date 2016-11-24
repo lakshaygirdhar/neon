@@ -13,7 +13,8 @@ import com.gaadi.neon.util.NeonConstants;
 import com.gaadi.neon.util.PhotoParams;
 
 import java.util.ArrayList;
-
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -35,8 +36,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(TAG, "onActivityResult: " + requestCode + " responseCode : " + resultCode);
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                ArrayList<FileInfo> images = (ArrayList<FileInfo>) data.getSerializableExtra(NeonConstants.COLLECTED_IMAGES);
-                Log.i(TAG,"Selected images info "+ images.size());
+                Map<ImageTagModel ,List<FileInfo>> images = (Map<ImageTagModel ,List<FileInfo>>) data.getSerializableExtra(NeonConstants.COLLECTED_IMAGES);
+                for(Map.Entry<ImageTagModel,List<FileInfo>> entry : images.entrySet()){
+                    Log.d(TAG, "onActivityResult: " + entry.getKey().getTagName());
+
+                    for(FileInfo fileInfo : entry.getValue()){
+                        if(fileInfo.getFilePath() != null)
+                            Log.d(TAG, "onActivityResult: " + fileInfo.getFilePath());
+                    }
+                }
             }
         }
     }

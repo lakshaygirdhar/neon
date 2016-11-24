@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gaadi.neon.fragment.CameraFragment1;
 import com.gaadi.neon.fragment.NeutralFragment;
 import com.gaadi.neon.model.ImageTagModel;
+import com.gaadi.neon.util.AnimationUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonConstants;
@@ -24,14 +25,13 @@ import com.scanlibrary.R;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 /**
  * @author lakshaygirdhar
  * @version 1.0
  * @since 8/9/16
- *
  */
 @SuppressWarnings("deprecation,unchecked")
 public class CameraActivity1 extends AppCompatActivity implements CameraFragment1.PictureTakenListener, View.OnClickListener
@@ -54,8 +54,7 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
     private HashMap<ImageTagModel, List<FileInfo>> imagesWithTags;
 
     @Override
-    protected void onCreate(
-                    Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_activity_layout);
@@ -67,14 +66,18 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         enableDoneButton(false);
 
         //To make sure that name appears only after animation ends
-        new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable()
+        {
             @Override
-            public void run() {
-                if (maxNumberOfImages == 0) {
+            public void run()
+            {
+                if(maxNumberOfImages == 0)
+                {
                     buttonDone.setVisibility(View.VISIBLE);
                     buttonDone.setOnClickListener(CameraActivity1.this);
                 }
-                if (photoParams.getImageName() != null && !"".equals(photoParams.getImageName())) {
+                if(photoParams.getImageName() != null && !"".equals(photoParams.getImageName()))
+                {
                     tvImageName.setVisibility(View.VISIBLE);
                     tvImageName.setText(String.valueOf(photoParams.getImageName()));
                     tvImageName.setOnClickListener(CameraActivity1.this);
@@ -87,7 +90,8 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         manager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
 
         //for handling screen orientation
-        if (savedInstanceState != null) {
+        if(savedInstanceState != null)
+        {
             imagesList = (ArrayList<FileInfo>) savedInstanceState.getSerializable(Constants.IMAGES_SELECTED);
             addInScrollView(imagesList);
         }
@@ -112,7 +116,8 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
     private void customize()
     {
         photoParams = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
-        if(photoParams.isTagEnabled()){
+        if(photoParams.isTagEnabled())
+        {
             tvImageName.setVisibility(View.GONE);
             mTagList = photoParams.getImageTags();
             setTag(mTagList.get(currentTag));
@@ -123,31 +128,67 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
 
         boolean isGalleryEnabled = photoParams.isGalleryFromCameraEnabled();
 
-        if (!isGalleryEnabled) {
+        if(!isGalleryEnabled)
+        {
             buttonGallery.setVisibility(View.GONE);
         }
     }
 
-    public void setTag(ImageTagModel imageTagModel){
+    public void setTag(ImageTagModel imageTagModel)
+    {
         tvTag.setText(imageTagModel.getTagName());
     }
 
-    public ImageTagModel getNextTag(){
-        if(currentTag < mTagList.size() && !mTagList.get(currentTag).isMandatory()){
-            currentTag++;
+    public ImageTagModel getNextTag()
+    {
+        if(photoParams.isTagEnabled()){
+            if(mTagList.get(currentTag).isMandatory()){
+                if(imagesWithTags.get(mTagList.get(currentTag))==null || imagesWithTags.get(mTagList.get(currentTag)).size() == 0){
+                    Toast.makeText(this, String.format(getString(R.string.tag_mandatory_error), mTagList.get(currentTag).getTagName()),
+                                   Toast.LENGTH_SHORT).show();
+                } else {
+                    currentTag++;
+                }
+            } else {
+                currentTag++;
+            }
         } else {
+            if(currentTag < mTagList.size() && !mTagList.get(currentTag).isMandatory())
+            {
+                currentTag++;
+            }
+            else
+            {
+                Toast.makeText(this, String.format(getString(R.string.tag_mandatory_error), mTagList.get(currentTag).getTagName()),
+                               Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if(currentTag == mTagList.size() - 1)
+        {
             tvNext.setText(getString(R.string.finish));
+        }
+        if(currentTag == mTagList.size()){
+            if(photoParams.isTagEnabled())
+                onPicturesFinalized(imagesWithTags);
+            else
+                onPicturesFinalized(imagesList);
+            return mTagList.get(currentTag-1);
         }
         return mTagList.get(currentTag);
     }
 
-    public ImageTagModel getPreviousTag(){
-        if(currentTag>0)
+    public ImageTagModel getPreviousTag()
+    {
+        if(currentTag > 0)
+        {
             currentTag--;
+        }
         return mTagList.get(currentTag);
     }
 
-    private void enableDoneButton(boolean enable) {
+    private void enableDoneButton(boolean enable)
+    {
         buttonCapture.setImageResource(enable ? R.drawable.camera_switch : R.drawable.ic_camera);
         buttonCapture.setTag(enable ? getString(R.string.done) : getString(R.string.capture));
     }
@@ -160,18 +201,27 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
     }
 
     //updates the listview with the photos clicked by the camera
-    private void updateCapturedPhotos(FileInfo fileInfo) {
-        if (maxNumberOfImages == 1) {
+    private void updateCapturedPhotos(FileInfo fileInfo)
+    {
+        if(maxNumberOfImages == 1)
+        {
             buttonCapture.setTag("done");
             onClick(buttonCapture);
-        } else {
-            if (imagesList.size() >= 1 && photoParams.isCameraHorizontalPreviewEnabled())
+        }
+        else
+        {
+            if(imagesList.size() >= 1 && photoParams.isCameraHorizontalPreviewEnabled())
+            {
                 scrollView.setVisibility(View.VISIBLE);
+            }
             else
+            {
                 scrollView.setVisibility(View.GONE);
+            }
             addInScrollView(fileInfo);
 
-            if (maxNumberOfImages > 0) {
+            if(maxNumberOfImages > 0)
+            {
                 updateView(imagesList.size() < maxNumberOfImages);
             }
             mFragment.startPreview();
@@ -179,10 +229,14 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         }
     }
 
-    private void updateView(boolean status) {
-        if (!status) {
+    private void updateView(boolean status)
+    {
+        if(!status)
+        {
             buttonCapture.setVisibility(View.GONE);
-        } else {
+        }
+        else
+        {
             buttonCapture.setVisibility(View.VISIBLE);
         }
         buttonDone.setVisibility(View.VISIBLE);
@@ -190,40 +244,53 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
     }
 
     //It is called when configuration(orientation) of screen changes
-    private void addInScrollView(ArrayList<FileInfo> infos) {
-        if (infos != null && infos.size() > 0) {
-            for (FileInfo info : infos) {
+    private void addInScrollView(ArrayList<FileInfo> infos)
+    {
+        if(infos != null && infos.size() > 0)
+        {
+            for(FileInfo info : infos)
+            {
                 scrollView.addView(createImageView(info));
             }
             scrollView.setVisibility(View.VISIBLE);
         }
     }
 
-    private void addInScrollView(FileInfo info) {
+    private void addInScrollView(FileInfo info)
+    {
         scrollView.addView(createImageView(info));
         scrollView.setVisibility(View.VISIBLE);
     }
 
-    private View createImageView(final FileInfo info) {
+    private View createImageView(final FileInfo info)
+    {
         final File file = new File(info.getFilePath());
-        if (!file.exists())
+        if(!file.exists())
+        {
             return null;
-        final View outerView = View.inflate(this,R.layout.camera_priority_overlay,null);
-        outerView.findViewById(R.id.ivRemoveImage).setOnClickListener(new View.OnClickListener() {
+        }
+        final View outerView = View.inflate(this, R.layout.camera_priority_overlay, null);
+        outerView.findViewById(R.id.ivRemoveImage).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 scrollView.removeView(outerView);
                 imagesList.remove(info);
-                if (maxNumberOfImages > 0)
+                if(maxNumberOfImages > 0)
+                {
                     updateView(imagesList.size() < maxNumberOfImages);
-                if (imagesList.size() < 1) {
+                }
+                if(imagesList.size() < 1)
+                {
                     buttonDone.setVisibility(View.GONE);
                     scrollView.setVisibility(View.GONE);
                 }
             }
         });
 
-        Glide.with(this).load("file://" + info.getFilePath())
+        Glide.with(this)
+             .load("file://" + info.getFilePath())
              .diskCacheStrategy(DiskCacheStrategy.ALL)
              .crossFade()
              .centerCrop()
@@ -239,28 +306,37 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         fileInfo.setFilePath(filePath);
         fileInfo.setFileName(filePath.substring(filePath.lastIndexOf("/") + 1));
         fileInfo.setSource(FileInfo.SOURCE.PHONE_CAMERA);
-        if(photoParams.isTagEnabled()){
+        if(photoParams.isTagEnabled())
+        {
 
-            if(imagesWithTags.get(mTagList.get(currentTag)) == null){
-                imagesWithTags.put(mTagList.get(currentTag), Collections.singletonList(fileInfo));
-            } else {
-                List<FileInfo> listFiles = (List<FileInfo>) mTagList.get(currentTag);
-                listFiles.add(fileInfo);
-                imagesWithTags.put(mTagList.get(currentTag),listFiles);
+            if(imagesWithTags.get(mTagList.get(currentTag)) == null)
+            {
+                List<FileInfo> fileInfos = new ArrayList<>();
+                fileInfos.add(fileInfo);
+                imagesWithTags.put(mTagList.get(currentTag), fileInfos);
             }
-        } else {
+            else
+            {
+                List<FileInfo> listFiles = imagesWithTags.get(mTagList.get(currentTag));
+                listFiles.add(fileInfo);
+                imagesWithTags.put(mTagList.get(currentTag), listFiles);
+            }
+        }
+        else
+        {
             imagesList.add(fileInfo);
             if(photoParams.isCameraHorizontalPreviewEnabled())
+            {
                 updateCapturedPhotos(fileInfo);
+            }
         }
-
-
     }
 
     @Override
     public void onPicturesFinalized(ArrayList<FileInfo> infos)
     {
         getSupportFragmentManager().popBackStackImmediate();
+
         if(infos.size() > 0)
         {
             setResult(RESULT_OK, new Intent().putExtra(NeonConstants.COLLECTED_IMAGES, infos));
@@ -273,11 +349,10 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
     }
 
     @Override
-    public void sendPictureForCropping(File file)
+    public void onPicturesFinalized(Map<ImageTagModel, List<FileInfo>> filesMap)
     {
-        //        Intent intent = new Intent(this, ScanActivity.class);
-        //        intent.putExtra(ScanConstants.IMAGE_FILE_FOR_CROPPING,file);
-        //        startActivityForResult(intent,ScanActivity.REQUEST_REVIEW);
+        setResult(RESULT_OK, new Intent().putExtra(NeonConstants.COLLECTED_IMAGES, imagesWithTags));
+        finish();
     }
 
     @Override
@@ -296,32 +371,56 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == R.id.buttonCapture) {
-            if (v.getTag().equals("capture")) {
+        if(v.getId() == R.id.buttonCapture)
+        {
+            if(v.getTag().equals("capture"))
+            {
                 mFragment.clickPicture();
-            } else if (v.getTag().equals("done")) {
-                if (imagesList.size() > 0) {
-                   onPicturesFinalized(imagesList);
-                } else {
-                    Toast.makeText(this, getString(R.string.please_select_atleast_one), Toast.LENGTH_SHORT).show();
+            }
+            else if(v.getTag().equals("done"))
+            {
+                if(photoParams.isTagEnabled())
+                {
+                    onPicturesFinalized(imagesWithTags);
+                }
+                else
+                {
+                    onPicturesFinalized(imagesList);
                 }
             }
-        } else if (v.getId() == R.id.buttonGallery) {
+        }
+        else if(v.getId() == R.id.buttonGallery)
+        {
             Intent intent = new Intent(this, GalleryActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(GalleryActivity.MAX_COUNT, maxNumberOfImages);
             intent.putExtra(Constants.PHOTO_PARAMS, photoParams);
             startActivityForResult(intent, GALLERY_PICK);
-
-        } else if (v.getId() == R.id.buttonDone) {
-            if (imagesList.size() == 0) {
-                Toast.makeText(this, getString(R.string.no_images), Toast.LENGTH_SHORT).show();
-            } else {
+        }
+        else if(v.getId() == R.id.buttonDone)
+        {
+            if(!photoParams.isTagEnabled())
+            {
+                if(imagesList.size() == 0)
+                {
+                    Toast.makeText(this, getString(R.string.no_images), Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    buttonCapture.setTag("done");
+                    onClick(buttonCapture);
+                }
+            }
+            else
+            {
                 buttonCapture.setTag("done");
                 onClick(buttonCapture);
             }
-        } else if(v.getId() == R.id.tvSkip){
+        }
+        else if(v.getId() == R.id.tvSkip)
+        {
             setTag(getNextTag());
+            AnimationUtils.translateRightToLeft(tvTag, 200, 0);
         }
     }
 }
