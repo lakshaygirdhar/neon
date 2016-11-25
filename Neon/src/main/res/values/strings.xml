@@ -50,5 +50,6 @@
     <string name="finish">Finish</string>
     <string name="capture">capture</string>
     <string name="tag_mandatory_error"> %1$s \n is mandatory </string>
+    <string name="press_done">Press Done</string>
     <color name="gray">#808080</color>
 </resources>

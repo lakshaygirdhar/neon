@@ -43,10 +43,11 @@ import android.widget.Toast;
 import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.CameraPreview;
-import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.DrawingView;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.NeonConstants;
+import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PhotoParams;
 import com.gaadi.neon.util.PrefsUtils;
 import com.scanlibrary.R;
@@ -84,6 +85,7 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
     private boolean useFrontFacingCamera;
     private boolean enableCapturedReview;
     private float mDist;
+    private ImageView mSwitchCamera;
     private PhotoParams.CameraFacing cameraFacing;
 
     public void clickPicture()
@@ -105,7 +107,7 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
     public static CameraFragment1 getInstance(PhotoParams photoParams) {
         CameraFragment1 fragment = new CameraFragment1();
         Bundle extras = new Bundle();
-        extras.putSerializable(Constants.PHOTO_PARAMS, photoParams);
+        extras.putSerializable(NeonConstants.PHOTO_PARAMS, photoParams);
         fragment.setArguments(extras);
         return fragment;
     }
@@ -124,40 +126,62 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentView = LayoutInflater.from(getContext()).inflate(R.layout.camera_fragment_layout, container, false);
-        mPhotoParams = (PhotoParams) getArguments().getSerializable(Constants.PHOTO_PARAMS);
+        mPhotoParams = (PhotoParams) getArguments().getSerializable(NeonConstants.PHOTO_PARAMS);
         mActivity = getActivity();
         if(mPhotoParams != null){
 
-            enableCapturedReview = mPhotoParams.isEnableCapturedReview();
-            PhotoParams.CameraOrientation orientation = mPhotoParams.getOrientation();
-            cameraFacing = mPhotoParams.getCameraFace();
-            Log.d(TAG, "onCreateView: " + cameraFacing);
+            initialize();
 
-            //View to add rectangle on tap to focus
-            drawingView = new DrawingView(mActivity);
+            customize();
 
-            setOrientation(mActivity, orientation);
-
-            LinearLayoutManager layoutManager
-                    = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
-
-            currentFlashMode = (ImageView) fragmentView.findViewById(R.id.currentFlashMode);
-
-            rcvFlash = (RecyclerView)fragmentView.findViewById(R.id.flash_listview);
-            rcvFlash.setLayoutManager(layoutManager);
-
-            ImageView mSwitchCamera = (ImageView) fragmentView.findViewById(R.id.switchCamera);
-            if(CommonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                mSwitchCamera.setVisibility(View.GONE);
-                useFrontFacingCamera = false;
-            }
-            mSwitchCamera.setOnClickListener(this);
-            fragmentView.setOnTouchListener(this);
-
-        } else {
+        }
+        else
+        {
             Toast.makeText(getContext(), getString(R.string.pass_params), Toast.LENGTH_SHORT).show();
         }
         return fragmentView;
+    }
+
+    private void initialize()
+    {
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+
+        currentFlashMode = (ImageView) fragmentView.findViewById(R.id.currentFlashMode);
+        rcvFlash = (RecyclerView) fragmentView.findViewById(R.id.flash_listview);
+        rcvFlash.setLayoutManager(layoutManager);
+
+        //View to add rectangle on tap to focus
+        drawingView = new DrawingView(mActivity);
+
+        mSwitchCamera = (ImageView) fragmentView.findViewById(R.id.switchCamera);
+
+        mSwitchCamera.setOnClickListener(this);
+        fragmentView.setOnTouchListener(this);
+    }
+
+    private void customize()
+    {
+        PhotoParams.CameraOrientation orientation = mPhotoParams.getOrientation();
+        cameraFacing = mPhotoParams.getCameraFace();
+        setOrientation(mActivity, orientation);
+
+        if(!mPhotoParams.isFlashOptionsEnabled())
+            fragmentView.findViewById(R.id.llFlash).setVisibility(View.INVISIBLE);
+
+        enableCapturedReview = mPhotoParams.isEnableCapturedReview();
+
+        if(mPhotoParams.isCameraFaceSwitchEnabled())
+        {
+            if(NeonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT)
+            {
+                mSwitchCamera.setVisibility(View.GONE);
+                useFrontFacingCamera = false;
+            }
+        } else {
+            mSwitchCamera.setVisibility(View.GONE);
+            useFrontFacingCamera = false;
+        }
     }
 
     @Override
@@ -254,14 +278,14 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
         if (mCamera == null) {
             try {
                 if (!permissionAlreadyRequested && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                        && !CommonUtils.checkForPermission(mActivity,
+                        && !NeonUtils.checkForPermission(mActivity,
                                                            new String[]{Manifest.permission.CAMERA,
                                                                    Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                                            Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
                     permissionAlreadyRequested = true;
                     return;
                 }
-                if (cameraFacing == PhotoParams.CameraFacing.FRONT && CommonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                if (cameraFacing == PhotoParams.CameraFacing.FRONT && NeonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     Log.d(TAG, "onResume: open front");
                     mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
                 } else {

@@ -12,8 +12,8 @@ import com.gaadi.neon.activity.CameraActivity1;
 import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.activity.NeutralActivity;
 import com.gaadi.neon.util.ApplicationController;
-import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PhotoParams;
 import com.scanlibrary.R;
 
@@ -33,10 +33,10 @@ public class PhotosLibrary {
         switch (params.getMode()) {
             case CAMERA_PRIORITY:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                        && !CommonUtils.checkForPermission(context,
-                                                           new String[]{Manifest.permission.CAMERA,
+                        && !NeonUtils.checkForPermission(context,
+                                                         new String[]{Manifest.permission.CAMERA,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                                           Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
+                                                         Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
                     return;
                 }
                 Intent newIntent = new Intent(context, CameraActivity.class);

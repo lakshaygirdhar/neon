@@ -16,18 +16,41 @@ public class PhotoParams implements Serializable {
     private CameraOrientation orientation;
     private int noOfPhotos;
     private FolderOptions folderOptions;
-    private boolean tagEnabled;
-    private boolean metaEnabled;
     private String uploadApi;
     private MODE mode = MODE.NEUTRAL;
     private ArrayList<?> imagePathList;
+    private ArrayList<ImageTagModel> imageTags;
+    private CameraFacing cameraFace;
+
+    private boolean cameraFaceSwitchEnabled;
+    private boolean tagEnabled;
+    private boolean metaEnabled;
     private boolean enableCapturedReview;
     private boolean enableExtraBrightness;
     private boolean restrictedExtensionEnabled;
-    private CameraFacing cameraFace;
     private boolean galleryFromCameraEnabled;
     private boolean cameraHorizontalPreviewEnabled;
-    private ArrayList<ImageTagModel> imageTags;
+    private boolean flashOptionsEnabled;
+
+    public boolean isCameraFaceSwitchEnabled()
+    {
+        return cameraFaceSwitchEnabled;
+    }
+
+    public void setCameraFaceSwitchEnabled(boolean cameraFaceSwitchEnabled)
+    {
+        this.cameraFaceSwitchEnabled = cameraFaceSwitchEnabled;
+    }
+
+    public boolean isFlashOptionsEnabled()
+    {
+        return flashOptionsEnabled;
+    }
+
+    public void setFlashOptionsEnabled(boolean flashOptionsEnabled)
+    {
+        this.flashOptionsEnabled = flashOptionsEnabled;
+    }
 
     private enum FolderOptions {
         PUBLIC_DIR, PUBLIC_DIR_DCIM, PUBLIC_DIR_SOCIAL, PUBLIC_DIR_ALL;

@@ -22,10 +22,10 @@ import com.gaadi.neon.adapter.PhotosGridAdapter;
 import com.gaadi.neon.dynamicgrid.DynamicGridView;
 import com.gaadi.neon.interfaces.UpdateSelection;
 import com.gaadi.neon.util.ApplicationController;
-import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonConstants;
+import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PhotoParams;
 import com.scanlibrary.R;
 
@@ -239,7 +239,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
     {
         if(action.equals(ADD_PHOTOS))
         {
-            CommonUtils.removeFileInfo(listAdd, cameraItemsFiles);
+            NeonUtils.removeFileInfo(listAdd, cameraItemsFiles);
             cameraItemsFiles.addAll(listAdd);
             photosGridAdapter.set(cameraItemsFiles);
             photosGridAdapter.notifyDataSetChanged();
@@ -251,7 +251,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
     {
         if(v.getId() == R.id.addPhotoCamera)
         {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !CommonUtils.checkForPermission(context,
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !NeonUtils.checkForPermission(context,
                                                                                                  new String[]{Manifest.permission.CAMERA,
                                                                                                          Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                                                                                  Constants.REQUEST_PERMISSION_CAMERA,
@@ -274,7 +274,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, A
         else if(v.getId() == R.id.addPhotoGallary)
         {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    !CommonUtils.checkForPermission(context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    !NeonUtils.checkForPermission(context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                                                     Constants.REQUEST_PERMISSION_READ_EXTERNAL_STORAGE, "Storage"))
             {
                 return;

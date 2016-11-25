@@ -15,9 +15,8 @@ import android.widget.GridView;
 import com.gaadi.neon.adapter.SelectFilesAdapter;
 import com.gaadi.neon.interfaces.UpdateSelection;
 import com.gaadi.neon.util.ApplicationController;
-import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.NeonConstants;
+import com.gaadi.neon.util.NeonUtils;
 import com.scanlibrary.R;
 
 import java.util.ArrayList;
@@ -109,13 +108,13 @@ public class GalleryFiles extends BaseActivity implements UpdateSelection, Loade
             finish();
         } else if (id == R.id.menu_next) {
             folderSelectedFiles.addAll(addedFiles);
-            CommonUtils.removeFileInfo(folderSelectedFiles, deletedFiles);
+            NeonUtils.removeFileInfo(folderSelectedFiles, deletedFiles);
             if (maxCount == 0) {
                 if (ApplicationController.selectedFiles == null)
                     ApplicationController.selectedFiles = new ArrayList<>();
                 addFilesToSelected(ApplicationController.selectedFiles, addedFiles);
                 removeFilesFromSelected(ApplicationController.selectedFiles, deletedFiles);
-                CommonUtils.removeFileInfo(ApplicationController.selectedFiles, deletedFiles, false);
+                NeonUtils.removeFileInfo(ApplicationController.selectedFiles, deletedFiles, false);
             }
             Intent intent = new Intent();
             intent.putExtra(GalleryFiles.SELECTED_FILES, folderSelectedFiles);
@@ -131,14 +130,14 @@ public class GalleryFiles extends BaseActivity implements UpdateSelection, Loade
         fileInfo.setFilePath(imagePath);
         if (selected) {
             textViewDone.setVisible(true);
-            CommonUtils.addFileInfo(addedFiles, fileInfo);
-            CommonUtils.removeFileInfo(deletedFiles, fileInfo);
+            NeonUtils.addFileInfo(addedFiles, fileInfo);
+            NeonUtils.removeFileInfo(deletedFiles, fileInfo);
         } else {
             SelectFilesAdapter adapter = (SelectFilesAdapter) folderFiles.getAdapter();
             if (adapter.selectedArr.size() == 0) {
                 textViewDone.setVisible(true);
             }
-            CommonUtils.addFileInfo(deletedFiles, fileInfo);
+            NeonUtils.addFileInfo(deletedFiles, fileInfo);
         }
         if (maxCount > 0)
             adapter.setStopSelection((addedFiles.size() - deletedFiles.size()) == maxCount);

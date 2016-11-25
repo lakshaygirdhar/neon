@@ -40,10 +40,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
 import com.gaadi.neon.util.CameraPreview;
-import com.gaadi.neon.util.CommonUtils;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.DrawingView;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.NeonConstants;
+import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PhotoParams;
 import com.gaadi.neon.util.PrefsUtils;
 import com.scanlibrary.R;
@@ -104,7 +105,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
     public static CameraFragment getInstance(PhotoParams photoParams) {
         CameraFragment fragment = new CameraFragment();
         Bundle extras = new Bundle();
-        extras.putSerializable(Constants.PHOTO_PARAMS, photoParams);
+        extras.putSerializable(NeonConstants.PHOTO_PARAMS, photoParams);
         fragment.setArguments(extras);
         return fragment;
     }
@@ -119,7 +120,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentView = LayoutInflater.from(getContext()).inflate(R.layout.camera_fragment, container, false);
-        mPhotoParams = (PhotoParams) getArguments().getSerializable(Constants.PHOTO_PARAMS);
+        mPhotoParams = (PhotoParams) getArguments().getSerializable(NeonConstants.PHOTO_PARAMS);
         mActivity = getActivity();
         if(mPhotoParams != null){
             imageName = mPhotoParams.getImageName();
@@ -148,7 +149,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
             tvImageName = (TextView) fragmentView.findViewById(R.id.imageName);
 
             ImageView mSwitchCamera = (ImageView) fragmentView.findViewById(R.id.switchCamera);
-            if(CommonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            if(NeonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT) {
                 mSwitchCamera.setVisibility(View.GONE);
                 useFrontFacingCamera = false;
             }
@@ -286,14 +287,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
         if (mCamera == null) {
             try {
                 if (!permissionAlreadyRequested && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                        && !CommonUtils.checkForPermission(mActivity,
+                        && !NeonUtils.checkForPermission(mActivity,
                                                            new String[]{Manifest.permission.CAMERA,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                                            Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
                     permissionAlreadyRequested = true;
                     return;
                 }
-                if (cameraFacing == PhotoParams.CameraFacing.FRONT && CommonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                if (cameraFacing == PhotoParams.CameraFacing.FRONT && NeonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     Log.d(TAG, "onResume: open front");
                     mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
 //                    mSwitchCamera.setVisibility(View.GONE);
@@ -396,7 +397,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
             Intent intent = new Intent(mActivity, GalleryActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(GalleryActivity.MAX_COUNT, maxNumberOfImages);
-            intent.putExtra(Constants.PHOTO_PARAMS, mPhotoParams);
+            intent.putExtra(NeonConstants.PHOTO_PARAMS, mPhotoParams);
             startActivityForResult(intent, GALLERY_PICK);
 
         } else if (v.getId() == R.id.buttonDone) {

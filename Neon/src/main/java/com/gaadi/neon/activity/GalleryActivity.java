@@ -13,10 +13,9 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.gaadi.neon.adapter.ImagesFoldersAdapter;
-import com.gaadi.neon.util.CommonUtils;
-import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonConstants;
+import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PhotoParams;
 import com.scanlibrary.R;
 
@@ -50,14 +49,14 @@ public class GalleryActivity extends BaseActivity implements AdapterView.OnItemC
 
         GridView gvFolders = (GridView) findViewById(R.id.gvFolders);
 
-        if (getIntent().getSerializableExtra(Constants.PHOTO_PARAMS) != null) {
-            mPhotoParams = (PhotoParams) getIntent().getSerializableExtra(Constants.PHOTO_PARAMS);
+        if (getIntent().getSerializableExtra(NeonConstants.PHOTO_PARAMS) != null) {
+            mPhotoParams = (PhotoParams) getIntent().getSerializableExtra(NeonConstants.PHOTO_PARAMS);
             maxCount = mPhotoParams.getNoOfPhotos();
         }
         ImagesFoldersAdapter adapter = new ImagesFoldersAdapter(this, folders);
         gvFolders.setAdapter(adapter);
 
-        Uri uri = CommonUtils.getImageStoreUri();
+        Uri uri = NeonUtils.getImageStoreUri();
 
         String[] PROJECTION_BUCKET = {
                 "" + MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,

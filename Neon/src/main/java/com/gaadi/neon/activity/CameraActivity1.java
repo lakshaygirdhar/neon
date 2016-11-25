@@ -123,7 +123,14 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
             setTag(mTagList.get(currentTag));
             imagesWithTags = new HashMap<>();
         }
+        else
+        {
+            findViewById(R.id.rlTags).setVisibility(View.GONE);
+        }
+
         maxNumberOfImages = photoParams.getNoOfPhotos();
+        if(maxNumberOfImages == 1)
+            buttonDone.setVisibility(View.GONE);
         imageName = photoParams.getImageName();
 
         boolean isGalleryEnabled = photoParams.isGalleryFromCameraEnabled();
@@ -141,18 +148,27 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
 
     public ImageTagModel getNextTag()
     {
-        if(photoParams.isTagEnabled()){
-            if(mTagList.get(currentTag).isMandatory()){
-                if(imagesWithTags.get(mTagList.get(currentTag))==null || imagesWithTags.get(mTagList.get(currentTag)).size() == 0){
+        if(photoParams.isTagEnabled())
+        {
+            if(mTagList.get(currentTag).isMandatory())
+            {
+                if(imagesWithTags.get(mTagList.get(currentTag)) == null || imagesWithTags.get(mTagList.get(currentTag)).size() == 0)
+                {
                     Toast.makeText(this, String.format(getString(R.string.tag_mandatory_error), mTagList.get(currentTag).getTagName()),
                                    Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else
+                {
                     currentTag++;
                 }
-            } else {
+            }
+            else
+            {
                 currentTag++;
             }
-        } else {
+        }
+        else
+        {
             if(currentTag < mTagList.size() && !mTagList.get(currentTag).isMandatory())
             {
                 currentTag++;
@@ -168,12 +184,17 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         {
             tvNext.setText(getString(R.string.finish));
         }
-        if(currentTag == mTagList.size()){
+        if(currentTag == mTagList.size())
+        {
             if(photoParams.isTagEnabled())
+            {
                 onPicturesFinalized(imagesWithTags);
+            }
             else
+            {
                 onPicturesFinalized(imagesList);
-            return mTagList.get(currentTag-1);
+            }
+            return mTagList.get(currentTag - 1);
         }
         return mTagList.get(currentTag);
     }
@@ -200,8 +221,7 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         outState.putSerializable(Constants.IMAGES_SELECTED, imagesList);
     }
 
-    //updates the listview with the photos clicked by the camera
-    private void updateCapturedPhotos(FileInfo fileInfo)
+    private void handleCameraButtons(FileInfo fileInfo)
     {
         if(maxNumberOfImages == 1)
         {
@@ -213,12 +233,12 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
             if(imagesList.size() >= 1 && photoParams.isCameraHorizontalPreviewEnabled())
             {
                 scrollView.setVisibility(View.VISIBLE);
+                addInScrollView(fileInfo);
             }
             else
             {
                 scrollView.setVisibility(View.GONE);
             }
-            addInScrollView(fileInfo);
 
             if(maxNumberOfImages > 0)
             {
@@ -240,7 +260,7 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
             buttonCapture.setVisibility(View.VISIBLE);
         }
         buttonDone.setVisibility(View.VISIBLE);
-        tvImageName.setText(status ? imageName : "Press Done");
+        tvImageName.setText(status ? imageName : getString(R.string.press_done));
     }
 
     //It is called when configuration(orientation) of screen changes
@@ -305,6 +325,7 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         FileInfo fileInfo = new FileInfo();
         fileInfo.setFilePath(filePath);
         fileInfo.setFileName(filePath.substring(filePath.lastIndexOf("/") + 1));
+        fileInfo.setDisplayName(imageName);
         fileInfo.setSource(FileInfo.SOURCE.PHONE_CAMERA);
         if(photoParams.isTagEnabled())
         {
@@ -325,10 +346,7 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         else
         {
             imagesList.add(fileInfo);
-            if(photoParams.isCameraHorizontalPreviewEnabled())
-            {
-                updateCapturedPhotos(fileInfo);
-            }
+            handleCameraButtons(fileInfo);
         }
     }
 
@@ -394,7 +412,7 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
             Intent intent = new Intent(this, GalleryActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(GalleryActivity.MAX_COUNT, maxNumberOfImages);
-            intent.putExtra(Constants.PHOTO_PARAMS, photoParams);
+            intent.putExtra(NeonConstants.PHOTO_PARAMS, photoParams);
             startActivityForResult(intent, GALLERY_PICK);
         }
         else if(v.getId() == R.id.buttonDone)

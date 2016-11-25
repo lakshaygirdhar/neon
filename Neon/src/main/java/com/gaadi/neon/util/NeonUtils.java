@@ -33,8 +33,10 @@ import java.util.ArrayList;
 /**
  * Created by Lakshay
  * @since 17-03-2015.
+ *
  */
-public class CommonUtils {
+
+public class NeonUtils {
 
     public static void createNotification(Context context, int smallIcon, String title, String content, Intent resultIntent, int imageUploadNotifId) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
