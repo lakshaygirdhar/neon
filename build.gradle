@@ -15,8 +15,13 @@ allprojects {
     repositories {
         jcenter()
     }
+    ext{
+        supportLibraryVersion = "25.0.1"
+    }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+
