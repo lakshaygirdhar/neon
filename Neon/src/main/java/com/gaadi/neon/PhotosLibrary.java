@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.widget.Toast;
 
-import com.gaadi.neon.activity.CameraActivity;
 import com.gaadi.neon.activity.CameraActivity1;
 import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.activity.NeutralActivity;
@@ -39,7 +38,7 @@ public class PhotosLibrary {
                                                          Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
                     return;
                 }
-                Intent newIntent = new Intent(context, CameraActivity.class);
+                Intent newIntent = new Intent(context, CameraActivity1.class);
                 newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 newIntent.putExtra("photoParams", params);
                 ((Activity) context).startActivityForResult(newIntent, requestCode);

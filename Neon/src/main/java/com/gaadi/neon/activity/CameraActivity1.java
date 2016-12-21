@@ -120,6 +120,11 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         {
             tvImageName.setVisibility(View.GONE);
             mTagList = photoParams.getImageTags();
+            if(mTagList == null)
+            {
+                Toast.makeText(this, getString(R.string.no_tags_sent), Toast.LENGTH_SHORT).show();
+                return;
+            }
             setTag(mTagList.get(currentTag));
             imagesWithTags = new HashMap<>();
         }

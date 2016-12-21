@@ -1,16 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        config {
-            keyAlias 'lakshay'
-            keyPassword '123456'
-            storeFile file('/home/lakshaygirdhar/Downloads/lakshay.jks')
-            storePassword '123456'
-        }
-    }
+//    signingConfigs {
+//        config {
+//            keyAlias 'lakshay'
+//            keyPassword '123456'
+//            storeFile file('/home/lakshaygirdhar/Downloads/lakshay.jks')
+//            storePassword '123456'
+//        }
+//    }
     compileSdkVersion 24
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "25.0.1"
     defaultConfig {
         applicationId "com.customise.gaadi.camera"
         minSdkVersion 16
@@ -24,10 +24,10 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+//            signingConfig signingConfigs.config
         }
         debug {
-            signingConfig signingConfigs.config
+//            signingConfig signingConfigs.config
         }
     }
 }

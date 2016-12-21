@@ -64,7 +64,7 @@ import java.util.Map;
 @SuppressWarnings("deprecation,unchecked")
 public class CameraFragment1 extends Fragment implements View.OnClickListener, View.OnTouchListener, Camera.PictureCallback {
 
-    private static final String TAG = "CameraFragment";
+    private static final String TAG = "CameraFragment1";
     private static final int REQUEST_REVIEW = 100;
     private PhotoParams mPhotoParams;
     private DrawingView drawingView;
