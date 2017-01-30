@@ -3,14 +3,15 @@ package com.gaadi.neon.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.gaadi.neon.dynamicgrid.BaseDynamicGridAdapter;
 import com.gaadi.neon.interfaces.UpdateSelection;
 import com.gaadi.neon.util.ApplicationController;
 import com.gaadi.neon.util.FileInfo;
@@ -20,24 +21,39 @@ import java.util.ArrayList;
 
 /**
  * Created by Lakshay
- * @since 20-02-2015
  *
+ * @since 20-02-2015
  */
-public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.OnClickListener {
+public class PhotosGridAdapter extends BaseAdapter implements View.OnClickListener {
 
     private Context context;
     private UpdateSelection updateSelection;
     private int imgLoadDefSmall;
+    private ArrayList<FileInfo> mFiles;
 
     public PhotosGridAdapter(Context context,
                              ArrayList<FileInfo> fileInfos,
-                             int columnCount,
                              UpdateSelection updateSelection,
                              int imgLoadDefSmall) {
-        super(context, fileInfos, columnCount);
         this.context = context;
+        this.mFiles = fileInfos;
         this.updateSelection = updateSelection;
         this.imgLoadDefSmall = imgLoadDefSmall;
+    }
+
+    @Override
+    public int getCount() {
+        return mFiles.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mFiles.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
     }
 
     @Override
@@ -45,7 +61,7 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
         PhotosHolder holder;
 
         if (convertView == null) {
-            convertView = View.inflate(context,R.layout.display_images, null);
+            convertView = View.inflate(context, R.layout.display_images, null);
             holder = new PhotosHolder();
             holder.image = (ImageView) convertView.findViewById(R.id.ivImageDisplay);
             holder.removeImage = (ImageView) convertView.findViewById(R.id.ivRemoveImage);
@@ -56,16 +72,16 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
             holder = (PhotosHolder) convertView.getTag();
         }
 
-//        if (position == 0) {
-//            holder.tvProfile.setVisibility(View.VISIBLE);
-//            holder.transparentView.setVisibility(View.VISIBLE);
-//            holder.transparentView.setBackgroundColor(ContextCompat.getColor(context, R.color.tranparent_black));
-//            holder.image.setBackgroundColor(ContextCompat.getColor(context , R.color.transparent_white));
-//
-//        } else {
+        if (position == 0) {
+            holder.tvProfile.setVisibility(View.VISIBLE);
+            holder.transparentView.setVisibility(View.VISIBLE);
+            //holder.transparentView.setBackgroundColor(ContextCompat.getColor(context, R.color.tranparent_black));
+            holder.image.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent_white));
+
+        } else {
             holder.tvProfile.setVisibility(View.GONE);
             holder.transparentView.setVisibility(View.GONE);
-//        }
+        }
         holder.removeImage.setTag(position);
         holder.removeImage.setOnClickListener(this);
 
@@ -87,7 +103,7 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
 
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             final AlertDialog alertDialog = builder
-                    .setTitle(R.string.alert)
+                    .setTitle(R.string.app_name)
                     .setMessage(R.string.removeImage)
                     .setPositiveButton(R.string.yes,
                             new DialogInterface.OnClickListener() {
@@ -117,12 +133,17 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
     private void removeImage(int position) {
         if (getCount() > 0) {
             FileInfo fileInfo = (FileInfo) getItem(position);
-            getItems().remove(position);
+            mFiles.remove(position);
             ApplicationController.selectedFiles.remove(fileInfo.getFilePath());
             this.updateSelection.updateSelected(fileInfo.getFilePath(), false);
             notifyDataSetChanged();
         }
 
+    }
+
+    public void updateGridImages(ArrayList<FileInfo> fileInfos) {
+        mFiles = fileInfos;
+        notifyDataSetChanged();
     }
 
     private class PhotosHolder {

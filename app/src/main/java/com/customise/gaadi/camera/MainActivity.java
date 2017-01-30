@@ -12,6 +12,7 @@ import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonConstants;
 import com.gaadi.neon.util.PhotoParams;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -64,31 +65,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             case R.id.bClickMe:
                 PhotoParams params = new PhotoParams();
-                params.setMode(PhotoParams.MODE.CAMERA_PRIORITY);
+                params.setMode(PhotoParams.MODE.NEUTRAL);
                 params.setTagEnabled(true);
-                //                ArrayList<ImageTagModel> imageTagModels = new ArrayList<>();
-                //                ImageTagModel imageTagModel = new ImageTagModel();
-                //                imageTagModel.setTagName("First");
-                //                imageTagModels.add(imageTagModel);
-                //
-                //                ImageTagModel imageTagModel1 = new ImageTagModel();
-                //                imageTagModel1.setTagName("Second");
-                //                imageTagModel1.setMandatory(true);
-                //                imageTagModels.add(imageTagModel1);
-                //
-                //                ImageTagModel imageTagModel2 = new ImageTagModel();
-                //                imageTagModel2.setTagName("Third");
-                //                imageTagModels.add(imageTagModel2);
-                //
-                //                params.setImageTags(imageTagModels);
+                params.setCameraFaceSwitchEnabled(true);
+                params.setCameraHorizontalPreviewEnabled(true);
+                params.setGalleryFromCameraEnabled(false);
+                params.setEnableCapturedReview(true);
+                params.setFlashOptionsEnabled(true);
 
-                params.setImageName("My Image");
-                params.setNoOfPhotos(1);
+                               ArrayList<ImageTagModel> imageTagModels = new ArrayList<>();
+                                ImageTagModel imageTagModel = new ImageTagModel();
+                                imageTagModel.setTagName("First");
+                                imageTagModels.add(imageTagModel);
+
+                                ImageTagModel imageTagModel1 = new ImageTagModel();
+                                imageTagModel1.setTagName("Second");
+                                imageTagModel1.setMandatory(true);
+                                imageTagModels.add(imageTagModel1);
+
+                                ImageTagModel imageTagModel2 = new ImageTagModel();
+                                imageTagModel2.setTagName("Third");
+                                imageTagModels.add(imageTagModel2);
+
+                                params.setImageTags(imageTagModels);
+
+                //params.setImageName("My Image");
+               // params.setNoOfPhotos(1);
                 params.setCameraFace(PhotoParams.CameraFacing.BACK);
                 //        params.setMode(PhotoParams.MODE.NEUTRAL);
                 params.setOrientation(PhotoParams.CameraOrientation.LANDSCAPE);
                 //        params.setNoOfPhotos(2);
-                //        params.setEnableCapturedReview(true);
+                        params.setEnableCapturedReview(true);
                 //        params.setEnableExtraBrightness(false);
                 //        params.setRestrictedExtensionEnabled(true);
                 //        params.setCameraFace(PhotoParams.CameraFacing.BACK);

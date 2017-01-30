@@ -6,38 +6,38 @@
                 android:orientation="vertical">
 
     <ImageView
-        android:contentDescription="@null"
         android:id="@+id/ivImageDisplay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"/>
 
 
     <ImageView
-        android:contentDescription="@null"
         android:id="@+id/viewTransaparent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
-        android:src="@color/tranparent_black" />
+        android:src="@color/tranparent_black"/>
 
     <android.support.v7.widget.AppCompatImageView
-        android:contentDescription="@null"
         android:id="@+id/ivRemoveImage"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        app:srcCompat="@drawable/ic_cancel" />
+        app:srcCompat="@drawable/ic_cancel"/>
 
 
     <TextView
         android:id="@+id/tvProfilePhoto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="@string/profile_photo"
-        android:textColor="@color/white" />
+        android:background="@color/tranparent_black"
+        android:textColor="@color/white"
+        android:padding="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 
 </RelativeLayout>

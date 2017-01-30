@@ -53,4 +53,5 @@
     <string name="press_done">Press Done</string>
     <string name="no_tags_sent">Please set tags for images</string>
     <color name="gray">#808080</color>
+    <string name="title_activity_image_review">ImageReviewActivity</string>
 </resources>

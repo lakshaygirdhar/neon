@@ -1,0 +1,6 @@
+<resources>
+
+    <style name="NeonAppCompatNoActionBarTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="NeonAppCompatNoActionBarTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

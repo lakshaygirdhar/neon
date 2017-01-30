@@ -30,6 +30,7 @@
     <dimen name="three_coloumn_height">120dp</dimen>
     <dimen name="gv_horizontal_spacing">2dp</dimen>
     <dimen name="gv_vertical_spacing">1dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 
 </resources>

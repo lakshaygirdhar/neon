@@ -29,6 +29,8 @@ dependencies {
     compile project.GLIDE_LIBRARY
     compile project.RECYCLERVIEW
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:design:25.1.0'
+    compile 'com.soundcloud.android:android-crop:1.0.1@aar'
 }
 ext {
     bintrayRepo = 'maven'
