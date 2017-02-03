@@ -117,5 +117,6 @@ public class SelectFilesAdapter extends CursorAdapter implements View.OnClickLis
         ImageView selectedImage;
         ImageView transparentLayer;
         ImageView selection_view;
+
     }
 }

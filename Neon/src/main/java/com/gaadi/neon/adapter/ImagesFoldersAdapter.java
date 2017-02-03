@@ -1,18 +1,20 @@
 package com.gaadi.neon.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.activity.gallery.GridFilesActivity;
+import com.gaadi.neon.model.BucketModel;
+import com.gaadi.neon.util.Constants;
 import com.scanlibrary.R;
-
 import java.util.ArrayList;
 
 /**
@@ -20,13 +22,13 @@ import java.util.ArrayList;
  */
 public class ImagesFoldersAdapter extends BaseAdapter {
 
-    Context context;
-    ArrayList<FileInfo> folders;
+    private Activity context;
+    private ArrayList<BucketModel> folders;
 
-    public ImagesFoldersAdapter(Context context, ArrayList<FileInfo> files) {
+    public ImagesFoldersAdapter(Activity context, ArrayList<BucketModel> bucketModels) {
 
         this.context = context;
-        this.folders = files;
+        this.folders = bucketModels;
     }
 
     @Override
@@ -60,21 +62,32 @@ public class ImagesFoldersAdapter extends BaseAdapter {
         }
 
         holder = (FolderHolder) convertView.getTag();
-        FileInfo fileInfo = folders.get(position);
-        if (fileInfo.getFileCount() > 0) {
-            holder.countFiles.setText(fileInfo.getFileCount() + "");
+        final BucketModel bucketInfo = folders.get(position);
+        if (bucketInfo.getFileCount() > 0) {
+            holder.countFiles.setText(String.valueOf(bucketInfo.getFileCount()));
             holder.countFiles.setVisibility(View.VISIBLE);
         } else {
             holder.countFiles.setVisibility(View.INVISIBLE);
         }
-        holder.FolderName.setText(folders.get(position).getDisplayName().toString());
+        holder.FolderName.setText(folders.get(position).getBucketName());
 
         Glide.with(context)
-                .load("file://" + folders.get(position).getFilePath())
+                .load("file://" + folders.get(position).getBucketCoverImagePath())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .placeholder(R.drawable.default_placeholder)
                 .centerCrop()
                 .into(holder.imageView);
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent folderFilesIntent = new Intent(context, GridFilesActivity.class);
+                folderFilesIntent.putExtra(Constants.BucketName,bucketInfo.getBucketName());
+                folderFilesIntent.putExtra(Constants.BucketId,bucketInfo.getBucketId());
+                context.startActivity(folderFilesIntent);
+            }
+        });
         return convertView;
     }
+
+
 }

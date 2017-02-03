@@ -1,5 +1,7 @@
 package com.gaadi.neon.util;
 
+import com.gaadi.neon.model.ImageTagModel;
+
 import java.io.Serializable;
 
 /**
@@ -16,6 +18,25 @@ public class FileInfo implements Serializable {
     private boolean selected;
     private SOURCE source;
     private int fileCount;
+
+    public String getDateTimeTaken() {
+        return dateTimeTaken;
+    }
+
+    public void setDateTimeTaken(String dateTimeTaken) {
+        this.dateTimeTaken = dateTimeTaken;
+    }
+
+    private String dateTimeTaken;
+    private ImageTagModel fileTag;
+
+    public ImageTagModel getFileTag() {
+        return fileTag;
+    }
+
+    public void setFileTag(ImageTagModel fileTag) {
+        this.fileTag = fileTag;
+    }
 
     public FileInfo() {
         this.selected = false;

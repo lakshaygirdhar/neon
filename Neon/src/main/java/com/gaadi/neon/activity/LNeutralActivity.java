@@ -21,9 +21,9 @@ import com.scanlibrary.R;
  *
  */
 
-public class NeutralActivity extends FragmentActivity
+public class LNeutralActivity extends FragmentActivity
 {
-    private static final String TAG = "NeutralActivity";
+    private static final String TAG = "LNeutralActivity";
     private NeutralFragment cameraItemsFragment;
 
     @Override

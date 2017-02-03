@@ -161,7 +161,7 @@ public class GalleryFiles extends BaseActivity implements UpdateSelection, Loade
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_folder_file, menu);
+        getMenuInflater().inflate(R.menu.menu_done_file, menu);
         textViewDone = menu.findItem(R.id.menu_next);
         textViewDone.setVisible(!ApplicationController.selectedFiles.isEmpty());
         return super.onCreateOptionsMenu(menu);

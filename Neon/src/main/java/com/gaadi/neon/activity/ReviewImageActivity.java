@@ -1,5 +1,6 @@
 package com.gaadi.neon.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -7,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
 
 import java.io.File;
@@ -27,14 +30,12 @@ import java.io.File;
  * @author lakshaygirdhar
  * @since 13-08-2016
  */
-public class ReviewImageActivity extends AppCompatActivity implements View.OnClickListener
-{
+public class ReviewImageActivity extends AppCompatActivity implements View.OnClickListener {
     protected Toolbar toolbar;
     private String imagePath;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle extras = getIntent().getExtras();
@@ -49,12 +50,10 @@ public class ReviewImageActivity extends AppCompatActivity implements View.OnCli
         TextView tvImageName = (TextView) findViewById(R.id.imageName);
         boolean flag = extras.getBoolean(Constants.FLAG);
 
-        if(flag)
-        {
+        if (flag) {
             toolbar.setVisibility(View.VISIBLE);
             setSupportActionBar(toolbar);
-            if(getSupportActionBar() != null)
-            {
+            if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
             tvImageName.setVisibility(View.GONE);
@@ -62,9 +61,7 @@ public class ReviewImageActivity extends AppCompatActivity implements View.OnCli
             upArrow.setColorFilter(ContextCompat.getColor(ReviewImageActivity.this, R.color.white), PorterDuff.Mode.SRC_ATOP);
             getSupportActionBar().setHomeAsUpIndicator(upArrow);
             relativeLayout.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             toolbar.setVisibility(View.GONE);
             tvImageName.setVisibility(View.VISIBLE);
             ImageView bDone = (ImageView) findViewById(R.id.bDone);
@@ -78,37 +75,28 @@ public class ReviewImageActivity extends AppCompatActivity implements View.OnCli
         tvImageName.setVisibility(View.VISIBLE);
         tvImageName.setText(imageName);
 
-        if(imagePath != null)
-        {
+        if (imagePath != null) {
             Glide.with(this).load(imagePath).into(ivReview);
         }
     }
 
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         int id = v.getId();
-        if(id == R.id.bDone)
-        {
+        if (id == R.id.bDone) {
             FragmentManager manager = getSupportFragmentManager();
             manager.popBackStackImmediate();
             Intent intent = new Intent();
             intent.putExtra(Constants.IMAGE_PATH, imagePath);
             setResult(RESULT_OK, intent);
             finish();
-        }
-        else if(id == R.id.bCancel)
-        {
+        } else if (id == R.id.bCancel) {
             Uri uri = Uri.parse(imagePath);
             File fdelete = new File(uri.getPath());
-            if(fdelete.exists())
-            {
-                if(fdelete.delete())
-                {
+            if (fdelete.exists()) {
+                if (fdelete.delete()) {
                     System.out.println("file Deleted :" + imagePath);
-                }
-                else
-                {
+                } else {
                     System.out.println("file not Deleted :" + imagePath);
                 }
             }
@@ -119,14 +107,14 @@ public class ReviewImageActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 break;
         }
         return true;
     }
+
+
 }

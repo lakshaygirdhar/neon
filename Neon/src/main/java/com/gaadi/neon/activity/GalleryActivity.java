@@ -53,7 +53,8 @@ public class GalleryActivity extends BaseActivity implements AdapterView.OnItemC
             mPhotoParams = (PhotoParams) getIntent().getSerializableExtra(NeonConstants.PHOTO_PARAMS);
             maxCount = mPhotoParams.getNoOfPhotos();
         }
-        ImagesFoldersAdapter adapter = new ImagesFoldersAdapter(this, folders);
+        //ImagesFoldersAdapter adapter = new ImagesFoldersAdapter(this, folders);
+        ImagesFoldersAdapter adapter=null;
         gvFolders.setAdapter(adapter);
 
         Uri uri = NeonUtils.getImageStoreUri();

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/camera_preview"
@@ -15,32 +15,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:gravity="center"
         android:layout_centerHorizontal="true"
-        android:textSize="14sp"
-        android:textColor="@android:color/white"
-        android:padding="10dp"
         android:background="@color/tranparent_black"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
         android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/llFlash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-                  android:layout_width="wrap_content"
-                  android:layout_marginLeft="20dp"
-                  android:layout_marginStart="10dp"
-                  android:gravity="center_vertical"
-                  android:layout_height="wrap_content"
-                  android:orientation="horizontal">
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <ImageView android:padding="5dp"
-                   android:contentDescription="@null"
-                   android:id="@+id/currentFlashMode"
-                   android:layout_marginLeft="@dimen/default_margin"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:clickable="true"
-                   android:visibility="visible" />
+        <ImageView
+            android:id="@+id/currentFlashMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:clickable="true"
+            android:contentDescription="@null"
+            android:padding="5dp"
+            android:visibility="visible" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/flash_listview"
@@ -50,20 +51,20 @@
     </LinearLayout>
 
     <ImageView
-        android:contentDescription="@null"
         android:id="@+id/switchCamera"
-        android:layout_margin="@dimen/default_margin"
-        android:layout_below="@id/llFlash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/camera_switch"/>
+        android:layout_below="@id/llFlash"
+        android:layout_margin="@dimen/default_margin"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/camera_switch" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
         android:background="@color/tranparent_black"
-        android:layout_alignParentBottom="true">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -72,30 +73,30 @@
             android:layout_marginRight="10dp">
 
             <ImageView
-                android:contentDescription="@null"
                 android:id="@+id/buttonDone"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/ic_camera_done"
                 android:layout_centerVertical="true"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_camera_done"
                 android:visibility="visible" />
 
             <ImageView
-                android:contentDescription="@null"
                 android:id="@+id/buttonCapture"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_centerHorizontal="true"
+                android:contentDescription="@null"
                 android:src="@drawable/ic_camera" />
 
             <ImageView
-                android:contentDescription="@null"
                 android:id="@+id/buttonGallery"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:contentDescription="@null"
                 android:src="@drawable/ic_camera_gallery" />
 
         </RelativeLayout>
@@ -109,9 +110,9 @@
                 android:id="@+id/imageHolderView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="#80000000"
                 android:minWidth="600dp"
                 android:orientation="horizontal"
-                android:background="#80000000"
                 android:visibility="gone">
 
             </LinearLayout>
@@ -121,9 +122,9 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

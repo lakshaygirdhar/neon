@@ -49,7 +49,6 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
             holder = new PhotosHolder();
             holder.image = (ImageView) convertView.findViewById(R.id.ivImageDisplay);
             holder.removeImage = (ImageView) convertView.findViewById(R.id.ivRemoveImage);
-            holder.transparentView = convertView.findViewById(R.id.viewTransaparent);
             holder.tvProfile = (TextView) convertView.findViewById(R.id.tvProfilePhoto);
             convertView.setTag(holder);
         } else {
@@ -64,7 +63,6 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
 //
 //        } else {
             holder.tvProfile.setVisibility(View.GONE);
-            holder.transparentView.setVisibility(View.GONE);
 //        }
         holder.removeImage.setTag(position);
         holder.removeImage.setOnClickListener(this);
@@ -128,7 +126,6 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
     private class PhotosHolder {
         ImageView image;
         ImageView removeImage;
-        View transparentView;
         TextView tvProfile;
     }
 }

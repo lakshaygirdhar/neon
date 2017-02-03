@@ -39,7 +39,8 @@ public class CameraActivity extends AppCompatActivity implements CameraFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_priority_items);
         PhotoParams photoParams = (PhotoParams) getIntent().getSerializableExtra(NeutralFragment.PHOTO_PARAMS);
-        CameraFragment1 fragment = CameraFragment1.getInstance(photoParams);
+        /*CameraFragment1 fragment = CameraFragment1.getInstance(photoParams);*/
+        CameraFragment1 fragment = new CameraFragment1();
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }

@@ -85,7 +85,7 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
             }
         }, 1000);
 
-        mFragment = CameraFragment1.getInstance(photoParams);
+        //mFragment = CameraFragment1.getInstance(photoParams);
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.content_frame, mFragment).commit();
 
@@ -443,7 +443,7 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         else if(v.getId() == R.id.tvSkip)
         {
             setTag(getNextTag());
-            AnimationUtils.translateRightToLeft(tvTag, 200, 0);
+            AnimationUtils.translateOnXAxis(tvTag, 200, 0);
         }
     }
 }

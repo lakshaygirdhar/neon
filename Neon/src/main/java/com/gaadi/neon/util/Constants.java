@@ -16,6 +16,12 @@ import java.util.Date;
  *
  */
 public class Constants {
+    public static final String Gallery_Params = "Gallery_Params";
+    public static final String Camera_Params = "Camera_Params";
+    public static final String BucketName = "BucketName";
+    public static final String BucketId = "BucketId";
+
+
 
     public static final int TYPE_IMAGE = 1;
     public static final String APP_SHARED_PREFERENCE = "com.gcloud.gaadi.prefs";

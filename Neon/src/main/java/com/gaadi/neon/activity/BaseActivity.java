@@ -7,7 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.gaadi.neon.model.ImageTagModel;
+import com.gaadi.neon.util.FileInfo;
 import com.scanlibrary.R;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author lakshaygirdhar
@@ -16,7 +21,7 @@ import com.scanlibrary.R;
  *
  */
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     protected FrameLayout frameLayout;
     protected Toolbar toolbar;

@@ -4,7 +4,6 @@ package com.gaadi.neon.fragment;
  * @author lakshaygirdhar
  * @version 1.0
  * @since 19/10/16
- *
  */
 
 import android.Manifest;
@@ -14,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -40,17 +40,22 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.gaadi.neon.Enumerations.CameraFacing;
+import com.gaadi.neon.Enumerations.CameraOrientation;
+import com.gaadi.neon.activity.neutral.NeonBaseNeutralActivity;
 import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
+import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.model.ImageTagModel;
+import com.gaadi.neon.util.ApplicationController;
 import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.DrawingView;
 import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.NeonConstants;
 import com.gaadi.neon.util.NeonUtils;
-import com.gaadi.neon.util.PhotoParams;
 import com.gaadi.neon.util.PrefsUtils;
+import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
+import com.scanlibrary.databinding.NeonCameraFragmentLayoutBinding;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -62,36 +67,35 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("deprecation,unchecked")
-public class CameraFragment1 extends Fragment implements View.OnClickListener, View.OnTouchListener, Camera.PictureCallback {
+public class CameraFragment1 extends Fragment implements View.OnTouchListener, Camera.PictureCallback {
 
     private static final String TAG = "CameraFragment1";
     private static final int REQUEST_REVIEW = 100;
-    private PhotoParams mPhotoParams;
     private DrawingView drawingView;
-
+    private ImageView buttonCapture;
     private ImageView currentFlashMode;
     private ArrayList<String> supportedFlashModes;
-
     private RecyclerView rcvFlash;
     private Camera mCamera;
     private CameraPreview mCameraPreview;
     private boolean readyToTakePicture;
     private FrameLayout mCameraLayout;
-    private View fragmentView;
-    private Activity mActivity;
-    private PictureTakenListener mPictureTakenListener;
+    // private View fragmentView;
+    private ICameraParam cameraParam;
+    private SetOnPictureTaken mPictureTakenListener;
     private boolean permissionAlreadyRequested;
-
+    private Activity mActivity;
     private boolean useFrontFacingCamera;
-    private boolean enableCapturedReview;
+    //private boolean enableCapturedReview;
     private float mDist;
     private ImageView mSwitchCamera;
-    private PhotoParams.CameraFacing cameraFacing;
+    private CameraFacing cameraFacing;
+    NeonCameraFragmentLayoutBinding binder;
 
-    public void clickPicture()
-    {
+
+    public void clickPicture() {
         if (readyToTakePicture) {
-            if(mCamera != null) {
+            if (mCamera != null) {
                 mCamera.takePicture(null, null, this);
             }
             readyToTakePicture = false;
@@ -100,81 +104,96 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
 
     public interface PictureTakenListener {
         void onPictureTaken(String filePath);
+
         void onPicturesFinalized(ArrayList<FileInfo> infos);
-        void onPicturesFinalized(Map<ImageTagModel,List<FileInfo>> filesMap);
+
+        void onPicturesFinalized(Map<ImageTagModel, List<FileInfo>> filesMap);
     }
 
-    public static CameraFragment1 getInstance(PhotoParams photoParams) {
-        CameraFragment1 fragment = new CameraFragment1();
-        Bundle extras = new Bundle();
-        extras.putSerializable(NeonConstants.PHOTO_PARAMS, photoParams);
-        fragment.setArguments(extras);
-        return fragment;
+    public interface SetOnPictureTaken {
+        void onPictureTaken(String filePath);
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mPictureTakenListener = (PictureTakenListener) activity;
+        mPictureTakenListener = (SetOnPictureTaken) activity;
     }
 
-    public void startPreview(){
+    public void startPreview() {
         mCamera.startPreview();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragmentView = LayoutInflater.from(getContext()).inflate(R.layout.camera_fragment_layout, container, false);
-        mPhotoParams = (PhotoParams) getArguments().getSerializable(NeonConstants.PHOTO_PARAMS);
+        binder = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.neon_camera_fragment_layout, container, false);
+
         mActivity = getActivity();
-        if(mPhotoParams != null){
-
+        cameraParam = SingletonClass.getSingleonInstance().getCameraParam();
+        if (cameraParam != null) {
             initialize();
-
             customize();
-
-        }
-        else
-        {
+        } else {
             Toast.makeText(getContext(), getString(R.string.pass_params), Toast.LENGTH_SHORT).show();
         }
-        return fragmentView;
+        return binder.getRoot();
     }
 
-    private void initialize()
-    {
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+    private void initialize() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
 
-        currentFlashMode = (ImageView) fragmentView.findViewById(R.id.currentFlashMode);
-        rcvFlash = (RecyclerView) fragmentView.findViewById(R.id.flash_listview);
+        currentFlashMode = binder.currentFlashMode;
+        rcvFlash = binder.flashListview;
+        buttonCapture = binder.buttonCapture;
+        mSwitchCamera = binder.switchCamera;
+
         rcvFlash.setLayoutManager(layoutManager);
 
         //View to add rectangle on tap to focus
         drawingView = new DrawingView(mActivity);
 
-        mSwitchCamera = (ImageView) fragmentView.findViewById(R.id.switchCamera);
+        binder.setHandlers(this);
 
-        mSwitchCamera.setOnClickListener(this);
-        fragmentView.setOnTouchListener(this);
+        binder.getRoot().setOnTouchListener(this);
     }
 
-    private void customize()
-    {
-        PhotoParams.CameraOrientation orientation = mPhotoParams.getOrientation();
-        cameraFacing = mPhotoParams.getCameraFace();
+
+    public void onClickFragmentsView(View v) {
+        if (v.getId() == R.id.buttonCapture) {
+            clickPicture();
+        } else if (v.getId() == R.id.switchCamera) {
+            int cameraFacing = initCameraId();
+            if (cameraFacing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                stopCamera();
+                useFrontFacingCamera = true;
+                startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
+            } else {
+                stopCamera();
+                useFrontFacingCamera = false;
+                startCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+            }
+        } else if (v.getId() == R.id.currentFlashMode) {
+            if (rcvFlash.getVisibility() == View.GONE)
+                createFlashModesDropDown();
+            else
+                rcvFlash.setVisibility(View.GONE);
+        }
+    }
+
+
+    private void customize() {
+        CameraOrientation orientation = cameraParam.getCameraOrientation();
+        cameraFacing = cameraParam.getCameraFacing();
         setOrientation(mActivity, orientation);
 
-        if(!mPhotoParams.isFlashOptionsEnabled())
-            fragmentView.findViewById(R.id.llFlash).setVisibility(View.INVISIBLE);
+        if (!cameraParam.getFlashEnabled()) {
+            binder.llFlash.setVisibility(View.INVISIBLE);
+        }
+        // enableCapturedReview = mPhotoParams.isEnableCapturedReview();
 
-        enableCapturedReview = mPhotoParams.isEnableCapturedReview();
-
-        if(mPhotoParams.isCameraFaceSwitchEnabled())
-        {
-            if(NeonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT)
-            {
+        if (cameraParam.getCameraSwitchingEnabled()) {
+            if (NeonUtils.isFrontCameraAvailable() != Camera.CameraInfo.CAMERA_FACING_FRONT) {
                 mSwitchCamera.setVisibility(View.GONE);
                 useFrontFacingCamera = false;
             }
@@ -185,20 +204,16 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
-        try
-        {
+        try {
             mCamera.setPreviewCallback(null);
             mCameraPreview.getHolder().removeCallback(mCameraPreview);
             mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
             mCameraPreview = null;
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
     }
@@ -210,13 +225,12 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
 
         ViewGroup.LayoutParams layoutParamsDrawing
                 = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-                                             ViewGroup.LayoutParams.FILL_PARENT);
+                ViewGroup.LayoutParams.FILL_PARENT);
 
         getActivity().addContentView(drawingView, layoutParamsDrawing);
     }
 
     private void setFlashLayoutAndMode() {
-        currentFlashMode.setOnClickListener(this);
         String flashMode = PrefsUtils.getStringSharedPreference(getActivity(), Constants.FLASH_MODE, "");
         if (flashMode.equals("")) {
             currentFlashMode.setImageResource(R.drawable.flash_off);
@@ -245,8 +259,7 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
             currentFlashMode.setImageResource(R.drawable.flash_red_eye);
         } else if ("torch".equals(mode)) {
             currentFlashMode.setImageResource(R.drawable.flash_torch);
-        }
-        else{
+        } else {
             currentFlashMode.setImageResource(R.drawable.flash_off);
         }
         PrefsUtils.setStringSharedPreference(getActivity(), Constants.FLASH_MODE, mode);
@@ -264,7 +277,7 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
                 mPictureTakenListener.onPictureTaken(capturedFilePath);
             }
         } else {
-             if (requestCode != 101) {
+            if (requestCode != 101) {
                 mActivity.setResult(resultCode);
                 mActivity.finish();
             }
@@ -279,13 +292,13 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
             try {
                 if (!permissionAlreadyRequested && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                         && !NeonUtils.checkForPermission(mActivity,
-                                                           new String[]{Manifest.permission.CAMERA,
-                                                                   Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                                           Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
+                        new String[]{Manifest.permission.CAMERA,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
                     permissionAlreadyRequested = true;
                     return;
                 }
-                if (cameraFacing == PhotoParams.CameraFacing.FRONT && NeonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                if (cameraFacing == CameraFacing.front && NeonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     Log.d(TAG, "onResume: open front");
                     mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
                 } else {
@@ -294,10 +307,7 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
 
                 //To set hardware camera rotation
                 setCameraRotation();
-                Camera.Parameters parameters = mCamera.getParameters();
-                createSupportedFlashList(parameters);
 
-                setFlashLayoutAndMode();
 
                 mCameraPreview = new CameraPreview(mActivity, mCamera);
                 mCameraPreview.setReadyListener(new CameraPreview.ReadyToTakePicture() {
@@ -309,12 +319,12 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
 
                 mCameraPreview.setOnTouchListener(this);
 
-                mCameraLayout = (FrameLayout) fragmentView.findViewById(R.id.camera_preview);
+                mCameraLayout = binder.cameraPreview;
                 mCameraLayout.addView(mCameraPreview);
 
                 //set the screen layout to fullscreen
                 mActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                                               WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
             } catch (Exception e) {
                 Log.e("Camera Open Exception", "" + e.getMessage());
             }
@@ -335,26 +345,7 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
     }
 
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.switchCamera) {
-            int cameraFacing = initCameraId();
-            if (cameraFacing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                stopCamera();
-                useFrontFacingCamera = true;
-                startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
-            } else {
-                stopCamera();
-                useFrontFacingCamera = false;
-                startCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
-            }
-        } else if (v.getId() == R.id.currentFlashMode) {
-            if(rcvFlash.getVisibility()==View.GONE)
-                createFlashModesDropDown();
-            else
-                rcvFlash.setVisibility(View.GONE);
-        }
-    }
+
 
     private void createFlashModesDropDown() {
         FlashModeRecyclerHorizontalAdapter flashModeAdapter = new FlashModeRecyclerHorizontalAdapter(getActivity(), supportedFlashModes);
@@ -391,7 +382,7 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
                     handleFocus(event, params);
                 }
             }
-            if (event.getPointerCount() > 1){
+            if (event.getPointerCount() > 1) {
                 return true;
             }
 
@@ -418,14 +409,12 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
     }
 
 
-
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
         new ImagePostProcessing(mActivity, data).execute();
     }
 
-    private class ImagePostProcessing extends AsyncTask<Void, Void, File>
-    {
+    private class ImagePostProcessing extends AsyncTask<Void, Void, File> {
 
         private Context context;
         private byte[] data;
@@ -438,9 +427,9 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
 
         @Override
         protected File doInBackground(Void... params) {
-            File pictureFile = Constants.getMediaOutputFile(getActivity(),Constants.TYPE_IMAGE);
+            File pictureFile = Constants.getMediaOutputFile(getActivity(), Constants.TYPE_IMAGE);
 
-            if(pictureFile == null)
+            if (pictureFile == null)
                 return null;
 
             try {
@@ -454,30 +443,30 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
                     bm = BitmapFactory.decodeByteArray(data, 0, (data != null) ? data.length : 0);
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                         // Notice that width and height are reversed
-                        Bitmap scaled = Bitmap.createScaledBitmap(bm,screenWidth,screenHeight,true);
+                        Bitmap scaled = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
                         int w = scaled.getWidth();
                         int h = scaled.getHeight();
                         // Setting post rotate to 90
                         Matrix mtx = new Matrix();
                         int cameraId;
-                        if (cameraFacing == PhotoParams.CameraFacing.FRONT) {
+                        if (cameraFacing == CameraFacing.front) {
                             cameraId = getBackFacingCameraId();
                         } else {
                             cameraId = initCameraId();
                         }
-                        int CameraEyeValue = setPhotoOrientation(getActivity(),cameraId); // CameraID = 1 : front 0:back
-                        if(cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) { // As Front camera is Mirrored so Fliping the Orientation
+                        int CameraEyeValue = setPhotoOrientation(getActivity(), cameraId); // CameraID = 1 : front 0:back
+                        if (cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) { // As Front camera is Mirrored so Fliping the Orientation
                             if (CameraEyeValue == 270) {
                                 mtx.postRotate(90);
                             } else if (CameraEyeValue == 90) {
                                 mtx.postRotate(270);
                             }
-                        }else{
+                        } else {
                             mtx.postRotate(CameraEyeValue); // CameraEyeValue is default to Display Rotation
                         }
 
                         bm = Bitmap.createBitmap(scaled, 0, 0, w, h, mtx, true);
-                    }else{// LANDSCAPE MODE
+                    } else {// LANDSCAPE MODE
                         //No need to reverse width and height
                         bm = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
                     }
@@ -485,7 +474,6 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
                     return null;
                 }
                 // COnverting the Die photo to Bitmap
-
 
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -496,7 +484,7 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
                 fos.close();
                 Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
                 mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                                   pictureFileUri));
+                        pictureFileUri));
 
             } catch (FileNotFoundException e) {
                 Log.d(TAG, "File not found: " + e.getMessage());
@@ -520,12 +508,15 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
             if (progressDialog != null)
                 progressDialog.dismiss();
             if (file != null) {
-                if(!enableCapturedReview || mPhotoParams.getMode() == PhotoParams.MODE.NEUTRAL) {
+                /*if(getActivity() instanceof NeonBaseNeutralActivity) {
                     mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
                     readyToTakePicture = true;
                     return;
                 }
-                mCamera.startPreview();
+                mCamera.startPreview();*/
+
+                mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
+                readyToTakePicture = true;
             } else {
                 Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
                 readyToTakePicture = true;
@@ -533,8 +524,6 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
             }
         }
     }
-
-
 
 
     private void setCameraRotation() {
@@ -563,21 +552,24 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
         Camera.Parameters params = mCamera.getParameters();
         params.setRotation(rotate);
         mCamera.setParameters(params);
+
+        Camera.Parameters parameters = mCamera.getParameters();
+        createSupportedFlashList(parameters);
+
+        setFlashLayoutAndMode();
     }
 
-    private void setOrientation(Activity activity, PhotoParams.CameraOrientation orientation) {
+    private void setOrientation(Activity activity, CameraOrientation orientation) {
         if (orientation != null) {
-            if (orientation.equals(PhotoParams.CameraOrientation.LANDSCAPE)) {
+            if (orientation == CameraOrientation.landscape) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            } else if (orientation.equals(PhotoParams.CameraOrientation.PORTRAIT)) {
+            } else if (orientation == CameraOrientation.portrait) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
         } else {
             Log.e(Constants.TAG, "No orientation set");
         }
     }
-
-
 
 
     private Rect calculateTapArea(float x, float y, float coefficient) {
@@ -643,10 +635,10 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
         // ...
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
-        return (float)Math.sqrt(x * x + y * y);
+        return (float) Math.sqrt(x * x + y * y);
     }
 
-    public void stopCamera () {
+    public void stopCamera() {
         try {
             if (null == mCamera) {
                 return;
@@ -688,12 +680,12 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
 
                 mCameraPreview.setOnTouchListener(this);
 
-                mCameraLayout = (FrameLayout) fragmentView.findViewById(R.id.camera_preview);
+                mCameraLayout = binder.cameraPreview;
                 mCameraLayout.addView(mCameraPreview);
 
                 //set the screen layout to fullscreen
                 mActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                                               WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
             } catch (Exception e) {
@@ -720,8 +712,7 @@ public class CameraFragment1 extends Fragment implements View.OnClickListener, V
                         && !useFrontFacingCamera) {
                     result = i;
                     break;
-                }
-                else if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT
+                } else if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT
                         && useFrontFacingCamera) {
                     result = i;
                     break;

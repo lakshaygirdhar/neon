@@ -13,6 +13,15 @@ public class ImageTagModel implements Serializable
     private boolean mandatory;
     private String tagId;
 
+    private ImageTagModel(){};
+
+    public ImageTagModel(String _tagName,String _tagId,boolean _mandatory){
+        tagName = _tagName;
+        tagId = _tagId;
+        mandatory = _mandatory;
+    }
+
+
     public String getTagName()
     {
         return tagName;
