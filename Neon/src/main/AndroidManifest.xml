@@ -49,6 +49,8 @@
         <activity android:name="com.gaadi.neon.activity.gallery.GridFoldersActivity" />
         <activity android:name="com.gaadi.neon.activity.gallery.GridFilesActivity" />
         <activity android:name="com.gaadi.neon.activity.ImageShow"></activity>
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+
     </application>
 
 </manifest>

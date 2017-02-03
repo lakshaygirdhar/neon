@@ -118,16 +118,17 @@
             android:paddingBottom="5dp" />
 
 
-        <com.gaadi.neon.dynamicgrid.DynamicGridView
-            android:id="@+id/gvPhotos"
+        <GridView
+            android:id="@+id/gvImages"
+            android:verticalSpacing="@dimen/vertical_space_images"
+            android:horizontalSpacing="@dimen/horizontal_space_images"
             android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
             android:layout_height="wrap_content"
+            android:layout_below="@id/lineShadow"
             android:layout_above="@+id/done"
-            android:layout_below="@+id/llActions"
-            android:layout_margin="@dimen/default_margin"
-            android:horizontalSpacing="@dimen/gv_horizontal_spacing"
-            android:numColumns="2"
-            android:verticalSpacing="@dimen/gv_vertical_spacing" />
+            android:numColumns="2" />
 
 
 

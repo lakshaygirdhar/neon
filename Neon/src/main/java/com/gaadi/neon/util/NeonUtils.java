@@ -12,12 +12,15 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.os.EnvironmentCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -28,7 +31,10 @@ import android.view.animation.Transformation;
 import com.scanlibrary.R;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Lakshay
@@ -38,7 +44,7 @@ import java.util.ArrayList;
 
 public class NeonUtils {
 
-    public static void createNotification(Context context, int smallIcon, String title, String content, Intent resultIntent, int imageUploadNotifId) {
+        public static void createNotification(Context context, int smallIcon, String title, String content, Intent resultIntent, int imageUploadNotifId) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(smallIcon)
                 .setContentTitle(title)
@@ -416,5 +422,84 @@ public class NeonUtils {
 
         // return final image
         return bmOut;
+    }
+
+    public static File getEmptyStoragePath(Context ctx) {
+        File mediaFile = null;
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String selectedPath = null;
+        ArrayList<String> list = (ArrayList) getSdCardPaths(ctx, true);
+        for (String path : list) {
+
+            long freeBytes = new File(path).getFreeSpace();
+            if (freeBytes > 5120) {
+                selectedPath = path;
+                break;
+            }
+        }
+        File externalDir = new File(selectedPath , ctx.getString(R.string.app_name));
+        if (!externalDir.exists()) {
+            if (!externalDir.mkdir()) {
+                //Toast.makeText(ctx,"FAILED externalDir.mkdir() TO CREATE DIRECTORY",Toast.LENGTH_SHORT).show();
+                Log.d("MyCameraApp", "failed to create directory");
+                return null;
+            }
+            else{
+                //Toast.makeText(ctx,"SUCCESS to create folder",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        mediaFile = new File(externalDir.getPath() + File.separator +
+                "IMG_" + timeStamp + ".jpg");
+        return mediaFile;
+    }
+
+    public static List<String> getSdCardPaths(final Context context, final boolean includePrimaryExternalStorage) {
+
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES).toString());
+        final List<String> result = new ArrayList<>();
+        if(!mediaStorageDir.exists()){
+            if(!mediaStorageDir.mkdir()){
+                Log.e("CommonUtils","Pictures Directory not found");
+            }
+            else{
+                result.add(mediaStorageDir.getAbsolutePath());
+            }
+        }
+        else{
+            result.add(mediaStorageDir.getAbsolutePath());
+        }
+        final File[] externalCacheDirs = ContextCompat.getExternalFilesDirs(context,null);
+        if (externalCacheDirs == null || externalCacheDirs.length == 0)
+            return null;
+        if (externalCacheDirs.length == 1) {
+            if (externalCacheDirs[0] == null)
+                return null;
+            final String storageState = EnvironmentCompat.getStorageState(externalCacheDirs[0]);
+            if (!Environment.MEDIA_MOUNTED.equals(storageState))
+                return null;
+            if (!includePrimaryExternalStorage && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && Environment.isExternalStorageEmulated())
+                return null;
+        }
+
+        if (includePrimaryExternalStorage || externalCacheDirs.length == 1)
+        {
+            result.add(externalCacheDirs[0].getAbsolutePath());
+            //result.add(getRootOfInnerSdCardFolder(externalCacheDirs[0]));
+        }
+        for (int i = 1; i < externalCacheDirs.length; ++i) {
+            final File file = externalCacheDirs[i];
+            if (file == null)
+                continue;
+            final String storageState = EnvironmentCompat.getStorageState(file);
+            if (Environment.MEDIA_MOUNTED.equals(storageState)) {
+                result.add(externalCacheDirs[i].getAbsolutePath());
+                //  result.add(getRootOfInnerSdCardFolder(externalCacheDirs[i]));
+            }
+        }
+        if (result.isEmpty())
+            return null;
+        return result;
     }
 }
