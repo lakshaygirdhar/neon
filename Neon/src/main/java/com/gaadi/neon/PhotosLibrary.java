@@ -1,6 +1,7 @@
 package com.gaadi.neon;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
@@ -82,7 +83,7 @@ public class PhotosLibrary {
 */
 
 
-    public static void collectPhotos(Activity activity, PhotosMode photosMode, SetOnImageCollectionListener listener) throws NullPointerException, NeonException {
+    public static void collectPhotos(Context activity, PhotosMode photosMode, SetOnImageCollectionListener listener) throws NullPointerException, NeonException {
         SingletonClass.getSingleonInstance().setImageResultListener(listener);
         validate(activity, photosMode,listener);
         if (photosMode.getParams() instanceof INeutralParam) {
@@ -94,7 +95,7 @@ public class PhotosLibrary {
         }
     }
 
-    private static void validate(Activity activity, PhotosMode photosMode,SetOnImageCollectionListener listener) throws NullPointerException, NeonException {
+    private static void validate(Context activity, PhotosMode photosMode,SetOnImageCollectionListener listener) throws NullPointerException, NeonException {
         if (activity == null) {
             throw new NullPointerException("Activity instance cannot be null");
         } else if (photosMode == null) {
@@ -107,7 +108,7 @@ public class PhotosLibrary {
         }
     }
 
-    private static void startCameraActivity(Activity activity, PhotosMode photosMode) {
+    private static void startCameraActivity(Context activity, PhotosMode photosMode) {
         ICameraParam cameraParams = (ICameraParam) photosMode.getParams();
         SingletonClass.getSingleonInstance().setCameraParam(cameraParams);
 
@@ -121,7 +122,7 @@ public class PhotosLibrary {
         }
     }
 
-    private static void startGalleryActivity(Activity activity, PhotosMode photosMode) {
+    private static void startGalleryActivity(Context activity, PhotosMode photosMode) {
         IGalleryParam galleryParams = (IGalleryParam) photosMode.getParams();
         SingletonClass.getSingleonInstance().setGalleryParam(galleryParams);
 
@@ -144,7 +145,7 @@ public class PhotosLibrary {
         }
     }
 
-    private static void startNeutralActivity(Activity activity, PhotosMode photosMode) {
+    private static void startNeutralActivity(Context activity, PhotosMode photosMode) {
         SingletonClass.getSingleonInstance().setNeutralEnabled(true);
 
         INeutralParam neutralParamParams = (INeutralParam) photosMode.getParams();
