@@ -1,6 +1,8 @@
 package com.gaadi.neon.util;
 
+import android.content.Context;
 import android.os.Handler;
+import android.widget.Toast;
 
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
@@ -128,9 +130,15 @@ public class SingletonClass {
         return true;
     }
 
-    public boolean putInImageCollection(FileInfo fileInfo) {
+    public boolean putInImageCollection(FileInfo fileInfo, Context context) {
         if (imagesCollection == null) {
             imagesCollection = new ArrayList<>();
+        }
+        if(!getGenericParam().getTagEnabled() && getGenericParam().getNumberOfPhotos() > 0 &&
+                getImagesCollection() != null &&
+                getGenericParam().getNumberOfPhotos() == getImagesCollection().size()){
+            Toast.makeText(context,"" + getGenericParam().getNumberOfPhotos() + " images are allowed only",Toast.LENGTH_SHORT).show();
+            return false;
         }
         return imagesCollection.add(fileInfo);
     }

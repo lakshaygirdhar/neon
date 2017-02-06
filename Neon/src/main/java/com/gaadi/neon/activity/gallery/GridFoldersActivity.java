@@ -26,8 +26,6 @@ import java.util.List;
 
 public class GridFoldersActivity extends NeonBaseGalleryActivity {
 
-    private MenuItem textViewCamera;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +37,7 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_camera, menu);
-        textViewCamera = menu.findItem(R.id.menu_camera);
+        MenuItem textViewCamera = menu.findItem(R.id.menu_camera);
         if(SingletonClass.getSingleonInstance().getGalleryParam().galleryToCameraSwitchEnabled()) {
             textViewCamera.setVisible(true);
         }else{

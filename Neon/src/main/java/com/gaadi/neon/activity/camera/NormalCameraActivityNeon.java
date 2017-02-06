@@ -255,7 +255,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         if (cameraParams.getTagEnabled()) {
             fileInfo.setFileTag(tagModels.get(currentTag));
         }
-        SingletonClass.getSingleonInstance().putInImageCollection(fileInfo);
+        SingletonClass.getSingleonInstance().putInImageCollection(fileInfo,this);
     }
 
 }

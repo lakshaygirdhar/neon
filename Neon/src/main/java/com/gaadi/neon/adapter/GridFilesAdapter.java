@@ -86,15 +86,11 @@ public class GridFilesAdapter extends BaseAdapter {
                     if(SingletonClass.getSingleonInstance().removeFromCollection(fileInfos.get(position))){
                         finalFilesHolder.selection_view.setVisibility(View.GONE);
                         finalFilesHolder.transparentLayer.setVisibility(View.GONE);
-                    }else{
-                        Toast.makeText(context,"Failed to deselect image.Please try again later",Toast.LENGTH_SHORT).show();
                     }
                 }else{
-                    if(SingletonClass.getSingleonInstance().putInImageCollection(fileInfos.get(position))) {
+                    if(SingletonClass.getSingleonInstance().putInImageCollection(fileInfos.get(position),context)) {
                         finalFilesHolder.selection_view.setVisibility(View.VISIBLE);
                         finalFilesHolder.transparentLayer.setVisibility(View.VISIBLE);
-                    }else{
-                        Toast.makeText(context,"Failed to select image.Please try again later",Toast.LENGTH_SHORT).show();
                     }
                 }
             }

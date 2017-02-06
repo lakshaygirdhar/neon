@@ -126,12 +126,12 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
 
                 @Override
                 public int getNumberOfPhotos() {
-                    return 0;
+                    return 3;
                 }
 
                 @Override
                 public boolean getTagEnabled() {
-                    return true;
+                    return false;
                 }
 
                 @Override
@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
 
                 @Override
                 public int getNumberOfPhotos() {
-                    return 0;
+                    return 5;
                 }
 
                 @Override
