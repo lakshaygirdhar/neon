@@ -446,6 +446,49 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
         }
     }
 
+    public void galleryOnlyHorizontalClicked(View view){
+        try {
+            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                @Override
+                public boolean selectVideos() {
+                    return false;
+                }
+
+                @Override
+                public GalleryType getGalleryViewType() {
+                    return GalleryType.horizontal_scroll;
+                }
+
+                @Override
+                public boolean galleryToCameraSwitchEnabled() {
+                    return false;
+                }
+
+                @Override
+                public boolean isRestrictedExtensionJpgPngEnabled() {
+                    return true;
+                }
+
+                @Override
+                public int getNumberOfPhotos() {
+                    return 0;
+                }
+
+                @Override
+                public boolean getTagEnabled() {
+                    return false;
+                }
+
+                @Override
+                public List<ImageTagModel> getImageTagsModel() {
+                    return null;
+                }
+            }),this);
+        } catch (NeonException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     @SuppressWarnings("unchecked")

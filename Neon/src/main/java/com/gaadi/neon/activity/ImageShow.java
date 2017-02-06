@@ -28,13 +28,14 @@ public class ImageShow extends NeonBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bindXml();
     }
 
 
     private void bindXml() {
-        ActivityImageShowBinding binder = DataBindingUtil.setContentView(this, R.layout.activity_image_show);
+        ActivityImageShowBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_image_show,frameLayout,true);
+        //ActivityImageShowBinding binder = DataBindingUtil.setContentView(this, R.layout.activity_image_show);
         ImageShowFragment imageShowFragment = new ImageShowFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.imageShowFragmentContainer, imageShowFragment).commit();

@@ -31,7 +31,7 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bindXml();
         setTitle(R.string.gallery);
     }
@@ -87,6 +87,7 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
             }
         }
     }
+
 
     private void performCameraOperation() {
 
@@ -155,7 +156,8 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
 
 
     private void bindXml() {
-        ActivityGridFoldersBinding binder = DataBindingUtil.setContentView(this, R.layout.activity_grid_folders);
+        ActivityGridFoldersBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_grid_folders,frameLayout,true);
+        //ActivityGridFoldersBinding binder = DataBindingUtil.setContentView(this, R.layout.activity_grid_folders);
         ImagesFoldersAdapter adapter = new ImagesFoldersAdapter(this, getImageBuckets());
         binder.gvFolders.setAdapter(adapter);
     }

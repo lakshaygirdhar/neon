@@ -35,7 +35,7 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bindXml();
         String title = getIntent().getStringExtra(Constants.BucketName);
         if (title == null || title.length() <= 0) {
@@ -190,7 +190,8 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
 
 
     private void bindXml() {
-        ActivityGridFilesBinding binder = DataBindingUtil.setContentView(this, R.layout.activity_grid_files);
+        ActivityGridFilesBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_grid_files,frameLayout,true);
+        //ActivityGridFilesBinding binder = DataBindingUtil.setContentView(this, R.layout.activity_grid_files);
         GridFilesAdapter adapter = new GridFilesAdapter(this, getFileFromBucketId(getIntent().getStringExtra(Constants.BucketId)));
         binder.gvFolderPhotos.setAdapter(adapter);
     }

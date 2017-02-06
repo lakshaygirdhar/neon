@@ -35,7 +35,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bindXml();
     }
 
@@ -51,7 +51,9 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
     }
 
     private void bindXml() {
-        NeutralActivityLayoutBinding binder = DataBindingUtil.setContentView(this, R.layout.neutral_activity_layout);
+        //NeutralActivityLayoutBinding binder = DataBindingUtil.setContentView(this, R.layout.neutral_activity_layout);
+        NeutralActivityLayoutBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.neutral_activity_layout,frameLayout,true);
+
         binder.setHandlers(this);
 
         ImageShowFragment imageShowFragment = new ImageShowFragment();

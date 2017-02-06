@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
 import com.gaadi.neon.activity.gallery.GridFilesActivity;
 import com.gaadi.neon.activity.gallery.GridFoldersActivity;
+import com.gaadi.neon.activity.gallery.HorizontalFilesActivity;
 import com.gaadi.neon.activity.neutral.NeonNeutralActivity;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
@@ -139,7 +140,8 @@ public class PhotosLibrary {
                 break;
 
             case horizontal_scroll:
-                Toast.makeText(activity, "Not yet implemented", Toast.LENGTH_SHORT).show();
+                Intent horizontalGalleryFileIntent = new Intent(activity, HorizontalFilesActivity.class);
+                activity.startActivity(horizontalGalleryFileIntent);
                 break;
 
         }

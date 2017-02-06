@@ -53,9 +53,8 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
         viewPagerRightBtn.setOnClickListener(this);
         viewPagerLeftBtn.setOnClickListener(this);
         mTitle = (TextView) findViewById(R.id.image_review_toolbar_title);
-        getSupportActionBar().setTitle("Image Review");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        setTitle("Image Review");
         Intent intent = getIntent();
 
         singleTagSelection = intent.getBooleanExtra(Constants.SINGLE_TAG_SELECTION, false);
@@ -85,7 +84,6 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
 
             }
         });
-
 
 
     }
@@ -121,7 +119,7 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
         } else if (event.getImageEventType() == ImageEditEvent.EVENT_REPLACED_BY_GALLERY) {
             isViewDirty = true;
         } else if (event.getImageEventType() == ImageEditEvent.EVENT_TAG_CHANGED) {
-            SingletonClass.getSingleonInstance().getImagesCollection().set(event.getPosition(),event.getModel());
+            SingletonClass.getSingleonInstance().getImagesCollection().set(event.getPosition(), event.getModel());
         }
     }
 
