@@ -15,16 +15,10 @@ allprojects {
     repositories {
         jcenter()
 
-        maven {
-            url "http://192.168.84.162:8081/artifactory/libs-release-local"
-            credentials {
-                username = "${artifactory_username}"
-                password = "${artifactory_password}"
-            }
-        }
+
     }
     ext{
-        supportLibraryVersion = "25.0.1"
+        supportLibraryVersion = "25.1.1"
     }
 }
 
