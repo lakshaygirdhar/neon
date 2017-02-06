@@ -167,7 +167,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         final ListPopupWindow listPopupWindow = new ListPopupWindow(getActivity());
         listPopupWindow.setModal(true);
         listPopupWindow.setWidth(ListPopupWindow.WRAP_CONTENT);
-        ImageTagsAdapter imageTagsAdapter = new ImageTagsAdapter(getActivity());
+        ImageTagsAdapter imageTagsAdapter = new ImageTagsAdapter(getActivity(),imageModel);
         listPopupWindow.setAdapter(imageTagsAdapter);
         listPopupWindow.setAnchorView(v);
         listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.gaadi.neon.activity.ImageReviewActivity;
 import com.gaadi.neon.model.ImageTagModel;
+import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
 
@@ -30,10 +31,12 @@ public class ImageTagsAdapter extends ArrayAdapter<ImageTagModel> {
     private final LayoutInflater mInflater;
     private Context context;
     private ImageTagsModelsHolder mHolder;
+    private FileInfo fileOnViewPager;
 
-    public ImageTagsAdapter(Context context) {
+    public ImageTagsAdapter(Context context, FileInfo _fileOnViewPager) {
         super(context, android.R.layout.simple_spinner_dropdown_item);
         this.context = context;
+        fileOnViewPager = _fileOnViewPager;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         setDropDownViewResource(R.layout.color_layout_row);
     }
@@ -72,8 +75,8 @@ public class ImageTagsAdapter extends ArrayAdapter<ImageTagModel> {
             mHolder = (ImageTagsModelsHolder) convertView.getTag();
 
         }
-        if(SingletonClass.getSingleonInstance().getImagesCollection().get(position).getFileTag() != null &&
-                SingletonClass.getSingleonInstance().getImagesCollection().get(position).getFileTag().getTagId().equals(
+        if(fileOnViewPager != null && fileOnViewPager.getFileTag() != null &&
+                fileOnViewPager.getFileTag().getTagId().equals(
                         tagsModel.getTagId())){
             ContextCompat.getColor(context, android.R.color.darker_gray);
         }else{
