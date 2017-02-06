@@ -18,6 +18,9 @@ public class FileInfo implements Serializable {
     private boolean selected;
     private SOURCE source;
     private int fileCount;
+    private String dateTimeTaken;
+    private ImageTagModel fileTag;
+
 
     public String getDateTimeTaken() {
         return dateTimeTaken;
@@ -27,8 +30,6 @@ public class FileInfo implements Serializable {
         this.dateTimeTaken = dateTimeTaken;
     }
 
-    private String dateTimeTaken;
-    private ImageTagModel fileTag;
 
     public ImageTagModel getFileTag() {
         return fileTag;

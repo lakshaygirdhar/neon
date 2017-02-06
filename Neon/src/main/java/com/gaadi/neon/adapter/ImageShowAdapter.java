@@ -2,6 +2,7 @@ package com.gaadi.neon.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -11,6 +12,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.gaadi.neon.activity.ImageReviewActivity;
+import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
 
@@ -82,7 +85,9 @@ public class ImageShowAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Clicked position " + position, Toast.LENGTH_SHORT).show();
+                Intent viewPagerIntent = new Intent(context,ImageReviewActivity.class);
+                viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION,position);
+                context.startActivity(viewPagerIntent);
             }
         });
 

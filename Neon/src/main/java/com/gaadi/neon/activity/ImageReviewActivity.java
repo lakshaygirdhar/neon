@@ -17,14 +17,14 @@ import com.gaadi.neon.events.ImageEditEvent;
 import com.gaadi.neon.interfaces.FragmentListener;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
 
 import java.util.ArrayList;
 
-public class ImageReviewActivity extends AppCompatActivity implements View.OnClickListener, FragmentListener {
+public class ImageReviewActivity extends NeonBaseActivity implements View.OnClickListener, FragmentListener {
 
     private ImagesReviewViewPagerAdapter mPagerAdapter;
-    private ArrayList<FileInfo> gallaryItemsFiles;
 
     private TextView mDoneButton;
     private TextView mTitle;
@@ -57,17 +57,16 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         Intent intent = getIntent();
-        gallaryItemsFiles = (ArrayList<FileInfo>) intent.getSerializableExtra(Constants.IMAGE_MODEL_FOR__REVIEW);
 
         singleTagSelection = intent.getBooleanExtra(Constants.SINGLE_TAG_SELECTION, false);
         int position = intent.getIntExtra(Constants.IMAGE_REVIEW_POSITION, 0);
         if (position == 0) {
             viewPagerLeftBtn.setVisibility(View.GONE);
         }
-        if (position == gallaryItemsFiles.size() - 1) {
+        if (position == SingletonClass.getSingleonInstance().getImagesCollection().size() - 1) {
             viewPagerRightBtn.setVisibility(View.GONE);
         }
-        mPagerAdapter = new ImagesReviewViewPagerAdapter(getSupportFragmentManager(), gallaryItemsFiles);
+        mPagerAdapter = new ImagesReviewViewPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(position);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -78,7 +77,7 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
 
             @Override
             public void onPageSelected(int position) {
-                setArrowButton(position, gallaryItemsFiles);
+                setArrowButton(position);
             }
 
             @Override
@@ -91,13 +90,14 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    private void setArrowButton(int position, ArrayList<FileInfo> imagesTempList) {
-        if (position == 0 || imagesTempList.size() == 1) {
+    private void setArrowButton(int position) {
+        if (position == 0 || SingletonClass.getSingleonInstance().getImagesCollection().size() == 1) {
             viewPagerLeftBtn.setVisibility(View.GONE);
         } else {
             viewPagerLeftBtn.setVisibility(View.VISIBLE);
         }
-        if (position == imagesTempList.size() - 1 || imagesTempList.size() == 1) {
+        if (position == SingletonClass.getSingleonInstance().getImagesCollection().size() - 1 ||
+                SingletonClass.getSingleonInstance().getImagesCollection().size() == 1) {
             viewPagerRightBtn.setVisibility(View.GONE);
         } else {
             viewPagerRightBtn.setVisibility(View.VISIBLE);
@@ -107,12 +107,12 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
     public void getFragmentChanges(ImageEditEvent event) {
         if (event.getImageEventType() == ImageEditEvent.EVENT_DELETE) {
             isViewDirty = true;
-            gallaryItemsFiles.remove(event.getPosition());
-            mPagerAdapter.setPagerItems(gallaryItemsFiles);
-            if (gallaryItemsFiles.size() == 0) {
+            SingletonClass.getSingleonInstance().removeFromCollection(event.getPosition());
+            mPagerAdapter.setPagerItems();
+            if (SingletonClass.getSingleonInstance().getImagesCollection().size() == 0) {
                 onBackPressed();
             }
-            setArrowButton(mPager.getCurrentItem(), gallaryItemsFiles);
+            setArrowButton(mPager.getCurrentItem());
         } else if (event.getImageEventType() == ImageEditEvent.EVENT_ROTATE) {
             isViewDirty = true;
 
@@ -121,7 +121,7 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
         } else if (event.getImageEventType() == ImageEditEvent.EVENT_REPLACED_BY_GALLERY) {
             isViewDirty = true;
         } else if (event.getImageEventType() == ImageEditEvent.EVENT_TAG_CHANGED) {
-            gallaryItemsFiles.set(event.getPosition(), event.getModel());
+            SingletonClass.getSingleonInstance().getImagesCollection().set(event.getPosition(),event.getModel());
         }
     }
 
@@ -129,9 +129,9 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.image_review_toolbar_doneBtn) {
-            Intent i = new Intent();
+            /*Intent i = new Intent();
             i.putExtra(Constants.IMAGE_MODEL_FOR__REVIEW, gallaryItemsFiles);
-            setResult(RESULT_OK, i);
+            setResult(RESULT_OK, i);*/
             finish();
         } else if (id == R.id.view_pager_leftbtn) {
             int position = mPager.getCurrentItem();
@@ -143,7 +143,7 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
 
         } else if (id == R.id.view_pager_rightbtn) {
             int position = mPager.getCurrentItem();
-            if (position < gallaryItemsFiles.size() - 1) {
+            if (position < SingletonClass.getSingleonInstance().getImagesCollection().size() - 1) {
                 position++;
                 mPager.setCurrentItem(position);
             }
@@ -167,37 +167,12 @@ public class ImageReviewActivity extends AppCompatActivity implements View.OnCli
 
         }
         if (item.getItemId() == R.id.menu_done) {
-            Intent i = new Intent();
+            /*Intent i = new Intent();
             i.putExtra(Constants.IMAGE_MODEL_FOR__REVIEW, gallaryItemsFiles);
-            setResult(RESULT_OK, i);
+            setResult(RESULT_OK, i);*/
             onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onBackPressed() {
-       /* if(isViewDirty){
-            ImagePipeline imagePipeline = Fresco.getImagePipeline();
-            imagePipeline.clearCaches();
-        }*/
-        Intent i = new Intent();
-        i.putExtra(Constants.IMAGE_MODEL_FOR__REVIEW, gallaryItemsFiles);
-        setResult(RESULT_OK, i);
-        //finish();
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-
 }

@@ -113,7 +113,7 @@ public class NeutralFragment extends Fragment implements View.OnClickListener, U
 
     private void setUpPhotosGrid(View rootView) {
         gvPhotos = (GridView) rootView.findViewById(R.id.gvImages);
-        photosGridAdapter = new PhotosGridAdapter(getActivity(), cameraItemsFiles, this, loadDefImgSmall);
+        //photosGridAdapter = new PhotosGridAdapter(getActivity(), cameraItemsFiles, this, loadDefImgSmall);
 
         gvPhotos.setAdapter(photosGridAdapter);
         // gvPhotos.setOnItemLongClickListener(this);

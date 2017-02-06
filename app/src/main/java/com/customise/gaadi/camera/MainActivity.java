@@ -33,12 +33,57 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements SetOnImageCollectionListener {
 
     private static final String TAG = "MainActivity";
-    public static final int REQUEST_CODE = 23;
+    private int numberOfTags = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    public void galleryPriorityFilesClicked(View v){
+        try {
+            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                @Override
+                public boolean selectVideos() {
+                    return false;
+                }
+
+                @Override
+                public GalleryType getGalleryViewType() {
+                    return GalleryType.grid_files;
+                }
+
+                @Override
+                public boolean galleryToCameraSwitchEnabled() {
+                    return true;
+                }
+
+                @Override
+                public boolean isRestrictedExtensionJpgPngEnabled() {
+                    return true;
+                }
+
+                @Override
+                public int getNumberOfPhotos() {
+                    return 0;
+                }
+
+                @Override
+                public boolean getTagEnabled() {
+                    return false;
+                }
+
+                @Override
+                public List<ImageTagModel> getImageTagsModel() {
+                    return null;
+                }
+
+
+            }),this);
+        } catch (NeonException e) {
+            e.printStackTrace();
+        }
     }
 
     public void cameraPriorityClicked(View view) {
@@ -92,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                 @Override
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
-                    for (int i = 0; i < 2; i++) {
+                    for (int i = 0; i < numberOfTags; i++) {
                         list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true));
                     }
                     return list;
@@ -251,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                 @Override
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
-                    for (int i = 0; i < 2; i++) {
+                    for (int i = 0; i < numberOfTags; i++) {
                         list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true));
                     }
                     return list;
@@ -284,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
 
                 @Override
                 public boolean galleryToCameraSwitchEnabled() {
-                    return true;
+                    return false;
                 }
 
                 @Override
@@ -386,8 +431,12 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                 @Override
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
-                    for (int i = 0; i < 2; i++) {
-                        list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true));
+                    for (int i = 0; i < numberOfTags; i++) {
+                        if(i%2==0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true));
+                        }else{
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false));
+                        }
                     }
                     return list;
                 }

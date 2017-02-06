@@ -1,9 +1,11 @@
 package com.gaadi.neon.activity.camera;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -215,6 +217,33 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         }
 
         buttonGallery.setVisibility(cameraParams.cameraToGallerySwitchEnabled() ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(SingletonClass.getSingleonInstance().isNeutralEnabled()){
+            super.onBackPressed();
+        }else{
+            if (SingletonClass.getSingleonInstance().getImagesCollection() != null &&
+                    SingletonClass.getSingleonInstance().getImagesCollection().size() > 0) {
+                new AlertDialog.Builder(this).setTitle("All Images will be lost. Do you sure want to go back?")
+                        .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        SingletonClass.getSingleonInstance().scheduleSinletonClearance();
+                        finish();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }else{
+                super.onBackPressed();
+            }
+        }
     }
 
     @Override

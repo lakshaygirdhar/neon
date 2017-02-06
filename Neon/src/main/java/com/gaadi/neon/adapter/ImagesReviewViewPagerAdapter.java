@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.gaadi.neon.fragment.ImageReviewViewPagerFragment;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.SingletonClass;
 
 import java.util.ArrayList;
 
@@ -15,23 +16,20 @@ import java.util.ArrayList;
  * @since 25/1/17
  */
 public class ImagesReviewViewPagerAdapter extends FragmentStatePagerAdapter {
-    private static final int NUM_PAGES = 20;
-    ArrayList<FileInfo> imageList;
-    ArrayList<ImageReviewViewPagerFragment> fragmentList;
-    //ArrayList<ImageTagsModel> imageTags;
-    FragmentManager mFragmentManager;
+    private ArrayList<ImageReviewViewPagerFragment> fragmentList;
+    private FragmentManager mFragmentManager;
 
-    public ImagesReviewViewPagerAdapter(FragmentManager fm,ArrayList<FileInfo> imageList) {
+    public ImagesReviewViewPagerAdapter(FragmentManager fm) {
         super(fm);
         mFragmentManager=fm;
-        this.imageList=imageList;
-        updatePagerItems(imageList);
+        updatePagerItems();
     }
 
     @Override
     public Fragment getItem(int position) {
         return fragmentList.get(position);
     }
+
     public int getItemPosition(Object item) {
         ImageReviewViewPagerFragment fragment = (ImageReviewViewPagerFragment)item;
 
@@ -44,30 +42,25 @@ public class ImagesReviewViewPagerAdapter extends FragmentStatePagerAdapter {
         }
     }
 
-    public void updatePagerItems(ArrayList<FileInfo> pagerItems){
+    private void updatePagerItems(){
 
         if(fragmentList!=null)
             fragmentList.clear();
         else
             fragmentList=new ArrayList<>();
-        for (int i = 0; i < pagerItems.size(); i++) {
-            fragmentList.add(ImageReviewViewPagerFragment.create(i,imageList.get(i)));
+        for (int i = 0; i < SingletonClass.getSingleonInstance().getImagesCollection().size(); i++) {
+            fragmentList.add(ImageReviewViewPagerFragment.create(i, SingletonClass.getSingleonInstance().getImagesCollection().get(i)));
         }
     }
 
-    public void setPagerItems(ArrayList<FileInfo> pagerItems) {
-        this.imageList=pagerItems;
+    public void setPagerItems() {
         if (fragmentList != null)
-            for (int i = 0; i < imageList.size(); i++) {
+            for (int i = 0; i < SingletonClass.getSingleonInstance().getImagesCollection().size(); i++) {
                 mFragmentManager.beginTransaction().remove(fragmentList.get(i)).commit();
             }
-        updatePagerItems(pagerItems);
+        updatePagerItems();
         notifyDataSetChanged();
     }
-   /* @Override
-    public float getPageWidth(int position) {
-        return 0.9f;
-    }*/
 
     @Override
     public int getCount() {

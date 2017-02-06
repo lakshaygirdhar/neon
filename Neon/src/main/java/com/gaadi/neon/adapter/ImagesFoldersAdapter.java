@@ -83,7 +83,7 @@ public class ImagesFoldersAdapter extends BaseAdapter {
                 Intent folderFilesIntent = new Intent(context, GridFilesActivity.class);
                 folderFilesIntent.putExtra(Constants.BucketName,bucketInfo.getBucketName());
                 folderFilesIntent.putExtra(Constants.BucketId,bucketInfo.getBucketId());
-                context.startActivity(folderFilesIntent);
+                context.startActivityForResult(folderFilesIntent,Constants.cameraInt);
             }
         });
         return convertView;

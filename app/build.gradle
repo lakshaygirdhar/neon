@@ -43,5 +43,4 @@ dependencies {
     compile project(':Neon')
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:design:25.0.1'
-    compile 'com.gaadi.library:baseviewlibrary:0.0.1'
 }

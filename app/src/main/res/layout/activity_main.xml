@@ -6,62 +6,83 @@
     android:orientation="vertical"
     tools:context="com.customise.gaadi.camera.MainActivity">
 
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <Button
-        android:text="Camera Only"
-        android:onClick="cameraOnlyClicked"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:text="Camera Priority"
-        android:onClick="cameraPriorityClicked"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-
-
-    <Button
-        android:text="Gallery Only (Grid Folders View)"
-        android:onClick="galleryOnlyGridClicked"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:onClick="galleryPriorityClicked"
-        android:text="Gallery Priority (Grid Folders View)"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-
-    <Button
-        android:onClick="galleryOnlyGridFilesClicked"
-        android:text="Gallery only (Grid Files)"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-
-
-    <Button
-        android:text="Gallery Only (Horizontal Scroll View)"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:text="Gallery Priority (Horizontal Scroll View)"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-
-
-
-    <Button
-        android:text="Neutral"
-        android:onClick="neutralClicked"
-        android:layout_marginTop="20dp"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
+
+        <Button
+            android:text="Camera Only"
+            android:onClick="cameraOnlyClicked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:text="Camera Priority"
+            android:onClick="cameraPriorityClicked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+
+        <Button
+            android:text="Gallery Only (Grid Folders View)"
+            android:onClick="galleryOnlyGridClicked"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:onClick="galleryPriorityClicked"
+            android:text="Gallery Priority (Grid Folders View)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <Button
+            android:onClick="galleryOnlyGridFilesClicked"
+            android:text="Gallery only (Grid Files)"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:onClick="galleryPriorityFilesClicked"
+            android:text="Gallery priority (Grid Files)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+
+        <Button
+            android:text="Gallery Only (Horizontal Scroll View)"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:text="Gallery Priority (Horizontal Scroll View)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+
+
+        <Button
+            android:text="Neutral"
+            android:onClick="neutralClicked"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
+</ScrollView>
+
+
 </LinearLayout>

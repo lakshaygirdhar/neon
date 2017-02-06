@@ -159,6 +159,8 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
             } catch (NeonException e) {
                 e.printStackTrace();
             }
+        }else if(id == android.R.id.home){
+            onBackPressed();
         }
 
     }
@@ -192,6 +194,8 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                     dialog.dismiss();
                 }
             }).show();
+        }else{
+            super.onBackPressed();
         }
 
     }

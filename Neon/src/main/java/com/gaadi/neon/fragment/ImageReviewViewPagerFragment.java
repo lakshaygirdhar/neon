@@ -21,23 +21,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.gaadi.neon.adapter.ImageTagsAdapter;
 import com.gaadi.neon.events.ImageEditEvent;
 import com.gaadi.neon.interfaces.FragmentListener;
+import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonUtils;
+import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author dipanshugarg
@@ -59,12 +66,9 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     private ImageView rotateBtn;
     private TextView txtVwTagSpinner;
     private ImageView draweeView;
-
+    private LinearLayout tagLayout;
     private FileInfo imageModel;
-    private ArrayList<FileInfo> imageTags;
-
-    private int counterRotation = 0;
-    private int screenWidth, screenHeight;
+    List<ImageTagModel> tagModels;
     private Context mContext;
     private ImageView cropBtn;
     private File cropFilePath;
@@ -104,30 +108,32 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageNumber = getArguments().getInt(ARG_PAGE);
+        tagModels = SingletonClass.getSingleonInstance().getGenericParam().getImageTagsModel();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout containing a title and body text.
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_image_review_viewpager, container, false);
-//        ButterKnife.bind(this, rootView);
 
         deleteBtn = (ImageView) rootView.findViewById(R.id.imagereview_deletebtn);
         cropBtn = (ImageView) rootView.findViewById(R.id.imagereview_cropbtn);
         rotateBtn = (ImageView) rootView.findViewById(R.id.imagereview_rotatebtn);
         txtVwTagSpinner = (TextView) rootView.findViewById(R.id.imagereview_tag_spinner);
         draweeView = (ImageView) rootView.findViewById(R.id.imagereview_imageview);
+        tagLayout = (LinearLayout) rootView.findViewById(R.id.footer_layout_imagereview_fragment);
+        if(SingletonClass.getSingleonInstance().getGenericParam().getTagEnabled()){
+            tagLayout.setVisibility(View.VISIBLE);
+        }else{
+            tagLayout.setVisibility(View.GONE);
+        }
         deleteBtn.setOnClickListener(this);
         rotateBtn.setOnClickListener(this);
         cropBtn.setOnClickListener(this);
         txtVwTagSpinner.setOnClickListener(this);
         onLoad(savedInstanceState);
-        // Set the title view to show the page number.
-       /* ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-                getString(R.string.title_template_step, mPageNumber + 1));*/
-
         return rootView;
     }
 
@@ -140,30 +146,15 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
                 imageModel = (FileInfo) o;
             }
         }
-         //imageTags = (ArrayList<FileInfo>) bundle.getSerializable(Constants.IMAGE_TAGS_FOR_REVIEW);
-
-
-       /* if (imageTags != null && imageTags.size() > 0) {
-            txtVwTagSpinner.setVisibility(View.VISIBLE);
-            Collections.sort(imageTags, new TagParentComparator());
-            if (imageModel.getTagsModel() != null) {
-                txtVwTagSpinner.setText(imageModel.getTagsModel().getTag_name());
-                selectedTag = imageModel.getTagsModel();
-            }
-            imageTagsAdapter = new ImageTagsAdapter(getActivity(), imageTags);
-        } else {
-            txtVwTagSpinner.setVisibility(View.GONE);
-        }*/
-        //draweeView.setOrientation(SubsamplingScaleImageView.ORIENTATION_USE_EXIF);
-        // draweeView.setImage(ImageSource.uri(imageModel.getImagePath()));
-
+        if(imageModel.getFileTag() != null){
+            txtVwTagSpinner.setText(imageModel.getFileTag().getTagName());
+        }
 
         Glide.with(mContext).load(imageModel.getFilePath())
                 .placeholder(R.drawable.default_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(draweeView);
-        // Glide.with(mContext).load("file://"+imageModel.getImagePath()).into(draweeView);
     }
 
     @Override
@@ -172,48 +163,35 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         super.onSaveInstanceState(outState);
     }
 
-  /*  public void showTagsDropDown() {
+    private void showTagsDropDown(View v) {
         final ListPopupWindow listPopupWindow = new ListPopupWindow(getActivity());
         listPopupWindow.setModal(true);
-        listPopupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(),
-                R.drawable.abc_popup_background_mtrl_mult,
-                null));
         listPopupWindow.setWidth(ListPopupWindow.WRAP_CONTENT);
+        ImageTagsAdapter imageTagsAdapter = new ImageTagsAdapter(getActivity());
         listPopupWindow.setAdapter(imageTagsAdapter);
-        listPopupWindow.setAnchorView(getView().findViewById(R.id.imagereview_tag_spinner));
+        listPopupWindow.setAnchorView(v);
         listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ImageTagsModel currentSelectedTag = (ImageTagsModel) parent.getAdapter().getItem(position);
-
-                if (((ImageReviewActivity) getActivity()).isSingleTagSelection() &&
-                        ((ImageReviewActivity) getActivity()).isAlreadySelectedTag(currentSelectedTag)) {
-                    Toast.makeText(getActivity(), "Already selected tag", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                ImageTagsModel lastSelectedModel = selectedTag;
-                selectedTag = currentSelectedTag;
-                ((ImageReviewActivity) getActivity()).setSelectedTagModel(lastSelectedModel, selectedTag);
-
-                txtVwTagSpinner.setText(selectedTag.getTag_name());
-                ImageTagsModel tagModel = new ImageTagsModel();
-                tagModel.setTagId(selectedTag.getTagId());
-                tagModel.setTag_name(selectedTag.getTag_name());
-                tagModel.setMandatory(selectedTag.getMandatory());
-                imageModel.setTagsModel(tagModel);
+                ImageTagModel singleModel = tagModels.get(position);
+                imageModel.setFileTag(new ImageTagModel(singleModel.getTagName(),singleModel.getTagId(),singleModel.isMandatory()));
                 ImageEditEvent event = new ImageEditEvent();
                 event.setModel(imageModel);
                 ((FragmentListener) getActivity()).getFragmentChanges(event);
                 listPopupWindow.dismiss();
+                txtVwTagSpinner.setText(singleModel.getTagName());
             }
         });
+
         txtVwTagSpinner.post(new Runnable() {
             @Override
             public void run() {
                 listPopupWindow.show();
             }
         });
-    }*/
+    }
+
+
 
     /**
      * Returns the page number represented by this fragment object.
@@ -231,16 +209,9 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             event.setPosition(mPageNumber);
             warnDeleteDialog(event);
         } else if (v.getId() == R.id.imagereview_rotatebtn) {
-            // draweeView.get
-            //draweeView.setRotation(90.0f);
-
             rotateImage(imageModel.getFilePath());
-            // getImageFromFrescoView(imageModel.getImagePath());
-//            clearFrescoCache(Uri.fromFile(new File(imageModel.getImagePath())));
-            //CommonUtils.setExifRotation(new File(imageModel.getImagePath()),0);
-            //draweeView.setImageURI(Uri.fromFile(new File(imageModel.getImagePath())));
         } else if (v.getId() == R.id.imagereview_tag_spinner) {
-          //  showTagsDropDown();
+            showTagsDropDown(v);
         } else if (v.getId() == R.id.imagereview_cropbtn) {
             cropFilePath = NeonUtils.getEmptyStoragePath(getActivity());
             Uri inputUri = Uri.fromFile(new File(imageModel.getFilePath()));
@@ -248,6 +219,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             Crop.of(inputUri, outputUri).start(getActivity(), ImageReviewViewPagerFragment.this);
         }
     }
+
 
     private void warnDeleteDialog(final ImageEditEvent event) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -274,23 +246,14 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         }
     }
 
-    @SuppressWarnings({"deprecation"})
-    public String getRealPathFromURI(Uri contentUri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getActivity().managedQuery(contentUri, proj, null, null, null);
-        if (cursor == null) return null;
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
 
     @SuppressLint("NewApi")
     private Bitmap getBitmap(String path) {
         DisplayMetrics displaymetrics;
         displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        screenWidth = displaymetrics.widthPixels;
-        screenHeight = displaymetrics.heightPixels;
+        int screenWidth = displaymetrics.widthPixels;
+        int screenHeight = displaymetrics.heightPixels;
         Log.e("inside of", "getBitmap = " + path);
         try {
             Bitmap b = null;
@@ -340,50 +303,6 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         return null;
     }
 
-    /*public Bitmap loadBitmap(String path, int orientation, final int targetWidth, final int targetHeight) {
-        Bitmap bitmap = null;
-        try {
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(path, options);
-            int sourceWidth, sourceHeight;
-            if (orientation == 90 || orientation == 270) {
-                sourceWidth = options.outHeight;
-                sourceHeight = options.outWidth;
-            } else {
-                sourceWidth = options.outWidth;
-                sourceHeight = options.outHeight;
-            }
-            if (sourceWidth > targetWidth || sourceHeight > targetHeight) {
-                float widthRatio = (float) sourceWidth / (float) targetWidth;
-                float heightRatio = (float) sourceHeight / (float) targetHeight;
-                float maxRatio = Math.max(widthRatio, heightRatio);
-                options.inJustDecodeBounds = false;
-                options.inSampleSize = (int) maxRatio;
-                bitmap = BitmapFactory.decodeFile(path, options);
-            } else {
-                bitmap = BitmapFactory.decodeFile(path);
-            }
-            if (orientation > 0) {
-                Matrix matrix = new Matrix();
-                matrix.postRotate(orientation);
-                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            }
-            sourceWidth = bitmap.getWidth();
-            sourceHeight = bitmap.getHeight();
-            if (sourceWidth != targetWidth || sourceHeight != targetHeight) {
-                float widthRatio = (float) sourceWidth / (float) targetWidth;
-                float heightRatio = (float) sourceHeight / (float) targetHeight;
-                float maxRatio = Math.max(widthRatio, heightRatio);
-                sourceWidth = (int) ((float) sourceWidth / maxRatio);
-                sourceHeight = (int) ((float) sourceHeight / maxRatio);
-                bitmap = Bitmap.createScaledBitmap(bitmap, sourceWidth, sourceHeight, true);
-            }
-        } catch (Exception e) {
-        }
-
-        return bitmap;
-    }*/
 
     public void rotateImage(String path) {
         File file = new File(path);
