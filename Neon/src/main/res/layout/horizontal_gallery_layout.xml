@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/content_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="3"
+        tools:context="com.apksmanager.ui.activities.GalleryActivity">
+
+        <ImageView
+            android:id="@+id/fullScreenImage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.3"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:src="@drawable/default_placeholder"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/galleryHorizontalRv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".7"
+            android:background="#d3d3d3" />
+
+
+    </LinearLayout>
+
+</layout>
+

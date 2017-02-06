@@ -124,9 +124,9 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         txtVwTagSpinner = (TextView) rootView.findViewById(R.id.imagereview_tag_spinner);
         draweeView = (ImageView) rootView.findViewById(R.id.imagereview_imageview);
         tagLayout = (LinearLayout) rootView.findViewById(R.id.footer_layout_imagereview_fragment);
-        if(SingletonClass.getSingleonInstance().getGenericParam().getTagEnabled()){
+        if (SingletonClass.getSingleonInstance().getGenericParam().getTagEnabled()) {
             tagLayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             tagLayout.setVisibility(View.GONE);
         }
         deleteBtn.setOnClickListener(this);
@@ -146,7 +146,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
                 imageModel = (FileInfo) o;
             }
         }
-        if(imageModel.getFileTag() != null){
+        if (imageModel.getFileTag() != null) {
             txtVwTagSpinner.setText(imageModel.getFileTag().getTagName());
         }
 
@@ -167,14 +167,14 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         final ListPopupWindow listPopupWindow = new ListPopupWindow(getActivity());
         listPopupWindow.setModal(true);
         listPopupWindow.setWidth(ListPopupWindow.WRAP_CONTENT);
-        ImageTagsAdapter imageTagsAdapter = new ImageTagsAdapter(getActivity(),imageModel);
+        ImageTagsAdapter imageTagsAdapter = new ImageTagsAdapter(getActivity(), imageModel);
         listPopupWindow.setAdapter(imageTagsAdapter);
         listPopupWindow.setAnchorView(v);
         listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageTagModel singleModel = tagModels.get(position);
-                imageModel.setFileTag(new ImageTagModel(singleModel.getTagName(),singleModel.getTagId(),singleModel.isMandatory()));
+                imageModel.setFileTag(new ImageTagModel(singleModel.getTagName(), singleModel.getTagId(), singleModel.isMandatory()));
                 ImageEditEvent event = new ImageEditEvent();
                 event.setModel(imageModel);
                 ((FragmentListener) getActivity()).getFragmentChanges(event);
