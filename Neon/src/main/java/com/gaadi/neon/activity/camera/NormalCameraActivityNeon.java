@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 import com.gaadi.neon.Enumerations.GalleryType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
+import com.gaadi.neon.activity.gallery.HorizontalFilesActivity;
+import com.gaadi.neon.adapter.GalleryHoriontalAdapter;
 import com.gaadi.neon.fragment.CameraFragment1;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
@@ -22,7 +25,9 @@ import com.gaadi.neon.interfaces.SetOnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.AnimationUtils;
+import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.PermissionType;
 import com.gaadi.neon.util.SingletonClass;
@@ -52,9 +57,26 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         bindXml();
         cameraParams = SingletonClass.getSingleonInstance().getCameraParam();
         customize();
-        CameraFragment1 fragment = new CameraFragment1();
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        bindCameraFragment();
+    }
+
+    private void bindCameraFragment() {
+        try {
+            askForPermissionIfNeeded(PermissionType.write_external_storage, new SetOnPermissionResultListener() {
+                @Override
+                public void onResult(boolean permissionGranted) {
+                    if(permissionGranted){
+                        CameraFragment1 fragment = new CameraFragment1();
+                        FragmentManager manager = getSupportFragmentManager();
+                        manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                    }else{
+                        Toast.makeText(NormalCameraActivityNeon.this,"Permission not granted",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } catch (ManifestPermission manifestPermission) {
+            manifestPermission.printStackTrace();
+        }
     }
 
     private void bindXml() {

@@ -15,14 +15,19 @@ import com.gaadi.neon.Enumerations.CameraType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.adapter.GridFilesAdapter;
+import com.gaadi.neon.adapter.ImagesFoldersAdapter;
 import com.gaadi.neon.interfaces.ICameraParam;
+import com.gaadi.neon.interfaces.SetOnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
+import com.gaadi.neon.util.PermissionType;
 import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.ActivityGridFilesBinding;
+import com.scanlibrary.databinding.ActivityGridFoldersBinding;
 
 import java.util.List;
 
@@ -188,10 +193,22 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
 
 
     private void bindXml() {
-        ActivityGridFilesBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_grid_files,frameLayout,true);
-        //ActivityGridFilesBinding binder = DataBindingUtil.setContentView(this, R.layout.activity_grid_files);
-        GridFilesAdapter adapter = new GridFilesAdapter(this, getFileFromBucketId(getIntent().getStringExtra(Constants.BucketId)));
-        binder.gvFolderPhotos.setAdapter(adapter);
+        try {
+            askForPermissionIfNeeded(PermissionType.write_external_storage, new SetOnPermissionResultListener() {
+                @Override
+                public void onResult(boolean permissionGranted) {
+                    if(permissionGranted){
+                        ActivityGridFilesBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_grid_files,frameLayout,true);
+                        GridFilesAdapter adapter = new GridFilesAdapter(GridFilesActivity.this, getFileFromBucketId(getIntent().getStringExtra(Constants.BucketId)));
+                        binder.gvFolderPhotos.setAdapter(adapter);
+                    }else{
+                        Toast.makeText(GridFilesActivity.this,"Permission not granted",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } catch (ManifestPermission manifestPermission) {
+            manifestPermission.printStackTrace();
+        }
     }
 
 

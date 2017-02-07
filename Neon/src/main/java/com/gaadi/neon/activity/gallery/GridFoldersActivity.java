@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.gaadi.neon.Enumerations.CameraFacing;
 import com.gaadi.neon.Enumerations.CameraOrientation;
@@ -14,10 +15,13 @@ import com.gaadi.neon.Enumerations.CameraType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.adapter.ImagesFoldersAdapter;
 import com.gaadi.neon.interfaces.ICameraParam;
+import com.gaadi.neon.interfaces.SetOnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
+import com.gaadi.neon.util.PermissionType;
 import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.ActivityGridFoldersBinding;
@@ -29,7 +33,6 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bindXml();
         setTitle(R.string.gallery);
     }
@@ -154,10 +157,23 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
 
 
     private void bindXml() {
-        ActivityGridFoldersBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_grid_folders,frameLayout,true);
-        //ActivityGridFoldersBinding binder = DataBindingUtil.setContentView(this, R.layout.activity_grid_folders);
-        ImagesFoldersAdapter adapter = new ImagesFoldersAdapter(this, getImageBuckets());
-        binder.gvFolders.setAdapter(adapter);
+        try {
+            askForPermissionIfNeeded(PermissionType.write_external_storage, new SetOnPermissionResultListener() {
+                @Override
+                public void onResult(boolean permissionGranted) {
+                    if(permissionGranted){
+                        ActivityGridFoldersBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_grid_folders,frameLayout,true);
+                        ImagesFoldersAdapter adapter = new ImagesFoldersAdapter(GridFoldersActivity.this, getImageBuckets());
+                        binder.gvFolders.setAdapter(adapter);
+                    }else{
+                        Toast.makeText(GridFoldersActivity.this,"Permission not granted",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } catch (ManifestPermission manifestPermission) {
+            manifestPermission.printStackTrace();
+        }
+
     }
 
     @Override

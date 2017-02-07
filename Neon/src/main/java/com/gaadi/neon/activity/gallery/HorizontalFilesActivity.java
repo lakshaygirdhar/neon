@@ -19,15 +19,20 @@ import com.gaadi.neon.Enumerations.CameraType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.adapter.GalleryHoriontalAdapter;
+import com.gaadi.neon.adapter.GridFilesAdapter;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.SetOnImageClickListener;
+import com.gaadi.neon.interfaces.SetOnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
+import com.gaadi.neon.util.PermissionType;
 import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
+import com.scanlibrary.databinding.ActivityGridFilesBinding;
 import com.scanlibrary.databinding.HorizontalGalleryLayoutBinding;
 
 import java.util.ArrayList;
@@ -200,15 +205,30 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
 
 
     private void bindXml() {
-        binder = DataBindingUtil.inflate(getLayoutInflater(),R.layout.horizontal_gallery_layout,frameLayout,true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        binder.galleryHorizontalRv.setLayoutManager(linearLayoutManager);
-        fileInfos = getFileFromBucketId(getIntent().getStringExtra(Constants.BucketId));
-        if(fileInfos != null && fileInfos.size()>0) {
-            GalleryHoriontalAdapter adapter = new GalleryHoriontalAdapter(this, fileInfos, this);
-            binder.galleryHorizontalRv.setAdapter(adapter);
-            onClick(fileInfos.get(0));
+        try {
+            askForPermissionIfNeeded(PermissionType.write_external_storage, new SetOnPermissionResultListener() {
+                @Override
+                public void onResult(boolean permissionGranted) {
+                    if(permissionGranted){
+                        binder = DataBindingUtil.inflate(getLayoutInflater(),R.layout.horizontal_gallery_layout,frameLayout,true);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(HorizontalFilesActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                        binder.galleryHorizontalRv.setLayoutManager(linearLayoutManager);
+                        fileInfos = getFileFromBucketId(getIntent().getStringExtra(Constants.BucketId));
+                        if(fileInfos != null && fileInfos.size()>0) {
+                            GalleryHoriontalAdapter adapter = new GalleryHoriontalAdapter(HorizontalFilesActivity.this, fileInfos, HorizontalFilesActivity.this);
+                            binder.galleryHorizontalRv.setAdapter(adapter);
+                            onClick(fileInfos.get(0));
+                        }
+                    }else{
+                        Toast.makeText(HorizontalFilesActivity.this,"Permission not granted",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } catch (ManifestPermission manifestPermission) {
+            manifestPermission.printStackTrace();
         }
+
+
     }
 
 

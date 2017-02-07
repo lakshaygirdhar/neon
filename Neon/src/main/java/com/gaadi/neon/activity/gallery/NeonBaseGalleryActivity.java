@@ -10,8 +10,11 @@ import com.gaadi.neon.activity.BaseActivity;
 import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.activity.NeonBaseActivity;
 import com.gaadi.neon.interfaces.IGalleryParam;
+import com.gaadi.neon.interfaces.SetOnPermissionResultListener;
 import com.gaadi.neon.model.BucketModel;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.ManifestPermission;
+import com.gaadi.neon.util.PermissionType;
 import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
 
@@ -112,8 +115,6 @@ public abstract class NeonBaseGalleryActivity extends NeonBaseActivity {
         return fileInfos;
     }
 
-
-    
 
     private int getBucketIndexWithId(String id) {
         if (buckets == null || buckets.size() <= 0) {
