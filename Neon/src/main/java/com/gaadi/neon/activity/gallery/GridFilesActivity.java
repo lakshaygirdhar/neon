@@ -39,7 +39,6 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bindXml();
         String title = getIntent().getStringExtra(Constants.BucketName);
         if (title == null || title.length() <= 0) {
@@ -47,7 +46,6 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
         }
         setTitle(title);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,7 +56,6 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
         textViewDone.setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -191,7 +188,6 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
         }
     }
 
-
     private void bindXml() {
         try {
             askForPermissionIfNeeded(PermissionType.write_external_storage, new SetOnPermissionResultListener() {
@@ -210,6 +206,4 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
             manifestPermission.printStackTrace();
         }
     }
-
-
 }
