@@ -12,8 +12,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gaadi.neon.activity.gallery.GridFilesActivity;
+import com.gaadi.neon.activity.gallery.HorizontalFilesActivity;
 import com.gaadi.neon.model.BucketModel;
 import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
 import java.util.ArrayList;
 
@@ -80,10 +82,22 @@ public class ImagesFoldersAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent folderFilesIntent = new Intent(context, GridFilesActivity.class);
-                folderFilesIntent.putExtra(Constants.BucketName,bucketInfo.getBucketName());
-                folderFilesIntent.putExtra(Constants.BucketId,bucketInfo.getBucketId());
-                context.startActivityForResult(folderFilesIntent,Constants.cameraInt);
+                Intent filesIntent;
+                switch (SingletonClass.getSingleonInstance().getGalleryParam().getGalleryViewType()){
+                    case Grid_Structure:
+                        filesIntent = new Intent(context, GridFilesActivity.class);
+                        break;
+
+                    case Horizontal_Structure:
+                        filesIntent = new Intent(context, HorizontalFilesActivity.class);
+                        break;
+
+                    default:
+                        filesIntent = new Intent(context, GridFilesActivity.class);
+                }
+                filesIntent.putExtra(Constants.BucketName,bucketInfo.getBucketName());
+                filesIntent.putExtra(Constants.BucketId,bucketInfo.getBucketId());
+                context.startActivityForResult(filesIntent,Constants.destroyPreviousActivity);
             }
         });
         return convertView;

@@ -134,6 +134,11 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                     }
 
                     @Override
+                    public boolean enableFolderStructure() {
+                        return SingletonClass.getSingleonInstance().getNeutralParam().enableFolderStructure();
+                    }
+
+                    @Override
                     public boolean galleryToCameraSwitchEnabled() {
                         return SingletonClass.getSingleonInstance().getNeutralParam().galleryToCameraSwitchEnabled();
                     }

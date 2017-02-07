@@ -21,7 +21,7 @@ public class Constants {
     public static final String BucketName = "BucketName";
     public static final String BucketId = "BucketId";
 
-    public static final int cameraInt = 300;
+    public static final int destroyPreviousActivity = 300;
 
     public static final int TYPE_IMAGE = 1;
     public static final String APP_SHARED_PREFERENCE = "com.gcloud.gaadi.prefs";

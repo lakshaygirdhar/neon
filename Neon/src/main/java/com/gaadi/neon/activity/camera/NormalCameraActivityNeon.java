@@ -18,11 +18,13 @@ import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.fragment.CameraFragment1;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
+import com.gaadi.neon.interfaces.SetOnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.AnimationUtils;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
+import com.gaadi.neon.util.PermissionType;
 import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NormalCameraActivityLayoutBinding;
@@ -91,7 +93,12 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
                         @Override
                         public GalleryType getGalleryViewType() {
-                            return GalleryType.grid_folders;
+                            return GalleryType.Grid_Structure;
+                        }
+
+                        @Override
+                        public boolean enableFolderStructure() {
+                            return true;
                         }
 
                         @Override

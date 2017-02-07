@@ -129,19 +129,24 @@ public class PhotosLibrary {
 
         switch (galleryParams.getGalleryViewType()) {
 
-            case grid_folders:
-                Intent gridGalleryFolderIntent = new Intent(activity, GridFoldersActivity.class);
-                activity.startActivity(gridGalleryFolderIntent);
+            case Grid_Structure:
+                Intent gridGalleryIntent;
+                if(galleryParams.enableFolderStructure()){
+                    gridGalleryIntent = new Intent(activity, GridFoldersActivity.class);
+                }else{
+                    gridGalleryIntent = new Intent(activity, GridFilesActivity.class);
+                }
+                activity.startActivity(gridGalleryIntent);
                 break;
 
-            case grid_files:
-                Intent gridGalleryFileIntent = new Intent(activity, GridFilesActivity.class);
-                activity.startActivity(gridGalleryFileIntent);
-                break;
-
-            case horizontal_scroll:
-                Intent horizontalGalleryFileIntent = new Intent(activity, HorizontalFilesActivity.class);
-                activity.startActivity(horizontalGalleryFileIntent);
+            case Horizontal_Structure:
+                Intent horizontalGalleryIntent;
+                if(galleryParams.enableFolderStructure()){
+                    horizontalGalleryIntent = new Intent(activity, GridFoldersActivity.class);
+                }else{
+                    horizontalGalleryIntent = new Intent(activity, HorizontalFilesActivity.class);
+                }
+                activity.startActivity(horizontalGalleryIntent);
                 break;
 
         }

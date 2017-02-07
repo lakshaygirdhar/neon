@@ -16,6 +16,8 @@ public interface IGalleryParam extends IParam{
 
     GalleryType getGalleryViewType();
 
+    boolean enableFolderStructure();
+
     boolean galleryToCameraSwitchEnabled();
 
     boolean isRestrictedExtensionJpgPngEnabled();

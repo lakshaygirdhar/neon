@@ -41,50 +41,6 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
         setContentView(R.layout.activity_main);
     }
 
-    public void galleryPriorityFilesClicked(View v){
-        try {
-            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
-                @Override
-                public boolean selectVideos() {
-                    return false;
-                }
-
-                @Override
-                public GalleryType getGalleryViewType() {
-                    return GalleryType.grid_files;
-                }
-
-                @Override
-                public boolean galleryToCameraSwitchEnabled() {
-                    return true;
-                }
-
-                @Override
-                public boolean isRestrictedExtensionJpgPngEnabled() {
-                    return true;
-                }
-
-                @Override
-                public int getNumberOfPhotos() {
-                    return 0;
-                }
-
-                @Override
-                public boolean getTagEnabled() {
-                    return false;
-                }
-
-                @Override
-                public List<ImageTagModel> getImageTagsModel() {
-                    return null;
-                }
-
-
-            }),this);
-        } catch (NeonException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void cameraPriorityClicked(View view) {
         try {
@@ -153,96 +109,6 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
 
         }
 
-    }
-
-    public void galleryPriorityClicked(View view) {
-        try {
-            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
-                @Override
-                public boolean selectVideos() {
-                    return false;
-                }
-
-                @Override
-                public GalleryType getGalleryViewType() {
-                    return GalleryType.grid_folders;
-                }
-
-                @Override
-                public boolean galleryToCameraSwitchEnabled() {
-                    return true;
-                }
-
-                @Override
-                public boolean isRestrictedExtensionJpgPngEnabled() {
-                    return true;
-                }
-
-                @Override
-                public int getNumberOfPhotos() {
-                    return 0;
-                }
-
-                @Override
-                public boolean getTagEnabled() {
-                    return false;
-                }
-
-                @Override
-                public List<ImageTagModel> getImageTagsModel() {
-                    return null;
-                }
-
-
-            }),this);
-        } catch (NeonException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void galleryOnlyGridClicked(View view) {
-        try {
-            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
-                @Override
-                public boolean selectVideos() {
-                    return false;
-                }
-
-                @Override
-                public GalleryType getGalleryViewType() {
-                    return GalleryType.grid_folders;
-                }
-
-                @Override
-                public boolean galleryToCameraSwitchEnabled() {
-                    return false;
-                }
-
-                @Override
-                public boolean isRestrictedExtensionJpgPngEnabled() {
-                    return true;
-                }
-
-                @Override
-                public int getNumberOfPhotos() {
-                    return 0;
-                }
-
-                @Override
-                public boolean getTagEnabled() {
-                    return false;
-                }
-
-                @Override
-                public List<ImageTagModel> getImageTagsModel() {
-                    return null;
-                }
-
-
-            }),this);
-        } catch (NeonException e) {
-            e.printStackTrace();
-        }
     }
 
     public void cameraOnlyClicked(View view) {
@@ -314,52 +180,6 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
 
     }
 
-    public void galleryOnlyGridFilesClicked(View view) {
-        try {
-            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
-                @Override
-                public boolean selectVideos() {
-                    return false;
-                }
-
-                @Override
-                public GalleryType getGalleryViewType() {
-                    return GalleryType.grid_files;
-                }
-
-                @Override
-                public boolean galleryToCameraSwitchEnabled() {
-                    return false;
-                }
-
-                @Override
-                public boolean isRestrictedExtensionJpgPngEnabled() {
-                    return true;
-                }
-
-                @Override
-                public int getNumberOfPhotos() {
-                    return 5;
-                }
-
-                @Override
-                public boolean getTagEnabled() {
-                    return false;
-                }
-
-                @Override
-                public List<ImageTagModel> getImageTagsModel() {
-                    return null;
-                }
-
-
-            }),this);
-        } catch (NeonException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public void neutralClicked(View view){
         try {
             PhotosLibrary.collectPhotos(this,PhotosMode.setNeutralMode().setParams(new INeutralParam() {
@@ -405,7 +225,12 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
 
                 @Override
                 public GalleryType getGalleryViewType() {
-                    return GalleryType.grid_folders;
+                    return GalleryType.Grid_Structure;
+                }
+
+                @Override
+                public boolean enableFolderStructure() {
+                    return true;
                 }
 
                 @Override
@@ -446,7 +271,8 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
         }
     }
 
-    public void galleryOnlyHorizontalClicked(View view){
+
+    public void gridOnlyFolderClicked(View view){
         try {
             PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
@@ -456,7 +282,12 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
 
                 @Override
                 public GalleryType getGalleryViewType() {
-                    return GalleryType.horizontal_scroll;
+                    return GalleryType.Grid_Structure;
+                }
+
+                @Override
+                public boolean enableFolderStructure() {
+                    return true;
                 }
 
                 @Override
@@ -471,23 +302,426 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
 
                 @Override
                 public int getNumberOfPhotos() {
-                    return 0;
+                    return 5;
                 }
 
                 @Override
                 public boolean getTagEnabled() {
-                    return false;
+                    return true;
                 }
 
                 @Override
                 public List<ImageTagModel> getImageTagsModel() {
-                    return null;
+                    ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+                    for (int i = 0; i < numberOfTags; i++) {
+                        if(i%2==0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true));
+                        }else{
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false));
+                        }
+                    }
+                    return list;
                 }
             }),this);
-        } catch (NeonException e) {
-            e.printStackTrace();
+        }catch (Exception e){
+
         }
     }
+
+    public void gridPriorityFolderClicked(View view){
+        try {
+            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                @Override
+                public boolean selectVideos() {
+                    return false;
+                }
+
+                @Override
+                public GalleryType getGalleryViewType() {
+                    return GalleryType.Grid_Structure;
+                }
+
+                @Override
+                public boolean enableFolderStructure() {
+                    return true;
+                }
+
+                @Override
+                public boolean galleryToCameraSwitchEnabled() {
+                    return true;
+                }
+
+                @Override
+                public boolean isRestrictedExtensionJpgPngEnabled() {
+                    return true;
+                }
+
+                @Override
+                public int getNumberOfPhotos() {
+                    return 5;
+                }
+
+                @Override
+                public boolean getTagEnabled() {
+                    return true;
+                }
+
+                @Override
+                public List<ImageTagModel> getImageTagsModel() {
+                    ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+                    for (int i = 0; i < numberOfTags; i++) {
+                        if(i%2==0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true));
+                        }else{
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false));
+                        }
+                    }
+                    return list;
+                }
+            }),this);
+        }catch (Exception e){
+
+        }
+    }
+
+    public void gridOnlyFilesClicked(View view){
+        try {
+            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                @Override
+                public boolean selectVideos() {
+                    return false;
+                }
+
+                @Override
+                public GalleryType getGalleryViewType() {
+                    return GalleryType.Grid_Structure;
+                }
+
+                @Override
+                public boolean enableFolderStructure() {
+                    return false;
+                }
+
+                @Override
+                public boolean galleryToCameraSwitchEnabled() {
+                    return false;
+                }
+
+                @Override
+                public boolean isRestrictedExtensionJpgPngEnabled() {
+                    return true;
+                }
+
+                @Override
+                public int getNumberOfPhotos() {
+                    return 5;
+                }
+
+                @Override
+                public boolean getTagEnabled() {
+                    return true;
+                }
+
+                @Override
+                public List<ImageTagModel> getImageTagsModel() {
+                    ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+                    for (int i = 0; i < numberOfTags; i++) {
+                        if(i%2==0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true));
+                        }else{
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false));
+                        }
+                    }
+                    return list;
+                }
+            }),this);
+        }catch (Exception e){
+
+        }
+    }
+
+    public void gridPriorityFilesClicked(View view){
+        try {
+            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                @Override
+                public boolean selectVideos() {
+                    return false;
+                }
+
+                @Override
+                public GalleryType getGalleryViewType() {
+                    return GalleryType.Grid_Structure;
+                }
+
+                @Override
+                public boolean enableFolderStructure() {
+                    return false;
+                }
+
+                @Override
+                public boolean galleryToCameraSwitchEnabled() {
+                    return true;
+                }
+
+                @Override
+                public boolean isRestrictedExtensionJpgPngEnabled() {
+                    return true;
+                }
+
+                @Override
+                public int getNumberOfPhotos() {
+                    return 5;
+                }
+
+                @Override
+                public boolean getTagEnabled() {
+                    return true;
+                }
+
+                @Override
+                public List<ImageTagModel> getImageTagsModel() {
+                    ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+                    for (int i = 0; i < numberOfTags; i++) {
+                        if(i%2==0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true));
+                        }else{
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false));
+                        }
+                    }
+                    return list;
+                }
+            }),this);
+        }catch (Exception e){
+
+        }
+    }
+
+
+
+    public void horizontalOnlyFolderClicked(View view){
+        try {
+            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                @Override
+                public boolean selectVideos() {
+                    return false;
+                }
+
+                @Override
+                public GalleryType getGalleryViewType() {
+                    return GalleryType.Horizontal_Structure;
+                }
+
+                @Override
+                public boolean enableFolderStructure() {
+                    return true;
+                }
+
+                @Override
+                public boolean galleryToCameraSwitchEnabled() {
+                    return false;
+                }
+
+                @Override
+                public boolean isRestrictedExtensionJpgPngEnabled() {
+                    return true;
+                }
+
+                @Override
+                public int getNumberOfPhotos() {
+                    return 5;
+                }
+
+                @Override
+                public boolean getTagEnabled() {
+                    return true;
+                }
+
+                @Override
+                public List<ImageTagModel> getImageTagsModel() {
+                    ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+                    for (int i = 0; i < numberOfTags; i++) {
+                        if(i%2==0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true));
+                        }else{
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false));
+                        }
+                    }
+                    return list;
+                }
+            }),this);
+        }catch (Exception e){
+
+        }
+    }
+
+    public void horizontalPriorityFolderClicked(View view){
+        try {
+            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                @Override
+                public boolean selectVideos() {
+                    return false;
+                }
+
+                @Override
+                public GalleryType getGalleryViewType() {
+                    return GalleryType.Horizontal_Structure;
+                }
+
+                @Override
+                public boolean enableFolderStructure() {
+                    return true;
+                }
+
+                @Override
+                public boolean galleryToCameraSwitchEnabled() {
+                    return true;
+                }
+
+                @Override
+                public boolean isRestrictedExtensionJpgPngEnabled() {
+                    return true;
+                }
+
+                @Override
+                public int getNumberOfPhotos() {
+                    return 5;
+                }
+
+                @Override
+                public boolean getTagEnabled() {
+                    return true;
+                }
+
+                @Override
+                public List<ImageTagModel> getImageTagsModel() {
+                    ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+                    for (int i = 0; i < numberOfTags; i++) {
+                        if(i%2==0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true));
+                        }else{
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false));
+                        }
+                    }
+                    return list;
+                }
+            }),this);
+        }catch (Exception e){
+
+        }
+    }
+
+    public void horizontalOnlyFilesClicked(View view){
+        try {
+            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                @Override
+                public boolean selectVideos() {
+                    return false;
+                }
+
+                @Override
+                public GalleryType getGalleryViewType() {
+                    return GalleryType.Horizontal_Structure;
+                }
+
+                @Override
+                public boolean enableFolderStructure() {
+                    return false;
+                }
+
+                @Override
+                public boolean galleryToCameraSwitchEnabled() {
+                    return false;
+                }
+
+                @Override
+                public boolean isRestrictedExtensionJpgPngEnabled() {
+                    return true;
+                }
+
+                @Override
+                public int getNumberOfPhotos() {
+                    return 5;
+                }
+
+                @Override
+                public boolean getTagEnabled() {
+                    return true;
+                }
+
+                @Override
+                public List<ImageTagModel> getImageTagsModel() {
+                    ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+                    for (int i = 0; i < numberOfTags; i++) {
+                        if(i%2==0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true));
+                        }else{
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false));
+                        }
+                    }
+                    return list;
+                }
+            }),this);
+        }catch (Exception e){
+
+        }
+    }
+
+    public void horizontalPrioriyFilesClicked(View view){
+        try {
+            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                @Override
+                public boolean selectVideos() {
+                    return false;
+                }
+
+                @Override
+                public GalleryType getGalleryViewType() {
+                    return GalleryType.Horizontal_Structure;
+                }
+
+                @Override
+                public boolean enableFolderStructure() {
+                    return false;
+                }
+
+                @Override
+                public boolean galleryToCameraSwitchEnabled() {
+                    return true;
+                }
+
+                @Override
+                public boolean isRestrictedExtensionJpgPngEnabled() {
+                    return true;
+                }
+
+                @Override
+                public int getNumberOfPhotos() {
+                    return 5;
+                }
+
+                @Override
+                public boolean getTagEnabled() {
+                    return true;
+                }
+
+                @Override
+                public List<ImageTagModel> getImageTagsModel() {
+                    ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+                    for (int i = 0; i < numberOfTags; i++) {
+                        if(i%2==0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true));
+                        }else{
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false));
+                        }
+                    }
+                    return list;
+                }
+            }),this);
+        }catch (Exception e){
+
+        }
+    }
+
 
 
 

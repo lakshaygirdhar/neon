@@ -163,7 +163,7 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Constants.cameraInt && requestCode == Constants.cameraInt){
+        if(resultCode == Constants.destroyPreviousActivity && requestCode == Constants.destroyPreviousActivity){
             finish();
         }
     }

@@ -30,45 +30,69 @@
 
 
         <Button
-            android:text="Gallery Only (Grid Folders View)"
-            android:onClick="galleryOnlyGridClicked"
+            android:onClick="gridOnlyFolderClicked"
             android:layout_marginTop="20dp"
+            android:text="Grid only Structure (Folders)"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <Button
-            android:onClick="galleryPriorityClicked"
-            android:text="Gallery Priority (Grid Folders View)"
+            android:onClick="gridPriorityFolderClicked"
+            android:text="Grid priority Structure (Folders)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:onClick="gridOnlyFilesClicked"
+            android:text="Grid only Structure (Files)"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
 
         <Button
-            android:onClick="galleryOnlyGridFilesClicked"
-            android:text="Gallery only (Grid Files)"
+            android:onClick="gridPriorityFilesClicked"
+            android:text="Grid priority Structure (Files)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+
+
+
+
+
+
+        <Button
+            android:onClick="horizontalOnlyFolderClicked"
             android:layout_marginTop="20dp"
+            android:text="Horizontal only Structure (Folders)"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <Button
-            android:onClick="galleryPriorityFilesClicked"
-            android:text="Gallery priority (Grid Files)"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-
-
-        <Button
-            android:onClick="galleryOnlyHorizontalClicked"
-            android:text="Gallery Only (Horizontal Scroll View)"
-            android:layout_marginTop="20dp"
+            android:onClick="horizontalPriorityFolderClicked"
+            android:text="Horizontal priority Structure (Folders)"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <Button
-            android:text="Gallery Priority (Horizontal Scroll View)"
+            android:onClick="horizontalOnlyFilesClicked"
+            android:text="Horizontal only Structure (Files)"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+
+        <Button
+            android:onClick="horizontalPrioriyFilesClicked"
+            android:text="Horizontal priority Structure (Files)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+
+
+
+
 
 
 

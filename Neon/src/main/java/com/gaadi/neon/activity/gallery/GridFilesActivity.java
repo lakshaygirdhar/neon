@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.gaadi.neon.Enumerations.CameraFacing;
 import com.gaadi.neon.Enumerations.CameraOrientation;
 import com.gaadi.neon.Enumerations.CameraType;
-import com.gaadi.neon.Enumerations.GalleryType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.adapter.GridFilesAdapter;
@@ -68,16 +67,15 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
                 Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
                 return super.onOptionsItemSelected(item);
             }else {
-                if(SingletonClass.getSingleonInstance().getImagesCollection() == null ||
+                /*if(SingletonClass.getSingleonInstance().getImagesCollection() == null ||
                         SingletonClass.getSingleonInstance().getImagesCollection().size()<=0){
                     Toast.makeText(this,"No image selected",Toast.LENGTH_SHORT).show();
                     return super.onOptionsItemSelected(item);
-                }
+                }*/
                 if (!SingletonClass.getSingleonInstance().isNeutralEnabled()) {
                     Intent intent = new Intent(this, ImageShow.class);
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    setResult(Constants.cameraInt);
+                    setResult(Constants.destroyPreviousActivity);
                     finish();
                 } else {
                     setResult(RESULT_OK);
@@ -86,7 +84,7 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
             }
         }else if (id == R.id.menuCamera) {
             performCameraOperation();
-            setResult(Constants.cameraInt);
+            setResult(Constants.destroyPreviousActivity);
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -97,7 +95,7 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
         if(SingletonClass.getSingleonInstance().isNeutralEnabled()){
             super.onBackPressed();
         }else{
-            if(SingletonClass.getSingleonInstance().getGalleryParam().getGalleryViewType() == GalleryType.grid_files){
+            if(!SingletonClass.getSingleonInstance().getGalleryParam().enableFolderStructure()){
                 if (SingletonClass.getSingleonInstance().getImagesCollection() != null &&
                         SingletonClass.getSingleonInstance().getImagesCollection().size() > 0) {
                     new AlertDialog.Builder(this).setTitle("All Images will be lost. Do you sure want to go back?")
