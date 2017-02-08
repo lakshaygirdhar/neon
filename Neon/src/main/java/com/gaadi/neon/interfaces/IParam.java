@@ -1,8 +1,10 @@
 package com.gaadi.neon.interfaces;
 
 import com.gaadi.neon.model.ImageTagModel;
+import com.gaadi.neon.util.FileInfo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,4 +21,7 @@ public interface IParam {
     boolean getTagEnabled();
 
     List<ImageTagModel> getImageTagsModel();
+
+    List<FileInfo> getAlreadyAddedImages();
+
 }

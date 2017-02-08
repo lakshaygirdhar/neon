@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
 
     private static final String TAG = "MainActivity";
     private int numberOfTags = 5;
+    List<FileInfo> allreadyImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,10 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                     return list;
                 }
 
-
+                @Override
+                public List<FileInfo> getAlreadyAddedImages() {
+                    return allreadyImages;
+                }
 
 
             }),this);
@@ -168,7 +172,10 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                     return list;
                 }
 
-
+                @Override
+                public List<FileInfo> getAlreadyAddedImages() {
+                    return allreadyImages;
+                }
 
 
             }),this);
@@ -265,6 +272,11 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                     }
                     return list;
                 }
+
+                @Override
+                public List<FileInfo> getAlreadyAddedImages() {
+                    return allreadyImages;
+                }
             }),this);
         } catch (NeonException e) {
             e.printStackTrace();
@@ -322,6 +334,11 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                     }
                     return list;
                 }
+
+                @Override
+                public List<FileInfo> getAlreadyAddedImages() {
+                    return allreadyImages;
+                }
             }),this);
         }catch (Exception e){
 
@@ -377,6 +394,11 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                         }
                     }
                     return list;
+                }
+
+                @Override
+                public List<FileInfo> getAlreadyAddedImages() {
+                    return allreadyImages;
                 }
             }),this);
         }catch (Exception e){
@@ -434,6 +456,11 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                     }
                     return list;
                 }
+
+                @Override
+                public List<FileInfo> getAlreadyAddedImages() {
+                    return allreadyImages;
+                }
             }),this);
         }catch (Exception e){
 
@@ -489,6 +516,11 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                         }
                     }
                     return list;
+                }
+
+                @Override
+                public List<FileInfo> getAlreadyAddedImages() {
+                    return allreadyImages;
                 }
             }),this);
         }catch (Exception e){
@@ -548,6 +580,11 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                     }
                     return list;
                 }
+
+                @Override
+                public List<FileInfo> getAlreadyAddedImages() {
+                    return allreadyImages;
+                }
             }),this);
         }catch (Exception e){
 
@@ -603,6 +640,11 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                         }
                     }
                     return list;
+                }
+
+                @Override
+                public List<FileInfo> getAlreadyAddedImages() {
+                    return allreadyImages;
                 }
             }),this);
         }catch (Exception e){
@@ -660,6 +702,11 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                     }
                     return list;
                 }
+
+                @Override
+                public List<FileInfo> getAlreadyAddedImages() {
+                    return allreadyImages;
+                }
             }),this);
         }catch (Exception e){
 
@@ -716,6 +763,11 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
                     }
                     return list;
                 }
+
+                @Override
+                public List<FileInfo> getAlreadyAddedImages() {
+                    return allreadyImages;
+                }
             }),this);
         }catch (Exception e){
 
@@ -723,27 +775,6 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
     }
 
 
-
-
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: " + requestCode + " responseCode : " + resultCode);
-
-
-        List<FileInfo> fileInfoList = (List<FileInfo>) data.getSerializableExtra(Constants.RESULT_IMAGES);
-        HashMap<String, List<FileInfo>> hashMap = (HashMap<String, List<FileInfo>>) data.getSerializableExtra(Constants.RESULT_IMAGES);
-
-
-        if (hashMap != null) {
-            Toast.makeText(this, "Got hash map with tags", Toast.LENGTH_SHORT).show();
-        }
-        if (fileInfoList != null) {
-            Toast.makeText(this, "Got file list without tags", Toast.LENGTH_SHORT).show();
-        }
-
-    }
 
 
     @Override
@@ -756,6 +787,7 @@ public class MainActivity extends AppCompatActivity implements SetOnImageCollect
     @Override
     public void imageCollection(List<FileInfo> imageCollection) {
         if(imageCollection != null && imageCollection.size()>0){
+            allreadyImages = imageCollection;
             Toast.makeText(this,"Got collection with size " + imageCollection.size(),Toast.LENGTH_SHORT).show();
         }
     }

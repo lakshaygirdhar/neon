@@ -18,11 +18,13 @@ import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
+import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NeutralActivityLayoutBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -116,6 +118,11 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                     public List<ImageTagModel> getImageTagsModel() {
                         return SingletonClass.getSingleonInstance().getNeutralParam().getImageTagsModel();
                     }
+
+                    @Override
+                    public ArrayList<FileInfo> getAlreadyAddedImages() {
+                        return null;
+                    }
                 }),SingletonClass.getSingleonInstance().getImageResultListener());
             } catch (NeonException e) {
                 e.printStackTrace();
@@ -162,6 +169,11 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                     public List<ImageTagModel> getImageTagsModel() {
                         return SingletonClass.getSingleonInstance().getNeutralParam().getImageTagsModel();
                     }
+
+                    @Override
+                    public ArrayList<FileInfo> getAlreadyAddedImages() {
+                        return null;
+                    }
                 }),SingletonClass.getSingleonInstance().getImageResultListener());
             } catch (NeonException e) {
                 e.printStackTrace();
@@ -185,26 +197,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
 
     @Override
     public void onBackPressed() {
-        if (SingletonClass.getSingleonInstance().getImagesCollection() != null &&
-                SingletonClass.getSingleonInstance().getImagesCollection().size() > 0) {
-            new AlertDialog.Builder(this).setTitle("All Images will be lost. Do you sure want to go back?")
-                    .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    SingletonClass.getSingleonInstance().scheduleSinletonClearance();
-                    finish();
-                }
-            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).show();
-        }else{
-            super.onBackPressed();
-        }
-
+        SingletonClass.getSingleonInstance().showBackOperationAlertIfNeeded(this);
     }
 
 }
