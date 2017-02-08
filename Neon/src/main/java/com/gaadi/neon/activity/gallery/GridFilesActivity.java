@@ -21,6 +21,7 @@ import com.gaadi.neon.interfaces.SetOnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.PermissionType;
@@ -29,6 +30,7 @@ import com.scanlibrary.R;
 import com.scanlibrary.databinding.ActivityGridFilesBinding;
 import com.scanlibrary.databinding.ActivityGridFoldersBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GridFilesActivity extends NeonBaseGalleryActivity {
@@ -69,11 +71,6 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
                 Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
                 return super.onOptionsItemSelected(item);
             }else {
-                /*if(SingletonClass.getSingleonInstance().getImagesCollection() == null ||
-                        SingletonClass.getSingleonInstance().getImagesCollection().size()<=0){
-                    Toast.makeText(this,"No image selected",Toast.LENGTH_SHORT).show();
-                    return super.onOptionsItemSelected(item);
-                }*/
                 if (!SingletonClass.getSingleonInstance().isNeutralEnabled()) {
                     Intent intent = new Intent(this, ImageShow.class);
                     startActivity(intent);
@@ -98,25 +95,7 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
             super.onBackPressed();
         }else{
             if(!SingletonClass.getSingleonInstance().getGalleryParam().enableFolderStructure()){
-                if (SingletonClass.getSingleonInstance().getImagesCollection() != null &&
-                        SingletonClass.getSingleonInstance().getImagesCollection().size() > 0) {
-                    new AlertDialog.Builder(this).setTitle("All Images will be lost. Do you sure want to go back?")
-                            .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            SingletonClass.getSingleonInstance().scheduleSinletonClearance();
-                            finish();
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
-                }else{
-                    super.onBackPressed();
-                }
+                SingletonClass.getSingleonInstance().showBackOperationAlertIfNeeded(this);
             }else{
                 super.onBackPressed();
             }
@@ -177,6 +156,11 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
                 @Override
                 public List<ImageTagModel> getImageTagsModel() {
                     return SingletonClass.getSingleonInstance().getGalleryParam().getImageTagsModel();
+                }
+
+                @Override
+                public ArrayList<FileInfo> getAlreadyAddedImages() {
+                    return null;
                 }
 
             };

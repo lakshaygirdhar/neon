@@ -44,13 +44,7 @@ public class ImageShowFragment extends Fragment {
         @Override
         public void onClick(View v) {
             if (validate()) {
-                if (SingletonClass.getSingleonInstance().getGenericParam().getTagEnabled()) {
-                    SingletonClass.getSingleonInstance().getImageResultListener().imageCollection(SingletonClass.getSingleonInstance().getFileHashMap());
-                } else {
-                    SingletonClass.getSingleonInstance().getImageResultListener().imageCollection(SingletonClass.getSingleonInstance().getImagesCollection());
-                }
-                SingletonClass.getSingleonInstance().scheduleSinletonClearance();
-                getActivity().finish();
+                SingletonClass.getSingleonInstance().sendImageCollectionAndFinish(getActivity());
             }
         }
     };
@@ -75,7 +69,7 @@ public class ImageShowFragment extends Fragment {
         if (!SingletonClass.getSingleonInstance().getGenericParam().getTagEnabled()) {
             return true;
         }
-        ArrayList<FileInfo> fileInfos = SingletonClass.getSingleonInstance().getImagesCollection();
+        List<FileInfo> fileInfos = SingletonClass.getSingleonInstance().getImagesCollection();
         if (fileInfos != null && fileInfos.size() > 0) {
             for (int i = 0; i < fileInfos.size(); i++) {
                 if (fileInfos.get(i).getFileTag() == null) {

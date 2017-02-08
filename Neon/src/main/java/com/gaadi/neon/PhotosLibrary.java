@@ -15,8 +15,12 @@ import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.INeutralParam;
 import com.gaadi.neon.interfaces.SetOnImageCollectionListener;
 import com.gaadi.neon.model.PhotosMode;
+import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.SingletonClass;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lakshaygirdhar
@@ -87,6 +91,10 @@ public class PhotosLibrary {
     public static void collectPhotos(Context activity, PhotosMode photosMode, SetOnImageCollectionListener listener) throws NullPointerException, NeonException {
         SingletonClass.getSingleonInstance().setImageResultListener(listener);
         validate(activity, photosMode,listener);
+        List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
+        if(alreadyAddedImages != null) {
+            SingletonClass.getSingleonInstance().setImagesCollection(alreadyAddedImages);
+        }
         if (photosMode.getParams() instanceof INeutralParam) {
             startNeutralActivity(activity, photosMode);
         } else if (photosMode.getParams() instanceof ICameraParam) {

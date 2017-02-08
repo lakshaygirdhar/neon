@@ -113,25 +113,7 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
             super.onBackPressed();
         }else{
             if(!SingletonClass.getSingleonInstance().getGalleryParam().enableFolderStructure()){
-                if (SingletonClass.getSingleonInstance().getImagesCollection() != null &&
-                        SingletonClass.getSingleonInstance().getImagesCollection().size() > 0) {
-                    new AlertDialog.Builder(this).setTitle("All Images will be lost. Do you sure want to go back?")
-                            .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            SingletonClass.getSingleonInstance().scheduleSinletonClearance();
-                            finish();
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
-                }else{
-                    super.onBackPressed();
-                }
+                SingletonClass.getSingleonInstance().showBackOperationAlertIfNeeded(this);
             }else{
                 super.onBackPressed();
             }
@@ -192,6 +174,11 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
                 @Override
                 public List<ImageTagModel> getImageTagsModel() {
                     return SingletonClass.getSingleonInstance().getGalleryParam().getImageTagsModel();
+                }
+
+                @Override
+                public ArrayList<FileInfo> getAlreadyAddedImages() {
+                    return null;
                 }
 
             };

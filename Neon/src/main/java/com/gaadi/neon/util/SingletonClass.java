@@ -1,7 +1,10 @@
 package com.gaadi.neon.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.gaadi.neon.interfaces.ICameraParam;
@@ -12,6 +15,7 @@ import com.gaadi.neon.interfaces.SetOnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,15 +27,41 @@ import java.util.List;
 public class SingletonClass {
 
     private static SingletonClass singleonInstance;
-    private ArrayList<FileInfo> imagesCollection;
+    private List<FileInfo> imagesCollection;
     private ICameraParam cameraParam;
     private IGalleryParam galleryParam;
     private boolean neutralEnabled;
+
+    public void setImagesCollection(List<FileInfo> allreadyAdded) {
+        imagesCollection = new ArrayList<>();
+        if (allreadyAdded != null && allreadyAdded.size() > 0) {
+            for (int i = 0; i < allreadyAdded.size(); i++){
+                FileInfo cloneFile = new FileInfo();
+                FileInfo originalFile = allreadyAdded.get(i);
+                if(originalFile == null){
+                    continue;
+                }
+                if(originalFile.getFileTag() != null) {
+                    cloneFile.setFileTag(new ImageTagModel(originalFile.getFileTag().getTagName(), originalFile.getFileTag().getTagId(), originalFile.getFileTag().isMandatory()));
+                }
+                cloneFile.setSelected(originalFile.getSelected());
+                cloneFile.setSource(originalFile.getSource());
+                cloneFile.setFileName(originalFile.getFileName());
+                cloneFile.setDateTimeTaken(originalFile.getDateTimeTaken());
+                cloneFile.setDisplayName(originalFile.getDisplayName());
+                cloneFile.setFileCount(originalFile.getFileCount());
+                cloneFile.setFilePath(originalFile.getFilePath());
+                cloneFile.setType(originalFile.getType());
+                imagesCollection.add(cloneFile);
+            }
+        }
+    }
+
     private INeutralParam neutralParam;
     private IParam genericParam;
     private static boolean clearInstance;
 
-    public void scheduleSinletonClearance(){
+    public void scheduleSinletonClearance() {
         clearInstance = true;
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -78,7 +108,7 @@ public class SingletonClass {
         this.neutralParam = neutralParam;
     }
 
-    public ArrayList<FileInfo> getImagesCollection() {
+    public List<FileInfo> getImagesCollection() {
         return imagesCollection;
     }
 
@@ -134,10 +164,10 @@ public class SingletonClass {
         if (imagesCollection == null) {
             imagesCollection = new ArrayList<>();
         }
-        if(!getGenericParam().getTagEnabled() && getGenericParam().getNumberOfPhotos() > 0 &&
+        if (!getGenericParam().getTagEnabled() && getGenericParam().getNumberOfPhotos() > 0 &&
                 getImagesCollection() != null &&
-                getGenericParam().getNumberOfPhotos() == getImagesCollection().size()){
-            Toast.makeText(context,"" + getGenericParam().getNumberOfPhotos() + " images are allowed only",Toast.LENGTH_SHORT).show();
+                getGenericParam().getNumberOfPhotos() == getImagesCollection().size()) {
+            Toast.makeText(context, "" + getGenericParam().getNumberOfPhotos() + " images are allowed only", Toast.LENGTH_SHORT).show();
             return false;
         }
         return imagesCollection.add(fileInfo);
@@ -150,7 +180,7 @@ public class SingletonClass {
         return imagesCollection.remove(position) != null;
     }
 
-    public HashMap<String, List<FileInfo>> getFileHashMap() {
+    private HashMap<String, List<FileInfo>> getFileHashMap() {
         if (imagesCollection == null || imagesCollection.size() <= 0) {
             return null;
         }
@@ -158,12 +188,15 @@ public class SingletonClass {
 
         for (int i = 0; i < imagesCollection.size(); i++) {
             FileInfo singleFile = imagesCollection.get(i);
-            if(hashMap.containsKey(singleFile.getFileTag().getTagId())){
+            if (singleFile.getFileTag() == null) {
+                continue;
+            }
+            if (hashMap.containsKey(singleFile.getFileTag().getTagId())) {
                 hashMap.get(singleFile.getFileTag().getTagId()).add(singleFile);
-            }else{
-                List<FileInfo>singleTagFiles = new ArrayList<>();
+            } else {
+                List<FileInfo> singleTagFiles = new ArrayList<>();
                 singleTagFiles.add(singleFile);
-                hashMap.put(singleFile.getFileTag().getTagId(),singleTagFiles);
+                hashMap.put(singleFile.getFileTag().getTagId(), singleTagFiles);
             }
         }
         return hashMap;
@@ -184,4 +217,42 @@ public class SingletonClass {
     public void setCameraParam(ICameraParam cameraParam) {
         this.cameraParam = cameraParam;
     }
+
+    public void sendImageCollectionAndFinish(Activity activity) {
+        SingletonClass.getSingleonInstance().getImageResultListener().imageCollection(SingletonClass.getSingleonInstance().getImagesCollection());
+        SingletonClass.getSingleonInstance().getImageResultListener().imageCollection(SingletonClass.getSingleonInstance().getFileHashMap());
+        SingletonClass.getSingleonInstance().scheduleSinletonClearance();
+        activity.finish();
+    }
+
+    public void showBackOperationAlertIfNeeded(final Activity activity) {
+        List<ImageTagModel> imageTagsModel = getGenericParam().getImageTagsModel();
+
+        if (!getGenericParam().getTagEnabled() || imageTagsModel == null || imageTagsModel.size() <= 0 ||
+                getImagesCollection() == null || getImagesCollection().size() <= 0) {
+            sendImageCollectionAndFinish(activity);
+        } else {
+            for (int i = 0; i < imageTagsModel.size(); i++) {
+                if (imageTagsModel.get(i).isMandatory() && !checkImagesAvailableForTag(imageTagsModel.get(i))) {
+                    new AlertDialog.Builder(activity).setTitle("All tags are not covered.Do you want to loose images?")
+                            .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Loose", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            scheduleSinletonClearance();
+                            activity.finish();
+                        }
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+                    return;
+                }
+            }
+            sendImageCollectionAndFinish(activity);
+        }
+    }
+
 }
