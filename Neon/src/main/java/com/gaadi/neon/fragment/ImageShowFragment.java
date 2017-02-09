@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.gaadi.neon.Enumerations.ResponseCode;
 import com.gaadi.neon.adapter.ImageShowAdapter;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.Constants;
@@ -44,7 +45,7 @@ public class ImageShowFragment extends Fragment {
         @Override
         public void onClick(View v) {
             if (validate()) {
-                SingletonClass.getSingleonInstance().sendImageCollectionAndFinish(getActivity());
+                SingletonClass.getSingleonInstance().sendImageCollectionAndFinish(getActivity(), ResponseCode.Success);
             }
         }
     };

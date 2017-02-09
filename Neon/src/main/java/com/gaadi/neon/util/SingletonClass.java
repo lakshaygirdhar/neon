@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
+import com.gaadi.neon.Enumerations.ResponseCode;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.INeutralParam;
@@ -15,7 +16,6 @@ import com.gaadi.neon.interfaces.SetOnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,13 +35,13 @@ public class SingletonClass {
     public void setImagesCollection(List<FileInfo> allreadyAdded) {
         imagesCollection = new ArrayList<>();
         if (allreadyAdded != null && allreadyAdded.size() > 0) {
-            for (int i = 0; i < allreadyAdded.size(); i++){
+            for (int i = 0; i < allreadyAdded.size(); i++) {
                 FileInfo cloneFile = new FileInfo();
                 FileInfo originalFile = allreadyAdded.get(i);
-                if(originalFile == null){
+                if (originalFile == null) {
                     continue;
                 }
-                if(originalFile.getFileTag() != null) {
+                if (originalFile.getFileTag() != null) {
                     cloneFile.setFileTag(new ImageTagModel(originalFile.getFileTag().getTagName(), originalFile.getFileTag().getTagId(), originalFile.getFileTag().isMandatory()));
                 }
                 cloneFile.setSelected(originalFile.getSelected());
@@ -218,41 +218,27 @@ public class SingletonClass {
         this.cameraParam = cameraParam;
     }
 
-    public void sendImageCollectionAndFinish(Activity activity) {
-        SingletonClass.getSingleonInstance().getImageResultListener().imageCollection(SingletonClass.getSingleonInstance().getImagesCollection());
-        SingletonClass.getSingleonInstance().getImageResultListener().imageCollection(SingletonClass.getSingleonInstance().getFileHashMap());
+    public void sendImageCollectionAndFinish(Activity activity, ResponseCode responseCode) {
+        SingletonClass.getSingleonInstance().getImageResultListener().imageCollection(SingletonClass.getSingleonInstance().getImagesCollection(), responseCode);
+        SingletonClass.getSingleonInstance().getImageResultListener().imageCollection(SingletonClass.getSingleonInstance().getFileHashMap(), responseCode);
         SingletonClass.getSingleonInstance().scheduleSinletonClearance();
         activity.finish();
     }
 
     public void showBackOperationAlertIfNeeded(final Activity activity) {
-        List<ImageTagModel> imageTagsModel = getGenericParam().getImageTagsModel();
-
-        if (!getGenericParam().getTagEnabled() || imageTagsModel == null || imageTagsModel.size() <= 0 ||
-                getImagesCollection() == null || getImagesCollection().size() <= 0) {
-            sendImageCollectionAndFinish(activity);
-        } else {
-            for (int i = 0; i < imageTagsModel.size(); i++) {
-                if (imageTagsModel.get(i).isMandatory() && !checkImagesAvailableForTag(imageTagsModel.get(i))) {
-                    new AlertDialog.Builder(activity).setTitle("All tags are not covered.Do you want to loose images?")
-                            .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Loose", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            scheduleSinletonClearance();
-                            activity.finish();
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
-                    return;
-                }
+        new AlertDialog.Builder(activity).setTitle("Are you sure want to go back?")
+                .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                sendImageCollectionAndFinish(activity, ResponseCode.Back);
             }
-            sendImageCollectionAndFinish(activity);
-        }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
     }
 
 }
