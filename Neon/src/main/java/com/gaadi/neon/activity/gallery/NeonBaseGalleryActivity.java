@@ -5,22 +5,13 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
-import com.gaadi.neon.Enumerations.GalleryType;
-import com.gaadi.neon.activity.BaseActivity;
-import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.activity.NeonBaseActivity;
-import com.gaadi.neon.interfaces.IGalleryParam;
-import com.gaadi.neon.interfaces.SetOnPermissionResultListener;
 import com.gaadi.neon.model.BucketModel;
 import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.ManifestPermission;
-import com.gaadi.neon.util.PermissionType;
 import com.gaadi.neon.util.SingletonClass;
 import com.scanlibrary.R;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * @author princebatra
@@ -30,7 +21,7 @@ import java.util.HashMap;
 public abstract class NeonBaseGalleryActivity extends NeonBaseActivity {
 
     private Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-    ArrayList<BucketModel> buckets;
+    private ArrayList<BucketModel> buckets;
 
     protected ArrayList<BucketModel> getImageBuckets() {
         buckets = new ArrayList<>();

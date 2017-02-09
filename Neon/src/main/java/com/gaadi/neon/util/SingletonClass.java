@@ -24,6 +24,8 @@ import java.util.List;
  * @version 1.0
  * @since 1/2/17
  */
+// TODO Review Lakshay : rename to NeonImagesHandler
+    // TODO Review Lakshay : check for lint issues
 public class SingletonClass {
 
     private static SingletonClass singleonInstance;
@@ -58,6 +60,7 @@ public class SingletonClass {
     }
 
     private INeutralParam neutralParam;
+    //TODO Review Lakshay : Remove Unused Code/Variable
     private IParam genericParam;
     private static boolean clearInstance;
 
@@ -167,6 +170,7 @@ public class SingletonClass {
         if (!getGenericParam().getTagEnabled() && getGenericParam().getNumberOfPhotos() > 0 &&
                 getImagesCollection() != null &&
                 getGenericParam().getNumberOfPhotos() == getImagesCollection().size()) {
+            //TODO Review Lakshay : Use strings.xml
             Toast.makeText(context, "" + getGenericParam().getNumberOfPhotos() + " images are allowed only", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -226,6 +230,7 @@ public class SingletonClass {
     }
 
     public void showBackOperationAlertIfNeeded(final Activity activity) {
+        //TODO Review Lakshay : Use strings.xml
         new AlertDialog.Builder(activity).setTitle("Are you sure want to go back?")
                 .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override

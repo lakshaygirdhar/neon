@@ -7,6 +7,7 @@ package com.gaadi.neon.util;
  */
 public class NeonException extends Exception {
 
+    //Todo Review Lakshay : Use proper access specifier
     String msg;
 
     public NeonException(String message){
