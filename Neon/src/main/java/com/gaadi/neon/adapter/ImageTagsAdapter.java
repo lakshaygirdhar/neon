@@ -71,13 +71,18 @@ public class ImageTagsAdapter extends ArrayAdapter<ImageTagModel> {
             mHolder = (ImageTagsModelsHolder) convertView.getTag();
 
         }
-        if(fileOnViewPager != null && fileOnViewPager.getFileTag() != null &&
+        if(NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(tagsModel)){
+            convertView.setBackgroundColor( ContextCompat.getColor(context, android.R.color.darker_gray));
+        }else{
+            convertView.setBackgroundColor( ContextCompat.getColor(context, android.R.color.transparent));
+        }
+        /*if(fileOnViewPager != null && fileOnViewPager.getFileTag() != null &&
                 fileOnViewPager.getFileTag().getTagId().equals(
                         tagsModel.getTagId())){
             ContextCompat.getColor(context, android.R.color.darker_gray);
         }else{
             ContextCompat.getColor(context, android.R.color.transparent);
-        }
+        }*/
 
         if(tagsModel.isMandatory()){//Constants.MANDATORY_TAGS is 1
             mHolder.text.setText("");

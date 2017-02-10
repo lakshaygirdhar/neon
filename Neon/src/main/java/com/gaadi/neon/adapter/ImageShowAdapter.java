@@ -31,7 +31,10 @@ public class ImageShowAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return NeonImagesHandler.getSingleonInstance().getImagesCollection().size();
+        if(NeonImagesHandler.getSingleonInstance().getImagesCollection() != null) {
+            return NeonImagesHandler.getSingleonInstance().getImagesCollection().size();
+        }
+        return 0;
     }
 
     @Override
