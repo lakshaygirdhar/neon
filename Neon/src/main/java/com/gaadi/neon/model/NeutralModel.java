@@ -9,7 +9,7 @@ import com.gaadi.neon.interfaces.INeutralParam;
  */
 public class NeutralModel {
 
-    public PhotosMode setParams(INeutralParam iParam){
+    public PhotosMode setParams(INeutralParam iParam) {
         return new PhotosMode(iParam);
     }
 }

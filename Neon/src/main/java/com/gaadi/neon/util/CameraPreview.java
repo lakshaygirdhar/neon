@@ -20,14 +20,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * Created by Lakshay on 18-02-2015.
- *
+ * @author lakshay girdhar
+ * @version 1.0
+ * @since 18/02/15
  */
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
     private static final String TAG = "CameraPreview";
+    private static final int DEGREES_0 = 0;
+    private static final int DEGREES_90 = 90;
+    private static final int DEGREES_180 = 180;
+    private static final int DEGREES_270 = 270;
     private Camera mCamera;
+    Camera.AutoFocusCallback myAutoFocusCallback = new Camera.AutoFocusCallback() {
+
+        @Override
+        public void onAutoFocus(boolean arg0, Camera arg1) {
+            if (arg0) {
+                mCamera.cancelAutoFocus();
+            }
+        }
+    };
     private List<Camera.Size> mSupportedPreviewSizes;
     private List<Camera.Size> mSupportedPictureSizes;
     private Camera.Size mPreviewSize;
@@ -35,15 +48,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private SurfaceHolder holder;
     private Display display;
     private Activity mActivity;
-
-    private static final int DEGREES_0 = 0;
-    private static final int DEGREES_90 = 90;
-    private static final int DEGREES_180 = 180;
-    private static final int DEGREES_270 = 270;
-
     private ReadyToTakePicture readyListener = null;
 
-    public CameraPreview(Context context){
+    public CameraPreview(Context context) {
         super(context);
     }
 
@@ -153,7 +160,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
-
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
@@ -222,8 +228,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 //            mCamera.setParameters(parameters);
 //            mCamera.startPreview();
 //            ScanActivity.readyToTakePicture = true;
-            if (readyListener != null)
-                readyListener.readyToTakePicture(true);
+        if (readyListener != null)
+            readyListener.readyToTakePicture(true);
 //
 //        } catch (Exception e) {
 //            Log.e(TAG, "" + e.getMessage());
@@ -238,38 +244,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             readyListener.readyToTakePicture(false);
 //        mCamera.release();
         Log.e("Camera Preview", "Surface Destroyed");
-    }
-
-    private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w, int h) {
-        final double ASPECT_TOLERANCE = 0.1;
-        double targetRatio = (double) h / w;
-
-        if (sizes == null) return null;
-
-        Camera.Size optimalSize = null;
-        double minDiff = Double.MAX_VALUE;
-
-        int targetHeight = h;
-
-        for (Camera.Size size : sizes) {
-            double ratio = (double) size.width / size.height;
-            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
-            if (Math.abs(size.height - targetHeight) < minDiff) {
-                optimalSize = size;
-                minDiff = Math.abs(size.height - targetHeight);
-            }
-        }
-
-        if (optimalSize == null) {
-            minDiff = Double.MAX_VALUE;
-            for (Camera.Size size : sizes) {
-                if (Math.abs(size.height - targetHeight) < minDiff) {
-                    optimalSize = size;
-                    minDiff = Math.abs(size.height - targetHeight);
-                }
-            }
-        }
-        return optimalSize;
     }
 
 //    @Override
@@ -312,6 +286,38 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 //        return true;
 //    }
 
+    private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w, int h) {
+        final double ASPECT_TOLERANCE = 0.1;
+        double targetRatio = (double) h / w;
+
+        if (sizes == null) return null;
+
+        Camera.Size optimalSize = null;
+        double minDiff = Double.MAX_VALUE;
+
+        int targetHeight = h;
+
+        for (Camera.Size size : sizes) {
+            double ratio = (double) size.width / size.height;
+            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
+            if (Math.abs(size.height - targetHeight) < minDiff) {
+                optimalSize = size;
+                minDiff = Math.abs(size.height - targetHeight);
+            }
+        }
+
+        if (optimalSize == null) {
+            minDiff = Double.MAX_VALUE;
+            for (Camera.Size size : sizes) {
+                if (Math.abs(size.height - targetHeight) < minDiff) {
+                    optimalSize = size;
+                    minDiff = Math.abs(size.height - targetHeight);
+                }
+            }
+        }
+        return optimalSize;
+    }
+
     public void doTouchFocus(final Rect tfocusRect) {
         try {
             List<Camera.Area> focusList = new ArrayList<Camera.Area>();
@@ -329,16 +335,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             Log.i(TAG, "Unable to autofocus");
         }
     }
-
-    Camera.AutoFocusCallback myAutoFocusCallback = new Camera.AutoFocusCallback() {
-
-        @Override
-        public void onAutoFocus(boolean arg0, Camera arg1) {
-            if (arg0) {
-                mCamera.cancelAutoFocus();
-            }
-        }
-    };
     //    private void focusOnTouch(MotionEvent event) {
 //        if (mCamera != null) {
 //
@@ -386,17 +382,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         return x;
     }
 
-
-    public interface ReadyToTakePicture {
-        void readyToTakePicture(boolean ready);
-    }
-
     public void setReadyListener(ReadyToTakePicture listener) {
         this.readyListener = listener;
     }
 
-    public void setParametersToCamera(){
-        if(mCamera==null){
+    public void setParametersToCamera() {
+        if (mCamera == null) {
             return;
         }
 
@@ -408,12 +399,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         int width = size.x;
         int height = size.y;
         mSupportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
-        mSupportedPictureSizes=mCamera.getParameters().getSupportedPictureSizes();
+        mSupportedPictureSizes = mCamera.getParameters().getSupportedPictureSizes();
         if (mSupportedPreviewSizes != null) {
             mPreviewSize = getOptimalPreviewSizeByAspect(mSupportedPreviewSizes, width, height);
-            mPictureSize=getOptimalPreviewSize(mSupportedPictureSizes, width, height);
+            mPictureSize = getOptimalPreviewSize(mSupportedPictureSizes, width, height);
             parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
-            parameters.setPictureSize(mPictureSize.width,mPictureSize.height);
+            parameters.setPictureSize(mPictureSize.width, mPictureSize.height);
         }
 
         if (parameters.getMaxNumFocusAreas() > 0) {
@@ -456,5 +447,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
         // Log.e(TAG,"OPTIMAL "+optimalSize.height+" "+optimalSize.width);
         return optimalSize;
+    }
+
+    public interface ReadyToTakePicture {
+        void readyToTakePicture(boolean ready);
     }
 }

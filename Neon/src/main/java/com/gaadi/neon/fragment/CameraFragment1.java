@@ -42,18 +42,16 @@ import android.widget.Toast;
 
 import com.gaadi.neon.Enumerations.CameraFacing;
 import com.gaadi.neon.Enumerations.CameraOrientation;
-import com.gaadi.neon.activity.neutral.NeonBaseNeutralActivity;
 import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.model.ImageTagModel;
-import com.gaadi.neon.util.ApplicationController;
 import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.DrawingView;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PrefsUtils;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NeonCameraFragmentLayoutBinding;
 
@@ -71,8 +69,8 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
     private static final String TAG = "CameraFragment1";
     private static final int REQUEST_REVIEW = 100;
+    NeonCameraFragmentLayoutBinding binder;
     private DrawingView drawingView;
-    private ImageView buttonCapture;
     private ImageView currentFlashMode;
     private ArrayList<String> supportedFlashModes;
     private RecyclerView rcvFlash;
@@ -90,8 +88,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private float mDist;
     private ImageView mSwitchCamera;
     private CameraFacing cameraFacing;
-    NeonCameraFragmentLayoutBinding binder;
-
 
     public void clickPicture() {
         if (readyToTakePicture) {
@@ -100,18 +96,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             }
             readyToTakePicture = false;
         }
-    }
-
-    public interface PictureTakenListener {
-        void onPictureTaken(String filePath);
-
-        void onPicturesFinalized(ArrayList<FileInfo> infos);
-
-        void onPicturesFinalized(Map<ImageTagModel, List<FileInfo>> filesMap);
-    }
-
-    public interface SetOnPictureTaken {
-        void onPictureTaken(String filePath);
     }
 
     @Override
@@ -130,7 +114,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         binder = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.neon_camera_fragment_layout, container, false);
 
         mActivity = getActivity();
-        cameraParam = SingletonClass.getSingleonInstance().getCameraParam();
+        cameraParam = NeonImagesHandler.getSingleonInstance().getCameraParam();
         if (cameraParam != null) {
             initialize();
             customize();
@@ -145,7 +129,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
         currentFlashMode = binder.currentFlashMode;
         rcvFlash = binder.flashListview;
-        buttonCapture = binder.buttonCapture;
         mSwitchCamera = binder.switchCamera;
 
         rcvFlash.setLayoutManager(layoutManager);
@@ -157,7 +140,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
         binder.getRoot().setOnTouchListener(this);
     }
-
 
     public void onClickFragmentsView(View v) {
         if (v.getId() == R.id.buttonCapture) {
@@ -180,7 +162,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 rcvFlash.setVisibility(View.GONE);
         }
     }
-
 
     private void customize() {
         CameraOrientation orientation = cameraParam.getCameraOrientation();
@@ -217,7 +198,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             Log.e(TAG, e.getMessage());
         }
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -265,7 +245,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         PrefsUtils.setStringSharedPreference(getActivity(), Constants.FLASH_MODE, mode);
         mCamera.setParameters(parameters);
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -344,9 +323,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         }
     }
 
-
-
-
     private void createFlashModesDropDown() {
         FlashModeRecyclerHorizontalAdapter flashModeAdapter = new FlashModeRecyclerHorizontalAdapter(getActivity(), supportedFlashModes);
         rcvFlash.setAdapter(flashModeAdapter);
@@ -408,123 +384,10 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         return true;
     }
 
-
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
         new ImagePostProcessing(mActivity, data).execute();
     }
-
-    private class ImagePostProcessing extends AsyncTask<Void, Void, File> {
-
-        private Context context;
-        private byte[] data;
-        private ProgressDialog progressDialog;
-
-        ImagePostProcessing(Context context, byte[] data) {
-            this.context = context;
-            this.data = data;
-        }
-
-        @Override
-        protected File doInBackground(Void... params) {
-            File pictureFile = Constants.getMediaOutputFile(getActivity(), Constants.TYPE_IMAGE);
-
-            if (pictureFile == null)
-                return null;
-
-            try {
-                FileOutputStream fos = new FileOutputStream(pictureFile);
-                Bitmap bm;
-
-                // COnverting ByteArray to Bitmap - >Rotate and Convert back to Data
-                if (data != null) {
-                    int screenWidth = getResources().getDisplayMetrics().widthPixels;
-                    int screenHeight = getResources().getDisplayMetrics().heightPixels;
-                    bm = BitmapFactory.decodeByteArray(data, 0, (data != null) ? data.length : 0);
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        // Notice that width and height are reversed
-                        Bitmap scaled = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
-                        int w = scaled.getWidth();
-                        int h = scaled.getHeight();
-                        // Setting post rotate to 90
-                        Matrix mtx = new Matrix();
-                        int cameraId;
-                        if (cameraFacing == CameraFacing.front) {
-                            cameraId = getBackFacingCameraId();
-                        } else {
-                            cameraId = initCameraId();
-                        }
-                        int CameraEyeValue = setPhotoOrientation(getActivity(), cameraId); // CameraID = 1 : front 0:back
-                        if (cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) { // As Front camera is Mirrored so Fliping the Orientation
-                            if (CameraEyeValue == 270) {
-                                mtx.postRotate(90);
-                            } else if (CameraEyeValue == 90) {
-                                mtx.postRotate(270);
-                            }
-                        } else {
-                            mtx.postRotate(CameraEyeValue); // CameraEyeValue is default to Display Rotation
-                        }
-
-                        bm = Bitmap.createBitmap(scaled, 0, 0, w, h, mtx, true);
-                    } else {// LANDSCAPE MODE
-                        //No need to reverse width and height
-                        bm = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
-                    }
-                } else {
-                    return null;
-                }
-                // COnverting the Die photo to Bitmap
-
-
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-                fos.write(byteArray);
-                //fos.write(data);
-                fos.close();
-                Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
-                mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        pictureFileUri));
-
-            } catch (FileNotFoundException e) {
-                Log.d(TAG, "File not found: " + e.getMessage());
-            } catch (IOException e) {
-                Log.d(TAG, "Error accessing file: " + e.getMessage());
-            }
-
-            mCamera.startPreview();
-            return pictureFile;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = ProgressDialog.show(context, null, "Saving Picture", true);
-        }
-
-        @Override
-        protected void onPostExecute(File file) {
-            super.onPostExecute(file);
-            if (progressDialog != null)
-                progressDialog.dismiss();
-            if (file != null) {
-                /*if(getActivity() instanceof NeonBaseNeutralActivity) {
-                    mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
-                    readyToTakePicture = true;
-                    return;
-                }
-                mCamera.startPreview();*/
-
-                mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
-                readyToTakePicture = true;
-            } else {
-                Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
-                readyToTakePicture = true;
-                mCamera.startPreview();
-            }
-        }
-    }
-
 
     private void setCameraRotation() {
         //STEP #1: Get rotation degrees
@@ -570,7 +433,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             Log.e(Constants.TAG, "No orientation set");
         }
     }
-
 
     private Rect calculateTapArea(float x, float y, float coefficient) {
         int FOCUS_AREA_SIZE = 200;
@@ -630,7 +492,9 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         }
     }
 
-    /** Determine the space between the first two fingers */
+    /**
+     * Determine the space between the first two fingers
+     */
     private float getFingerSpacing(MotionEvent event) {
         // ...
         float x = event.getX(0) - event.getX(1);
@@ -771,5 +635,128 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             }
         }
         return cameraId;
+    }
+
+    public interface PictureTakenListener {
+        void onPictureTaken(String filePath);
+
+        void onPicturesFinalized(ArrayList<FileInfo> infos);
+
+        void onPicturesFinalized(Map<ImageTagModel, List<FileInfo>> filesMap);
+    }
+
+    public interface SetOnPictureTaken {
+        void onPictureTaken(String filePath);
+    }
+
+    private class ImagePostProcessing extends AsyncTask<Void, Void, File> {
+
+        private Context context;
+        private byte[] data;
+        private ProgressDialog progressDialog;
+
+        ImagePostProcessing(Context context, byte[] data) {
+            this.context = context;
+            this.data = data;
+        }
+
+        @Override
+        protected File doInBackground(Void... params) {
+            File pictureFile = Constants.getMediaOutputFile(getActivity(), Constants.TYPE_IMAGE);
+
+            if (pictureFile == null)
+                return null;
+
+            try {
+                FileOutputStream fos = new FileOutputStream(pictureFile);
+                Bitmap bm;
+
+                // COnverting ByteArray to Bitmap - >Rotate and Convert back to Data
+                if (data != null) {
+                    int screenWidth = getResources().getDisplayMetrics().widthPixels;
+                    int screenHeight = getResources().getDisplayMetrics().heightPixels;
+                    bm = BitmapFactory.decodeByteArray(data, 0, (data != null) ? data.length : 0);
+                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        // Notice that width and height are reversed
+                        Bitmap scaled = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
+                        int w = scaled.getWidth();
+                        int h = scaled.getHeight();
+                        // Setting post rotate to 90
+                        Matrix mtx = new Matrix();
+                        int cameraId;
+                        if (cameraFacing == CameraFacing.front) {
+                            cameraId = getBackFacingCameraId();
+                        } else {
+                            cameraId = initCameraId();
+                        }
+                        int CameraEyeValue = setPhotoOrientation(getActivity(), cameraId); // CameraID = 1 : front 0:back
+                        if (cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) { // As Front camera is Mirrored so Fliping the Orientation
+                            if (CameraEyeValue == 270) {
+                                mtx.postRotate(90);
+                            } else if (CameraEyeValue == 90) {
+                                mtx.postRotate(270);
+                            }
+                        } else {
+                            mtx.postRotate(CameraEyeValue); // CameraEyeValue is default to Display Rotation
+                        }
+
+                        bm = Bitmap.createBitmap(scaled, 0, 0, w, h, mtx, true);
+                    } else {// LANDSCAPE MODE
+                        //No need to reverse width and height
+                        bm = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
+                    }
+                } else {
+                    return null;
+                }
+                // COnverting the Die photo to Bitmap
+
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+                fos.write(byteArray);
+                //fos.write(data);
+                fos.close();
+                Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
+                mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                        pictureFileUri));
+
+            } catch (FileNotFoundException e) {
+                Log.d(TAG, "File not found: " + e.getMessage());
+            } catch (IOException e) {
+                Log.d(TAG, "Error accessing file: " + e.getMessage());
+            }
+
+            mCamera.startPreview();
+            return pictureFile;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(context, null, "Saving Picture", true);
+        }
+
+        @Override
+        protected void onPostExecute(File file) {
+            super.onPostExecute(file);
+            if (progressDialog != null)
+                progressDialog.dismiss();
+            if (file != null) {
+                /*if(getActivity() instanceof NeonBaseNeutralActivity) {
+                    mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
+                    readyToTakePicture = true;
+                    return;
+                }
+                mCamera.startPreview();*/
+
+                mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
+                readyToTakePicture = true;
+            } else {
+                Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
+                readyToTakePicture = true;
+                mCamera.startPreview();
+            }
+        }
     }
 }

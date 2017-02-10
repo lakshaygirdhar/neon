@@ -4,6 +4,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="scanning">Croping in progress</string>
+    <string name="more_images">%1$d more images required"</string>
     <string name="scan">Save Croping</string>
     <string name="cantCrop">Can\'t crop the image, change the points</string>
     <string name="ok">OK</string>
@@ -24,10 +25,12 @@
     <string name="no">Cancel</string>
     <string name="title_activity_camera_priority">CameraPriorityActivity</string>
     <string name="title_activity_neutral">NeutralActivity</string>
-    <string name="permission_error">Permission Error</string>
+    <string name="permission_error">Permission not granted</string>
     <string name="you_need_to_allow_access_to">You need to allow access to %1$s.\nSettings->Apps->Gcloud->Permissions->%2$s</string>
     <string name="go_to_app_info">Go to App Info</string>
+    <string name="manifest_permission_error">Mention %1$s in your Manifest file</string>
     <string name="photos">Photos</string>
+    <string name="photos_count">Photos (%1$d)</string>
     <string name="zero">0</string>
     <string name="choose_gallery">Choose from Gallery</string>
     <string name="take_photo">Take Photo</string>
@@ -35,6 +38,8 @@
     <string name="gallery">Gallery</string>
     <string name="gallery_error">Either No access or no gallery files present</string>
     <string name="wrong_format">Wrong file format selected</string>
+    <string name="no_image_selected">No image selected</string>
+    <string name="max_count_error">%1$d images are allowed only</string>
     <string name="selected_max_photos">Maximum no of photos selected already</string>
     <string name="click_photo">Please click atleast one photo</string>
     <string name="pass_valid_params">Please pass valid params</string>
@@ -42,6 +47,7 @@
     <string name="no_images">No Images Clicked</string>
     <string name="next">NEXT</string>
     <string name="done">DONE</string>
+    <string name="image_review">Image Review</string>
     <string name="profile_photo">Profile Photo</string>
     <string name="please_select_atleast_one">Please click atleast one photo</string>
     <string name="camera_error">Camera Error. Kindly try again !!</string>

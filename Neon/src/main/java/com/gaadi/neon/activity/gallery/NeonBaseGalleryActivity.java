@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.gaadi.neon.activity.NeonBaseActivity;
 import com.gaadi.neon.model.BucketModel;
 import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public abstract class NeonBaseGalleryActivity extends NeonBaseActivity {
         String orderBy = MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC";
 
         Cursor mCursor;
-        if (SingletonClass.getSingleonInstance().getGalleryParam() != null && SingletonClass.getSingleonInstance().getGalleryParam().isRestrictedExtensionJpgPngEnabled()) {
+        if (NeonImagesHandler.getSingleonInstance().getGalleryParam() != null && NeonImagesHandler.getSingleonInstance().getGalleryParam().isRestrictedExtensionJpgPngEnabled()) {
             mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, MediaStore.Images.Media.MIME_TYPE + " in (?, ?)", new String[]{"image/jpeg", "image/png"}, orderBy);
         } else {
             mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, null, null, orderBy);

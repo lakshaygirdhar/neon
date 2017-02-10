@@ -3,8 +3,6 @@ package com.gaadi.neon.interfaces;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.FileInfo;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,10 +12,14 @@ import java.util.List;
  */
 public interface IParam {
 
-    /**Pass 0 if you want no restriction in number of photos*/
+    /**
+     * Pass 0 if you want no restriction in number of photos
+     */
     int getNumberOfPhotos();
 
-    /**If passes true then  List<ImageTagModel> must not be null or empty*/
+    /**
+     * If passes true then  List<ImageTagModel> must not be null or empty
+     */
     boolean getTagEnabled();
 
     List<ImageTagModel> getImageTagsModel();

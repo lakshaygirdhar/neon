@@ -12,14 +12,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gaadi.neon.activity.ImageReviewActivity;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -44,24 +40,24 @@ public class ImageTagsAdapter extends ArrayAdapter<ImageTagModel> {
     @Override
     public int getCount() {
 
-        return SingletonClass.getSingleonInstance().getGenericParam().getImageTagsModel().size();
+        return NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel().size();
     }
 
     @Override
     public ImageTagModel getItem(int position) {
 
-        return SingletonClass.getSingleonInstance().getGenericParam().getImageTagsModel().get(position);
+        return NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel().get(position);
     }
 
     @Override
     public long getItemId(int position) {
 
-        return SingletonClass.getSingleonInstance().getGenericParam().getImageTagsModel().indexOf(getItem(position));
+        return NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel().indexOf(getItem(position));
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageTagModel tagsModel = SingletonClass.getSingleonInstance().getGenericParam().getImageTagsModel().get(position);
+        ImageTagModel tagsModel = NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel().get(position);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.color_layout_row, parent, false);
 
@@ -122,7 +118,7 @@ public class ImageTagsAdapter extends ArrayAdapter<ImageTagModel> {
             mHolder = (ImageTagsModelsHolder) convertView.getTag();
 
         }
-        mHolder.text.setText(SingletonClass.getSingleonInstance().getGenericParam().getImageTagsModel().get(position).getTagName());
+        mHolder.text.setText(NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel().get(position).getTagName());
 
 
         return convertView;

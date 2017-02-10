@@ -1,9 +1,10 @@
 package com.gaadi.neon.util;
 
 /**
- * Created by princebatra on 20/1/17.
+ * @author princebatra
+ * @version 1.0
+ * @since 20/1/17
  */
-
 public enum PermissionType {
     read_calender,
     write_calender,

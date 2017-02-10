@@ -1,9 +1,10 @@
 package com.gaadi.neon.Enumerations;
 
 /**
- * Created by princebatra on 25/1/17.
+ * @author princebatra
+ * @version 1.0
+ * @since 25/1/17
  */
-
 public enum CameraOrientation {
 
     landscape,

@@ -3,7 +3,6 @@ package com.gaadi.neon.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,24 +12,16 @@ import android.widget.TextView;
 
 import com.gaadi.neon.adapter.ImagesReviewViewPagerAdapter;
 import com.gaadi.neon.events.ImageEditEvent;
-
 import com.gaadi.neon.interfaces.FragmentListener;
 import com.gaadi.neon.util.Constants;
-import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
-
-import java.util.ArrayList;
 
 public class ImageReviewActivity extends NeonBaseActivity implements View.OnClickListener, FragmentListener {
 
     private ImagesReviewViewPagerAdapter mPagerAdapter;
 
-    private TextView mDoneButton;
-    private TextView mTitle;
     private ViewPager mPager;
-    private Toolbar toolbar;
-    private boolean isViewDirty = false;
     private ImageView viewPagerRightBtn;
     private ImageView viewPagerLeftBtn;
     private boolean singleTagSelection;
@@ -43,18 +34,17 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_review);
-        toolbar = (Toolbar) findViewById(R.id.image_review_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.image_review_toolbar);
         setSupportActionBar(toolbar);
-        mDoneButton = (TextView) findViewById(R.id.image_review_toolbar_doneBtn);
+        TextView mDoneButton = (TextView) findViewById(R.id.image_review_toolbar_doneBtn);
         mDoneButton.setOnClickListener(this);
         mPager = (ViewPager) findViewById(R.id.pager);
         viewPagerLeftBtn = (ImageView) findViewById(R.id.view_pager_leftbtn);
         viewPagerRightBtn = (ImageView) findViewById(R.id.view_pager_rightbtn);
         viewPagerRightBtn.setOnClickListener(this);
         viewPagerLeftBtn.setOnClickListener(this);
-        mTitle = (TextView) findViewById(R.id.image_review_toolbar_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Image Review");
+        setTitle(R.string.image_review);
         Intent intent = getIntent();
 
         singleTagSelection = intent.getBooleanExtra(Constants.SINGLE_TAG_SELECTION, false);
@@ -62,7 +52,7 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
         if (position == 0) {
             viewPagerLeftBtn.setVisibility(View.GONE);
         }
-        if (position == SingletonClass.getSingleonInstance().getImagesCollection().size() - 1) {
+        if (position == NeonImagesHandler.getSingleonInstance().getImagesCollection().size() - 1) {
             viewPagerRightBtn.setVisibility(View.GONE);
         }
         mPagerAdapter = new ImagesReviewViewPagerAdapter(getSupportFragmentManager());
@@ -89,13 +79,13 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
     }
 
     private void setArrowButton(int position) {
-        if (position == 0 || SingletonClass.getSingleonInstance().getImagesCollection().size() == 1) {
+        if (position == 0 || NeonImagesHandler.getSingleonInstance().getImagesCollection().size() == 1) {
             viewPagerLeftBtn.setVisibility(View.GONE);
         } else {
             viewPagerLeftBtn.setVisibility(View.VISIBLE);
         }
-        if (position == SingletonClass.getSingleonInstance().getImagesCollection().size() - 1 ||
-                SingletonClass.getSingleonInstance().getImagesCollection().size() == 1) {
+        if (position == NeonImagesHandler.getSingleonInstance().getImagesCollection().size() - 1 ||
+                NeonImagesHandler.getSingleonInstance().getImagesCollection().size() == 1) {
             viewPagerRightBtn.setVisibility(View.GONE);
         } else {
             viewPagerRightBtn.setVisibility(View.VISIBLE);
@@ -103,11 +93,12 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
     }
 
     public void getFragmentChanges(ImageEditEvent event) {
+        boolean isViewDirty = false;
         if (event.getImageEventType() == ImageEditEvent.EVENT_DELETE) {
             isViewDirty = true;
-            SingletonClass.getSingleonInstance().removeFromCollection(event.getPosition());
+            NeonImagesHandler.getSingleonInstance().removeFromCollection(event.getPosition());
             mPagerAdapter.setPagerItems();
-            if (SingletonClass.getSingleonInstance().getImagesCollection().size() == 0) {
+            if (NeonImagesHandler.getSingleonInstance().getImagesCollection().size() == 0) {
                 onBackPressed();
             }
             setArrowButton(mPager.getCurrentItem());
@@ -119,7 +110,7 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
         } else if (event.getImageEventType() == ImageEditEvent.EVENT_REPLACED_BY_GALLERY) {
             isViewDirty = true;
         } else if (event.getImageEventType() == ImageEditEvent.EVENT_TAG_CHANGED) {
-            SingletonClass.getSingleonInstance().getImagesCollection().set(event.getPosition(), event.getModel());
+            NeonImagesHandler.getSingleonInstance().getImagesCollection().set(event.getPosition(), event.getModel());
         }
     }
 
@@ -141,7 +132,7 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
 
         } else if (id == R.id.view_pager_rightbtn) {
             int position = mPager.getCurrentItem();
-            if (position < SingletonClass.getSingleonInstance().getImagesCollection().size() - 1) {
+            if (position < NeonImagesHandler.getSingleonInstance().getImagesCollection().size() - 1) {
                 position++;
                 mPager.setCurrentItem(position);
             }

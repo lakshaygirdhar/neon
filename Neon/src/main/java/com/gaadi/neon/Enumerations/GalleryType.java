@@ -7,7 +7,6 @@ package com.gaadi.neon.Enumerations;
  */
 public enum GalleryType {
 
-    //grid_folders,
     Grid_Structure,
     Horizontal_Structure
 }

@@ -1,12 +1,9 @@
 package com.gaadi.neon.activity.camera;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,21 +13,18 @@ import android.widget.Toast;
 import com.gaadi.neon.Enumerations.GalleryType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
-import com.gaadi.neon.activity.gallery.HorizontalFilesActivity;
-import com.gaadi.neon.adapter.GalleryHoriontalAdapter;
 import com.gaadi.neon.fragment.CameraFragment1;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
-import com.gaadi.neon.interfaces.SetOnPermissionResultListener;
+import com.gaadi.neon.interfaces.OnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.AnimationUtils;
-import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.PermissionType;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NormalCameraActivityLayoutBinding;
 
@@ -44,34 +38,34 @@ import java.util.List;
  */
 public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements CameraFragment1.SetOnPictureTaken {
 
-    private TextView tvImageName, tvTag, tvNext, tvPrevious;
-    private ImageView buttonGallery;
     ICameraParam cameraParams;
     RelativeLayout tagsLayout;
     List<ImageTagModel> tagModels;
     int currentTag;
     NormalCameraActivityLayoutBinding binder;
+    private TextView tvImageName, tvTag, tvNext, tvPrevious;
+    private ImageView buttonGallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bindXml();
-        cameraParams = SingletonClass.getSingleonInstance().getCameraParam();
+        cameraParams = NeonImagesHandler.getSingleonInstance().getCameraParam();
         customize();
         bindCameraFragment();
     }
 
     private void bindCameraFragment() {
         try {
-            askForPermissionIfNeeded(PermissionType.write_external_storage, new SetOnPermissionResultListener() {
+            askForPermissionIfNeeded(PermissionType.write_external_storage, new OnPermissionResultListener() {
                 @Override
                 public void onResult(boolean permissionGranted) {
-                    if(permissionGranted){
+                    if (permissionGranted) {
                         CameraFragment1 fragment = new CameraFragment1();
                         FragmentManager manager = getSupportFragmentManager();
                         manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-                    }else{
-                        Toast.makeText(NormalCameraActivityNeon.this,"Permission not granted",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(NormalCameraActivityNeon.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -95,7 +89,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         int id = v.getId();
         if (id == R.id.buttonDone) {
             if (finishValidation()) {
-                if (!SingletonClass.getSingleonInstance().isNeutralEnabled()) {
+                if (!NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
                     Intent intent = new Intent(this, ImageShow.class);
                     startActivity(intent);
                     finish();
@@ -106,7 +100,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             }
         } else if (id == R.id.buttonGallery) {
             try {
-                IGalleryParam galleryParam = SingletonClass.getSingleonInstance().getGalleryParam();
+                IGalleryParam galleryParam = NeonImagesHandler.getSingleonInstance().getGalleryParam();
                 if (galleryParam == null) {
                     galleryParam = new IGalleryParam() {
                         @Override
@@ -136,17 +130,17 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
                         @Override
                         public int getNumberOfPhotos() {
-                            return SingletonClass.getSingleonInstance().getCameraParam().getNumberOfPhotos();
+                            return NeonImagesHandler.getSingleonInstance().getCameraParam().getNumberOfPhotos();
                         }
 
                         @Override
                         public boolean getTagEnabled() {
-                            return SingletonClass.getSingleonInstance().getCameraParam().getTagEnabled();
+                            return NeonImagesHandler.getSingleonInstance().getCameraParam().getTagEnabled();
                         }
 
                         @Override
                         public List<ImageTagModel> getImageTagsModel() {
-                            return SingletonClass.getSingleonInstance().getCameraParam().getImageTagsModel();
+                            return NeonImagesHandler.getSingleonInstance().getCameraParam().getImageTagsModel();
                         }
 
                         @Override
@@ -156,7 +150,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
                     };
                 }
-                PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(galleryParam),SingletonClass.getSingleonInstance().getImageResultListener());
+                PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(galleryParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
                 finish();
             } catch (NeonException e) {
                 e.printStackTrace();
@@ -173,24 +167,28 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     }
 
     private boolean finishValidation() {
-        if (SingletonClass.getSingleonInstance().getCameraParam().getTagEnabled()) {
+        if (NeonImagesHandler.getSingleonInstance().getCameraParam().getTagEnabled()) {
             for (int i = 0; i < tagModels.size(); i++) {
                 if (tagModels.get(i).isMandatory() &&
-                        !SingletonClass.getSingleonInstance().checkImagesAvailableForTag(tagModels.get(i))) {
+                        !NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(tagModels.get(i))) {
                     Toast.makeText(this, String.format(getString(R.string.tag_mandatory_error), tagModels.get(i).getTagName()),
                             Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
         } else {
-            if (SingletonClass.getSingleonInstance().getImagesCollection() == null ||
-                    SingletonClass.getSingleonInstance().getImagesCollection().size() <= 0) {
-                Toast.makeText(this, "No Image Captured", Toast.LENGTH_SHORT).show();
+            if (NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
+                    NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) {
+                Toast.makeText(this, R.string.no_images, Toast.LENGTH_SHORT).show();
                 return false;
-            } else if (SingletonClass.getSingleonInstance().getImagesCollection().size() <
-                    SingletonClass.getSingleonInstance().getCameraParam().getNumberOfPhotos()) {
-                Toast.makeText(this, SingletonClass.getSingleonInstance().getCameraParam().getNumberOfPhotos() -
-                        SingletonClass.getSingleonInstance().getImagesCollection().size() + " more image required", Toast.LENGTH_SHORT).show();
+            } else if (NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <
+                    NeonImagesHandler.getSingleonInstance().getCameraParam().getNumberOfPhotos()) {
+               /* Toast.makeText(this, NeonImagesHandler.getSingleonInstance().getCameraParam().getNumberOfPhotos() -
+                        NeonImagesHandler.getSingleonInstance().getImagesCollection().size() + " more image required", Toast.LENGTH_SHORT).show();
+                */
+                Toast.makeText(this,getString(R.string.more_images,NeonImagesHandler.getSingleonInstance().getCameraParam().getNumberOfPhotos() -
+                        NeonImagesHandler.getSingleonInstance().getImagesCollection().size()), Toast.LENGTH_SHORT).show();
+
                 return false;
             }
         }
@@ -199,7 +197,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     public ImageTagModel getNextTag() {
         if (tagModels.get(currentTag).isMandatory() &&
-                !SingletonClass.getSingleonInstance().checkImagesAvailableForTag(tagModels.get(currentTag))) {
+                !NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(tagModels.get(currentTag))) {
             Toast.makeText(this, String.format(getString(R.string.tag_mandatory_error), tagModels.get(currentTag).getTagName()),
                     Toast.LENGTH_SHORT).show();
         } else {
@@ -256,10 +254,10 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     @Override
     public void onBackPressed() {
-        if(SingletonClass.getSingleonInstance().isNeutralEnabled()){
+        if (NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
             super.onBackPressed();
-        }else{
-            SingletonClass.getSingleonInstance().showBackOperationAlertIfNeeded(this);
+        } else {
+            NeonImagesHandler.getSingleonInstance().showBackOperationAlertIfNeeded(this);
         }
     }
 
@@ -272,7 +270,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         if (cameraParams.getTagEnabled()) {
             fileInfo.setFileTag(tagModels.get(currentTag));
         }
-        SingletonClass.getSingleonInstance().putInImageCollection(fileInfo,this);
+        NeonImagesHandler.getSingleonInstance().putInImageCollection(fileInfo, this);
     }
 
 }

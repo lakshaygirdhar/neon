@@ -1,10 +1,8 @@
 package com.gaadi.neon.activity.neutral;
 
-import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -20,7 +18,7 @@ import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NeutralActivityLayoutBinding;
 
@@ -37,24 +35,22 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bindXml();
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(SingletonClass.getSingleonInstance().getImagesCollection() == null ||
-                SingletonClass.getSingleonInstance().getImagesCollection().size()<=0){
-            setTitle("Photos");
-        }else{
-            setTitle("Photos ( "  + SingletonClass.getSingleonInstance().getImagesCollection().size() + " )");
+        if (NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
+                NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) {
+            setTitle(R.string.photos);
+        } else {
+            setTitle(getString(R.string.photos_count,NeonImagesHandler.getSingleonInstance().getImagesCollection().size()));
         }
     }
 
     private void bindXml() {
-        //NeutralActivityLayoutBinding binder = DataBindingUtil.setContentView(this, R.layout.neutral_activity_layout);
-        NeutralActivityLayoutBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.neutral_activity_layout,frameLayout,true);
+        NeutralActivityLayoutBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.neutral_activity_layout, frameLayout, true);
 
         binder.setHandlers(this);
 
@@ -66,119 +62,119 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
     public void onClick(View v) {
         int id = v.getId();
 
-        if (id == R.id.addPhotoCamera){
+        if (id == R.id.addPhotoCamera) {
             try {
-                PhotosLibrary.collectPhotos(this,PhotosMode.setCameraMode().setParams(new ICameraParam() {
+                PhotosLibrary.collectPhotos(this, PhotosMode.setCameraMode().setParams(new ICameraParam() {
                     @Override
                     public CameraFacing getCameraFacing() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getCameraFacing();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getCameraFacing();
                     }
 
                     @Override
                     public CameraOrientation getCameraOrientation() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getCameraOrientation();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getCameraOrientation();
                     }
 
                     @Override
                     public boolean getFlashEnabled() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getFlashEnabled();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getFlashEnabled();
                     }
 
                     @Override
                     public boolean getCameraSwitchingEnabled() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getCameraSwitchingEnabled();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getCameraSwitchingEnabled();
                     }
 
                     @Override
                     public boolean getVideoCaptureEnabled() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getVideoCaptureEnabled();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getVideoCaptureEnabled();
                     }
 
                     @Override
                     public CameraType getCameraViewType() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getCameraViewType();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getCameraViewType();
                     }
 
                     @Override
                     public boolean cameraToGallerySwitchEnabled() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().cameraToGallerySwitchEnabled();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().cameraToGallerySwitchEnabled();
                     }
 
                     @Override
                     public int getNumberOfPhotos() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getNumberOfPhotos();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getNumberOfPhotos();
                     }
 
                     @Override
                     public boolean getTagEnabled() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getTagEnabled();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getTagEnabled();
                     }
 
                     @Override
                     public List<ImageTagModel> getImageTagsModel() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getImageTagsModel();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getImageTagsModel();
                     }
 
                     @Override
                     public ArrayList<FileInfo> getAlreadyAddedImages() {
                         return null;
                     }
-                }),SingletonClass.getSingleonInstance().getImageResultListener());
+                }), NeonImagesHandler.getSingleonInstance().getImageResultListener());
             } catch (NeonException e) {
                 e.printStackTrace();
             }
-        }else if(id == R.id.addPhotoGallary){
+        } else if (id == R.id.addPhotoGallary) {
             try {
-                PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                     @Override
                     public boolean selectVideos() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().selectVideos();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().selectVideos();
                     }
 
                     @Override
                     public GalleryType getGalleryViewType() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getGalleryViewType();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getGalleryViewType();
                     }
 
                     @Override
                     public boolean enableFolderStructure() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().enableFolderStructure();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().enableFolderStructure();
                     }
 
                     @Override
                     public boolean galleryToCameraSwitchEnabled() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().galleryToCameraSwitchEnabled();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().galleryToCameraSwitchEnabled();
                     }
 
                     @Override
                     public boolean isRestrictedExtensionJpgPngEnabled() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().isRestrictedExtensionJpgPngEnabled();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().isRestrictedExtensionJpgPngEnabled();
                     }
 
                     @Override
                     public int getNumberOfPhotos() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getNumberOfPhotos();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getNumberOfPhotos();
                     }
 
                     @Override
                     public boolean getTagEnabled() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getTagEnabled();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getTagEnabled();
                     }
 
                     @Override
                     public List<ImageTagModel> getImageTagsModel() {
-                        return SingletonClass.getSingleonInstance().getNeutralParam().getImageTagsModel();
+                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getImageTagsModel();
                     }
 
                     @Override
                     public ArrayList<FileInfo> getAlreadyAddedImages() {
                         return null;
                     }
-                }),SingletonClass.getSingleonInstance().getImageResultListener());
+                }), NeonImagesHandler.getSingleonInstance().getImageResultListener());
             } catch (NeonException e) {
                 e.printStackTrace();
             }
-        }else if(id == android.R.id.home){
+        } else if (id == android.R.id.home) {
             onBackPressed();
         }
 
@@ -190,14 +186,14 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
-        }else {
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
     public void onBackPressed() {
-        SingletonClass.getSingleonInstance().showBackOperationAlertIfNeeded(this);
+        NeonImagesHandler.getSingleonInstance().showBackOperationAlertIfNeeded(this);
     }
 
 }

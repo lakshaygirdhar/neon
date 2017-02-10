@@ -1,12 +1,8 @@
 package com.gaadi.neon.interfaces;
 
-import android.os.Parcelable;
-
 import com.gaadi.neon.Enumerations.CameraFacing;
 import com.gaadi.neon.Enumerations.CameraOrientation;
 import com.gaadi.neon.Enumerations.CameraType;
-
-import java.io.Serializable;
 
 /**
  * @author princebatra

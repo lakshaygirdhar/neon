@@ -12,8 +12,9 @@ import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.INeutralParam;
 import com.gaadi.neon.interfaces.IParam;
-import com.gaadi.neon.interfaces.SetOnImageCollectionListener;
+import com.gaadi.neon.interfaces.OnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
+import com.scanlibrary.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,15 +25,74 @@ import java.util.List;
  * @version 1.0
  * @since 1/2/17
  */
-// TODO Review Lakshay : rename to NeonImagesHandler
-    // TODO Review Lakshay : check for lint issues
-public class SingletonClass {
+public class NeonImagesHandler {
 
-    private static SingletonClass singleonInstance;
+    private static NeonImagesHandler singleonInstance;
+    private static boolean clearInstance;
     private List<FileInfo> imagesCollection;
     private ICameraParam cameraParam;
     private IGalleryParam galleryParam;
     private boolean neutralEnabled;
+    private INeutralParam neutralParam;
+    private OnImageCollectionListener imageResultListener;
+
+    private NeonImagesHandler() {
+    }
+
+    public synchronized static NeonImagesHandler getSingleonInstance() {
+        if (singleonInstance == null || clearInstance) {
+            singleonInstance = new NeonImagesHandler();
+            clearInstance = false;
+        }
+        return singleonInstance;
+    }
+
+    private void scheduleSinletonClearance() {
+        clearInstance = true;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getSingleonInstance();
+            }
+        }, 10000);
+    }
+
+    public OnImageCollectionListener getImageResultListener() {
+        return imageResultListener;
+    }
+
+    public void setImageResultListener(OnImageCollectionListener imageResultListener) {
+        this.imageResultListener = imageResultListener;
+    }
+
+    public IParam getGenericParam() {
+        if (galleryParam != null)
+            return galleryParam;
+        else if (cameraParam != null)
+            return cameraParam;
+        else
+            return neutralParam;
+    }
+
+    public boolean isNeutralEnabled() {
+        return neutralEnabled;
+    }
+
+    public void setNeutralEnabled(boolean neutralEnabled) {
+        this.neutralEnabled = neutralEnabled;
+    }
+
+    public INeutralParam getNeutralParam() {
+        return neutralParam;
+    }
+
+    public void setNeutralParam(INeutralParam neutralParam) {
+        this.neutralParam = neutralParam;
+    }
+
+    public List<FileInfo> getImagesCollection() {
+        return imagesCollection;
+    }
 
     public void setImagesCollection(List<FileInfo> allreadyAdded) {
         imagesCollection = new ArrayList<>();
@@ -57,73 +117,6 @@ public class SingletonClass {
                 imagesCollection.add(cloneFile);
             }
         }
-    }
-
-    private INeutralParam neutralParam;
-    //TODO Review Lakshay : Remove Unused Code/Variable
-    private IParam genericParam;
-    private static boolean clearInstance;
-
-    public void scheduleSinletonClearance() {
-        clearInstance = true;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getSingleonInstance();
-            }
-        }, 10000);
-    }
-
-
-    public SetOnImageCollectionListener getImageResultListener() {
-        return imageResultListener;
-    }
-
-    public void setImageResultListener(SetOnImageCollectionListener imageResultListener) {
-        this.imageResultListener = imageResultListener;
-    }
-
-    private SetOnImageCollectionListener imageResultListener;
-
-    public IParam getGenericParam() {
-        if (galleryParam != null)
-            return galleryParam;
-        else if (cameraParam != null)
-            return cameraParam;
-        else
-            return neutralParam;
-    }
-
-    public boolean isNeutralEnabled() {
-        return neutralEnabled;
-    }
-
-    public void setNeutralEnabled(boolean neutralEnabled) {
-        this.neutralEnabled = neutralEnabled;
-    }
-
-
-    public INeutralParam getNeutralParam() {
-        return neutralParam;
-    }
-
-    public void setNeutralParam(INeutralParam neutralParam) {
-        this.neutralParam = neutralParam;
-    }
-
-    public List<FileInfo> getImagesCollection() {
-        return imagesCollection;
-    }
-
-    private SingletonClass() {
-    }
-
-    public synchronized static SingletonClass getSingleonInstance() {
-        if (singleonInstance == null || clearInstance) {
-            singleonInstance = new SingletonClass();
-            clearInstance = false;
-        }
-        return singleonInstance;
     }
 
     public boolean checkImagesAvailableForTag(ImageTagModel tagModel) {
@@ -170,18 +163,14 @@ public class SingletonClass {
         if (!getGenericParam().getTagEnabled() && getGenericParam().getNumberOfPhotos() > 0 &&
                 getImagesCollection() != null &&
                 getGenericParam().getNumberOfPhotos() == getImagesCollection().size()) {
-            //TODO Review Lakshay : Use strings.xml
-            Toast.makeText(context, "" + getGenericParam().getNumberOfPhotos() + " images are allowed only", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.max_count_error,getGenericParam().getNumberOfPhotos()), Toast.LENGTH_SHORT).show();
             return false;
         }
         return imagesCollection.add(fileInfo);
     }
 
     public boolean removeFromCollection(int position) {
-        if (imagesCollection == null || imagesCollection.size() <= 0) {
-            return true;
-        }
-        return imagesCollection.remove(position) != null;
+        return imagesCollection == null || imagesCollection.size() <= 0 || imagesCollection.remove(position) != null;
     }
 
     private HashMap<String, List<FileInfo>> getFileHashMap() {
@@ -206,12 +195,12 @@ public class SingletonClass {
         return hashMap;
     }
 
-    public void setGalleryParam(IGalleryParam params) {
-        this.galleryParam = params;
-    }
-
     public IGalleryParam getGalleryParam() {
         return galleryParam;
+    }
+
+    public void setGalleryParam(IGalleryParam params) {
+        this.galleryParam = params;
     }
 
     public ICameraParam getCameraParam() {
@@ -223,9 +212,9 @@ public class SingletonClass {
     }
 
     public void sendImageCollectionAndFinish(Activity activity, ResponseCode responseCode) {
-        SingletonClass.getSingleonInstance().getImageResultListener().imageCollection(SingletonClass.getSingleonInstance().getImagesCollection(), responseCode);
-        SingletonClass.getSingleonInstance().getImageResultListener().imageCollection(SingletonClass.getSingleonInstance().getFileHashMap(), responseCode);
-        SingletonClass.getSingleonInstance().scheduleSinletonClearance();
+        NeonImagesHandler.getSingleonInstance().getImageResultListener().imageCollection(NeonImagesHandler.getSingleonInstance().getImagesCollection(), responseCode);
+        NeonImagesHandler.getSingleonInstance().getImageResultListener().imageCollection(NeonImagesHandler.getSingleonInstance().getFileHashMap(), responseCode);
+        NeonImagesHandler.getSingleonInstance().scheduleSinletonClearance();
         activity.finish();
     }
 

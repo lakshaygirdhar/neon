@@ -1,7 +1,5 @@
 package com.gaadi.neon.fragment;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,13 +12,11 @@ import android.widget.Toast;
 import com.gaadi.neon.Enumerations.ResponseCode;
 import com.gaadi.neon.adapter.ImageShowAdapter;
 import com.gaadi.neon.model.ImageTagModel;
-import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.ImageShowLayoutBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +28,14 @@ public class ImageShowFragment extends Fragment {
 
     ImageShowAdapter adapter;
     ImageShowLayoutBinding binder;
+    View.OnClickListener doneListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (validate()) {
+                NeonImagesHandler.getSingleonInstance().sendImageCollectionAndFinish(getActivity(), ResponseCode.Success);
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -41,21 +45,11 @@ public class ImageShowFragment extends Fragment {
         return binder.getRoot();
     }
 
-    View.OnClickListener doneListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (validate()) {
-                SingletonClass.getSingleonInstance().sendImageCollectionAndFinish(getActivity(), ResponseCode.Success);
-            }
-        }
-    };
-
-
     @Override
     public void onResume() {
         super.onResume();
-        if (SingletonClass.getSingleonInstance().getImagesCollection() == null ||
-                SingletonClass.getSingleonInstance().getImagesCollection().size() <= 0) {
+        if (NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
+                NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) {
             return;
         }
         if (adapter == null) {
@@ -67,10 +61,10 @@ public class ImageShowFragment extends Fragment {
     }
 
     private boolean validate() {
-        if (!SingletonClass.getSingleonInstance().getGenericParam().getTagEnabled()) {
+        if (!NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
             return true;
         }
-        List<FileInfo> fileInfos = SingletonClass.getSingleonInstance().getImagesCollection();
+        List<FileInfo> fileInfos = NeonImagesHandler.getSingleonInstance().getImagesCollection();
         if (fileInfos != null && fileInfos.size() > 0) {
             for (int i = 0; i < fileInfos.size(); i++) {
                 if (fileInfos.get(i).getFileTag() == null) {
@@ -80,12 +74,12 @@ public class ImageShowFragment extends Fragment {
             }
         }
 
-        List<ImageTagModel> imageTagModels = SingletonClass.getSingleonInstance().getGenericParam().getImageTagsModel();
+        List<ImageTagModel> imageTagModels = NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel();
         for (int j = 0; j < imageTagModels.size(); j++) {
-            if(!imageTagModels.get(j).isMandatory()){
+            if (!imageTagModels.get(j).isMandatory()) {
                 continue;
             }
-            if(!SingletonClass.getSingleonInstance().checkImagesAvailableForTag(imageTagModels.get(j))){
+            if (!NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
                 Toast.makeText(getActivity(), "All mandatory tags are not covered.", Toast.LENGTH_SHORT).show();
                 return false;
             }

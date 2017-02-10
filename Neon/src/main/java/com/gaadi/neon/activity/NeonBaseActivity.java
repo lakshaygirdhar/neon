@@ -14,7 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import com.gaadi.neon.interfaces.SetOnPermissionResultListener;
+import com.gaadi.neon.interfaces.OnPermissionResultListener;
 import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.PermissionType;
 import com.scanlibrary.R;
@@ -28,7 +28,7 @@ public abstract class NeonBaseActivity extends AppCompatActivity{
 
     protected FrameLayout frameLayout;
     protected Toolbar toolbar;
-    private SetOnPermissionResultListener permissionResultListener;
+    private OnPermissionResultListener permissionResultListener;
     private final int permissionRequestCode=1;
 
     @Override
@@ -56,7 +56,7 @@ public abstract class NeonBaseActivity extends AppCompatActivity{
     }
 
     protected void askForPermissionIfNeeded(PermissionType permissionType,
-                                            SetOnPermissionResultListener listener) throws ManifestPermission {
+                                            OnPermissionResultListener listener) throws ManifestPermission {
 
         permissionResultListener = listener;
 
@@ -153,7 +153,7 @@ public abstract class NeonBaseActivity extends AppCompatActivity{
     private void goForPermission(String[] permissionName) throws ManifestPermission{
 
         if(!mentionedInManifest(permissionName[0])){
-            throw new ManifestPermission("Mention " + permissionName[0] + " in your Manifest file");
+            throw new ManifestPermission(getString(R.string.manifest_permission_error,permissionName[0]));
         }
 
         if((android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) ||

@@ -1,8 +1,5 @@
 package com.gaadi.neon.interfaces;
 
-import com.gaadi.neon.Enumerations.CameraFacing;
-import com.gaadi.neon.Enumerations.CameraOrientation;
-import com.gaadi.neon.Enumerations.CameraType;
 import com.gaadi.neon.Enumerations.GalleryType;
 
 /**

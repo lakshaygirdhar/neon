@@ -6,14 +6,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -37,13 +35,12 @@ import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonUtils;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -108,7 +105,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageNumber = getArguments().getInt(ARG_PAGE);
-        tagModels = SingletonClass.getSingleonInstance().getGenericParam().getImageTagsModel();
+        tagModels = NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel();
 
     }
 
@@ -124,7 +121,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         txtVwTagSpinner = (TextView) rootView.findViewById(R.id.imagereview_tag_spinner);
         draweeView = (ImageView) rootView.findViewById(R.id.imagereview_imageview);
         tagLayout = (LinearLayout) rootView.findViewById(R.id.footer_layout_imagereview_fragment);
-        if (SingletonClass.getSingleonInstance().getGenericParam().getTagEnabled()) {
+        if (NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
             tagLayout.setVisibility(View.VISIBLE);
         } else {
             tagLayout.setVisibility(View.GONE);

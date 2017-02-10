@@ -1,6 +1,5 @@
 package com.gaadi.neon.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -14,7 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gaadi.neon.activity.ImageReviewActivity;
 import com.gaadi.neon.util.Constants;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 
 /**
@@ -32,12 +31,12 @@ public class ImageShowAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return SingletonClass.getSingleonInstance().getImagesCollection().size();
+        return NeonImagesHandler.getSingleonInstance().getImagesCollection().size();
     }
 
     @Override
     public Object getItem(int position) {
-        return SingletonClass.getSingleonInstance().getImagesCollection().get(position);
+        return NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position);
     }
 
     @Override
@@ -59,14 +58,14 @@ public class ImageShowAdapter extends BaseAdapter {
             holder = (PhotosHolder) convertView.getTag();
         }
 
-        if (!SingletonClass.getSingleonInstance().getGenericParam().getTagEnabled()) {
+        if (!NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
             holder.tvProfile.setVisibility(View.GONE);
         } else {
             holder.tvProfile.setVisibility(View.VISIBLE);
         }
 
-        if (SingletonClass.getSingleonInstance().getImagesCollection().get(position).getFileTag() != null) {
-            holder.tvProfile.setText(SingletonClass.getSingleonInstance().getImagesCollection().get(position).getFileTag().getTagName());
+        if (NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFileTag() != null) {
+            holder.tvProfile.setText(NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFileTag().getTagName());
         } else {
             holder.tvProfile.setText("Select Tag");
         }
@@ -74,7 +73,7 @@ public class ImageShowAdapter extends BaseAdapter {
         holder.removeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SingletonClass.getSingleonInstance().removeFromCollection(position)) {
+                if (NeonImagesHandler.getSingleonInstance().removeFromCollection(position)) {
                     notifyDataSetChanged();
                 }else{
                     Toast.makeText(context,"Failed to delete.Please try again later.",Toast.LENGTH_SHORT).show();
@@ -91,7 +90,7 @@ public class ImageShowAdapter extends BaseAdapter {
             }
         });
 
-        Glide.with(context).load(SingletonClass.getSingleonInstance().getImagesCollection().get(position).getFilePath())
+        Glide.with(context).load(NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFilePath())
                 .crossFade()
                 .placeholder(R.drawable.default_placeholder)
                 .centerCrop()

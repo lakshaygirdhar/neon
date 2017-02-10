@@ -5,8 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.gaadi.neon.fragment.ImageReviewViewPagerFragment;
-import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 
 import java.util.ArrayList;
 
@@ -48,14 +47,14 @@ public class ImagesReviewViewPagerAdapter extends FragmentStatePagerAdapter {
             fragmentList.clear();
         else
             fragmentList=new ArrayList<>();
-        for (int i = 0; i < SingletonClass.getSingleonInstance().getImagesCollection().size(); i++) {
-            fragmentList.add(ImageReviewViewPagerFragment.create(i, SingletonClass.getSingleonInstance().getImagesCollection().get(i)));
+        for (int i = 0; i < NeonImagesHandler.getSingleonInstance().getImagesCollection().size(); i++) {
+            fragmentList.add(ImageReviewViewPagerFragment.create(i, NeonImagesHandler.getSingleonInstance().getImagesCollection().get(i)));
         }
     }
 
     public void setPagerItems() {
         if (fragmentList != null)
-            for (int i = 0; i < SingletonClass.getSingleonInstance().getImagesCollection().size(); i++) {
+            for (int i = 0; i < NeonImagesHandler.getSingleonInstance().getImagesCollection().size(); i++) {
                 mFragmentManager.beginTransaction().remove(fragmentList.get(i)).commit();
             }
         updatePagerItems();

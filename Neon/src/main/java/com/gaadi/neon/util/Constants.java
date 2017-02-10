@@ -12,8 +12,8 @@ import java.util.Date;
 
 /**
  * Created by Lakshay
- * @since 13-02-2015.
  *
+ * @since 13-02-2015.
  */
 public class Constants {
     public static final String Gallery_Params = "Gallery_Params";
@@ -33,14 +33,13 @@ public class Constants {
     public static final String IMAGE_PATH = "image_path";
     public static final int REQUEST_PERMISSION_CAMERA = 104;
     public static final int REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 105;
-    public static final String FLASH_MODE="flashMode";
-    public static String FLAG="Flag";
-
+    public static final String FLASH_MODE = "flashMode";
     public static final String IMAGE_TAGS_FOR_REVIEW = "imageTagsReview";
     public static final String IMAGE_MODEL_FOR__REVIEW = "imageModelReview";
     public static final String IMAGE_REVIEW_POSITION = "imageReviewPosition";
     public static final String SINGLE_TAG_SELECTION = "singleTagSelection";
     public static final String ALREADY_SELECTED_TAGS = "alreadySelectedTags";
+    public static String FLAG = "Flag";
 
     public static File getMediaOutputFile(Context context, int type) {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(

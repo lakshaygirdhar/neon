@@ -8,7 +8,6 @@ import java.util.ArrayList;
 /**
  * @author lakshaygirdhar
  * @since 13-08-2016
- *
  */
 public class PhotoParams implements Serializable {
 
@@ -32,99 +31,73 @@ public class PhotoParams implements Serializable {
     private boolean cameraHorizontalPreviewEnabled;
     private boolean flashOptionsEnabled;
 
-    public boolean isCameraFaceSwitchEnabled()
-    {
+    public PhotoParams() {
+
+    }
+
+    public boolean isCameraFaceSwitchEnabled() {
         return cameraFaceSwitchEnabled;
     }
 
-    public void setCameraFaceSwitchEnabled(boolean cameraFaceSwitchEnabled)
-    {
+    public void setCameraFaceSwitchEnabled(boolean cameraFaceSwitchEnabled) {
         this.cameraFaceSwitchEnabled = cameraFaceSwitchEnabled;
     }
 
-    public boolean isFlashOptionsEnabled()
-    {
+    public boolean isFlashOptionsEnabled() {
         return flashOptionsEnabled;
     }
 
-    public void setFlashOptionsEnabled(boolean flashOptionsEnabled)
-    {
+    public void setFlashOptionsEnabled(boolean flashOptionsEnabled) {
         this.flashOptionsEnabled = flashOptionsEnabled;
     }
 
-    private enum FolderOptions {
-        PUBLIC_DIR, PUBLIC_DIR_DCIM, PUBLIC_DIR_SOCIAL, PUBLIC_DIR_ALL;
-    }
-
-    public enum CameraOrientation {
-        LANDSCAPE, PORTRAIT, BOTH;
-    }
-
-    public enum CameraFacing {
-        FRONT, BACK
-    }
-
-    public boolean isTagEnabled()
-    {
+    public boolean isTagEnabled() {
         return tagEnabled;
     }
 
-    public void setTagEnabled(boolean tagEnabled)
-    {
+    public void setTagEnabled(boolean tagEnabled) {
         this.tagEnabled = tagEnabled;
     }
 
-    public boolean isMetaEnabled()
-    {
+    public boolean isMetaEnabled() {
         return metaEnabled;
     }
 
-    public void setMetaEnabled(boolean metaEnabled)
-    {
+    public void setMetaEnabled(boolean metaEnabled) {
         this.metaEnabled = metaEnabled;
     }
 
-    public boolean isEnableCapturedReview()
-    {
+    public boolean isEnableCapturedReview() {
         return enableCapturedReview;
     }
 
-    public void setEnableCapturedReview(boolean enableCapturedReview)
-    {
+    public void setEnableCapturedReview(boolean enableCapturedReview) {
         this.enableCapturedReview = enableCapturedReview;
     }
 
-    public boolean isEnableExtraBrightness()
-    {
+    public boolean isEnableExtraBrightness() {
         return enableExtraBrightness;
     }
 
-    public void setEnableExtraBrightness(boolean enableExtraBrightness)
-    {
+    public void setEnableExtraBrightness(boolean enableExtraBrightness) {
         this.enableExtraBrightness = enableExtraBrightness;
     }
 
-    public ArrayList<ImageTagModel> getImageTags()
-    {
+    public ArrayList<ImageTagModel> getImageTags() {
         return imageTags;
     }
 
-    public void setImageTags(ArrayList<ImageTagModel> imageTags)
-    {
+    public void setImageTags(ArrayList<ImageTagModel> imageTags) {
         this.imageTags = imageTags;
     }
 
-    public boolean isCameraHorizontalPreviewEnabled()
-    {
+    public boolean isCameraHorizontalPreviewEnabled() {
         return cameraHorizontalPreviewEnabled;
     }
 
-    public void setCameraHorizontalPreviewEnabled(boolean cameraHorizontalPreviewEnabled)
-    {
+    public void setCameraHorizontalPreviewEnabled(boolean cameraHorizontalPreviewEnabled) {
         this.cameraHorizontalPreviewEnabled = cameraHorizontalPreviewEnabled;
     }
-
-    public enum MODE {CAMERA_PRIORITY, NEUTRAL, GALLERY_PRIORITY,CAMERA_ONLY,GALLERY_ONLY}
 
     public boolean isGalleryFromCameraEnabled() {
         return galleryFromCameraEnabled;
@@ -142,17 +115,12 @@ public class PhotoParams implements Serializable {
         this.cameraFace = cameraFace;
     }
 
-    public PhotoParams() {
-
+    public String getImageName() {
+        return imageName;
     }
-
 
     public void setImageName(String imageName) {
         this.imageName = imageName;
-    }
-
-    public String getImageName() {
-        return imageName;
     }
 
     public ArrayList<?> getImagePathList() {
@@ -218,4 +186,18 @@ public class PhotoParams implements Serializable {
     public void setRestrictedExtensionEnabled(boolean restrictedExtensionEnabled) {
         this.restrictedExtensionEnabled = restrictedExtensionEnabled;
     }
+
+    private enum FolderOptions {
+        PUBLIC_DIR, PUBLIC_DIR_DCIM, PUBLIC_DIR_SOCIAL, PUBLIC_DIR_ALL;
+    }
+
+    public enum CameraOrientation {
+        LANDSCAPE, PORTRAIT, BOTH;
+    }
+
+    public enum CameraFacing {
+        FRONT, BACK
+    }
+
+    public enum MODE {CAMERA_PRIORITY, NEUTRAL, GALLERY_PRIORITY, CAMERA_ONLY, GALLERY_ONLY}
 }

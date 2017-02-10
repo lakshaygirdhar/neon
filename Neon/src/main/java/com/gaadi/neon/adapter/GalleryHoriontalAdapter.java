@@ -1,25 +1,19 @@
 package com.gaadi.neon.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.gaadi.neon.interfaces.SetOnImageClickListener;
+import com.gaadi.neon.interfaces.OnImageClickListener;
 import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 
 import java.util.ArrayList;
@@ -34,9 +28,9 @@ public class GalleryHoriontalAdapter extends RecyclerView.Adapter<GalleryHoriont
     protected Context context;
     private ArrayList<FileInfo> fileInfos;
     private LayoutInflater layoutInflater;
-    SetOnImageClickListener listener;
+    OnImageClickListener listener;
 
-    public GalleryHoriontalAdapter(Context _context, ArrayList<FileInfo> _fileInfos, SetOnImageClickListener _listener) {
+    public GalleryHoriontalAdapter(Context _context, ArrayList<FileInfo> _fileInfos, OnImageClickListener _listener) {
         context = _context;
         fileInfos = _fileInfos;
         layoutInflater = LayoutInflater.from(context);
@@ -54,7 +48,7 @@ public class GalleryHoriontalAdapter extends RecyclerView.Adapter<GalleryHoriont
     public void onBindViewHolder(GalleryHoriontalAdapter.ItemHolder holder, int position) {
         FileInfo fileInfo = fileInfos.get(position);
         //int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 90, context.getResources().getDisplayMetrics());
-        if (SingletonClass.getSingleonInstance().checkImageAvailableForPath(fileInfo)) {
+        if (NeonImagesHandler.getSingleonInstance().checkImageAvailableForPath(fileInfo)) {
             holder.highlighter.setVisibility(View.VISIBLE);
         } else {
             holder.highlighter.setVisibility(View.GONE);
@@ -96,12 +90,12 @@ public class GalleryHoriontalAdapter extends RecyclerView.Adapter<GalleryHoriont
         @Override
         public boolean onLongClick(View v) {
             FileInfo fileInfo = parent.fileInfos.get(getLayoutPosition());
-            if (SingletonClass.getSingleonInstance().checkImageAvailableForPath(fileInfo)) {
-                if (SingletonClass.getSingleonInstance().removeFromCollection(fileInfo)) {
+            if (NeonImagesHandler.getSingleonInstance().checkImageAvailableForPath(fileInfo)) {
+                if (NeonImagesHandler.getSingleonInstance().removeFromCollection(fileInfo)) {
                     highlighter.setVisibility(View.GONE);
                 }
             } else {
-                if (SingletonClass.getSingleonInstance().putInImageCollection(fileInfo, context)) {
+                if (NeonImagesHandler.getSingleonInstance().putInImageCollection(fileInfo, context)) {
                     highlighter.setVisibility(View.VISIBLE);
                 }
             }

@@ -15,7 +15,7 @@ import com.gaadi.neon.activity.gallery.GridFilesActivity;
 import com.gaadi.neon.activity.gallery.HorizontalFilesActivity;
 import com.gaadi.neon.model.BucketModel;
 import com.gaadi.neon.util.Constants;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 import java.util.ArrayList;
 
@@ -83,7 +83,7 @@ public class ImagesFoldersAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent filesIntent;
-                switch (SingletonClass.getSingleonInstance().getGalleryParam().getGalleryViewType()){
+                switch (NeonImagesHandler.getSingleonInstance().getGalleryParam().getGalleryViewType()){
                     case Grid_Structure:
                         filesIntent = new Intent(context, GridFilesActivity.class);
                         break;

@@ -11,9 +11,7 @@ import java.util.List;
  * @version 1.0
  * @since 3/2/17
  */
-
-//// TODO Review Lakshay : should be renamed to OnImageCollectionListener
-public interface SetOnImageCollectionListener {
+public interface OnImageCollectionListener {
 
     void imageCollection(HashMap<String,List<FileInfo>> imageTagsCollection, ResponseCode responseCode);
     void imageCollection(List<FileInfo> imageCollection,ResponseCode responseCode);

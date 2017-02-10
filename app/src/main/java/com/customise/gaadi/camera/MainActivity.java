@@ -1,11 +1,7 @@
 package com.customise.gaadi.camera;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,20 +14,17 @@ import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.INeutralParam;
-import com.gaadi.neon.interfaces.SetOnImageCollectionListener;
+import com.gaadi.neon.interfaces.OnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
-import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.NeonConstants;
 import com.gaadi.neon.util.NeonException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements SetOnImageCollectionListener {
+public class MainActivity extends AppCompatActivity implements OnImageCollectionListener {
 
     private static final String TAG = "MainActivity";
     private int numberOfTags = 5;

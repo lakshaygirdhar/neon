@@ -1,11 +1,9 @@
 package com.gaadi.neon.activity.gallery;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,10 +17,9 @@ import com.gaadi.neon.Enumerations.CameraType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.adapter.GalleryHoriontalAdapter;
-import com.gaadi.neon.adapter.GridFilesAdapter;
 import com.gaadi.neon.interfaces.ICameraParam;
-import com.gaadi.neon.interfaces.SetOnImageClickListener;
-import com.gaadi.neon.interfaces.SetOnPermissionResultListener;
+import com.gaadi.neon.interfaces.OnImageClickListener;
+import com.gaadi.neon.interfaces.OnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.Constants;
@@ -30,9 +27,8 @@ import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.PermissionType;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
-import com.scanlibrary.databinding.ActivityGridFilesBinding;
 import com.scanlibrary.databinding.HorizontalGalleryLayoutBinding;
 
 import java.util.ArrayList;
@@ -43,21 +39,20 @@ import java.util.List;
  * @version 1.0
  * @since 6/2/17
  */
-public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements SetOnImageClickListener{
+public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements OnImageClickListener {
 
     HorizontalGalleryLayoutBinding binder;
     ArrayList<FileInfo> fileInfos;
-    MenuItem textViewDone,menuItemCamera;
+    MenuItem textViewDone, menuItemCamera;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bindXml();
         String title = getIntent().getStringExtra(Constants.BucketName);
         if (title == null || title.length() <= 0) {
-            title = "Files";
+            title = getString(R.string.gallery);
         }
         setTitle(title);
     }
@@ -67,7 +62,7 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
         getMenuInflater().inflate(R.menu.menu_done_file, menu);
         textViewDone = menu.findItem(R.id.menu_next);
         menuItemCamera = menu.findItem(R.id.menuCamera);
-        menuItemCamera.setVisible(SingletonClass.getSingleonInstance().getGalleryParam().galleryToCameraSwitchEnabled());
+        menuItemCamera.setVisible(NeonImagesHandler.getSingleonInstance().getGalleryParam().galleryToCameraSwitchEnabled());
         textViewDone.setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
@@ -79,17 +74,12 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
             onBackPressed();
             return true;
         } else if (id == R.id.menu_next) {
-            if (SingletonClass.getSingleonInstance().getImagesCollection() == null ||
-                    SingletonClass.getSingleonInstance().getImagesCollection().size() <= 0) {
-                Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+            if (NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
+                    NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) {
+                Toast.makeText(this, R.string.no_image_selected, Toast.LENGTH_SHORT).show();
                 return super.onOptionsItemSelected(item);
-            }else {
-               /* if(SingletonClass.getSingleonInstance().getImagesCollection() == null ||
-                        SingletonClass.getSingleonInstance().getImagesCollection().size()<=0){
-                    Toast.makeText(this,"No image selected",Toast.LENGTH_SHORT).show();
-                    return super.onOptionsItemSelected(item);
-                }*/
-                if (!SingletonClass.getSingleonInstance().isNeutralEnabled()) {
+            } else {
+                if (!NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
                     Intent intent = new Intent(this, ImageShow.class);
                     startActivity(intent);
                     setResult(Constants.destroyPreviousActivity);
@@ -99,7 +89,7 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
                     finish();
                 }
             }
-        }else if (id == R.id.menuCamera) {
+        } else if (id == R.id.menuCamera) {
             performCameraOperation();
             setResult(Constants.destroyPreviousActivity);
             finish();
@@ -109,12 +99,12 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
 
     @Override
     public void onBackPressed() {
-        if(SingletonClass.getSingleonInstance().isNeutralEnabled()){
+        if (NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
             super.onBackPressed();
-        }else{
-            if(!SingletonClass.getSingleonInstance().getGalleryParam().enableFolderStructure()){
-                SingletonClass.getSingleonInstance().showBackOperationAlertIfNeeded(this);
-            }else{
+        } else {
+            if (!NeonImagesHandler.getSingleonInstance().getGalleryParam().enableFolderStructure()) {
+                NeonImagesHandler.getSingleonInstance().showBackOperationAlertIfNeeded(this);
+            } else {
                 super.onBackPressed();
             }
 
@@ -123,8 +113,8 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
 
     private void performCameraOperation() {
 
-        ICameraParam cameraParam = SingletonClass.getSingleonInstance().getCameraParam();
-        if(cameraParam == null){
+        ICameraParam cameraParam = NeonImagesHandler.getSingleonInstance().getCameraParam();
+        if (cameraParam == null) {
             cameraParam = new ICameraParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
@@ -163,17 +153,17 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
 
                 @Override
                 public int getNumberOfPhotos() {
-                    return SingletonClass.getSingleonInstance().getGalleryParam().getNumberOfPhotos();
+                    return NeonImagesHandler.getSingleonInstance().getGalleryParam().getNumberOfPhotos();
                 }
 
                 @Override
                 public boolean getTagEnabled() {
-                    return SingletonClass.getSingleonInstance().getGalleryParam().getTagEnabled();
+                    return NeonImagesHandler.getSingleonInstance().getGalleryParam().getTagEnabled();
                 }
 
                 @Override
                 public List<ImageTagModel> getImageTagsModel() {
-                    return SingletonClass.getSingleonInstance().getGalleryParam().getImageTagsModel();
+                    return NeonImagesHandler.getSingleonInstance().getGalleryParam().getImageTagsModel();
                 }
 
                 @Override
@@ -184,7 +174,7 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
             };
         }
         try {
-            PhotosLibrary.collectPhotos(this, PhotosMode.setCameraMode().setParams(cameraParam),SingletonClass.getSingleonInstance().getImageResultListener());
+            PhotosLibrary.collectPhotos(this, PhotosMode.setCameraMode().setParams(cameraParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
         } catch (NeonException e) {
             e.printStackTrace();
         }
@@ -193,21 +183,21 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
 
     private void bindXml() {
         try {
-            askForPermissionIfNeeded(PermissionType.write_external_storage, new SetOnPermissionResultListener() {
+            askForPermissionIfNeeded(PermissionType.write_external_storage, new OnPermissionResultListener() {
                 @Override
                 public void onResult(boolean permissionGranted) {
-                    if(permissionGranted){
-                        binder = DataBindingUtil.inflate(getLayoutInflater(),R.layout.horizontal_gallery_layout,frameLayout,true);
+                    if (permissionGranted) {
+                        binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.horizontal_gallery_layout, frameLayout, true);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(HorizontalFilesActivity.this, LinearLayoutManager.HORIZONTAL, false);
                         binder.galleryHorizontalRv.setLayoutManager(linearLayoutManager);
                         fileInfos = getFileFromBucketId(getIntent().getStringExtra(Constants.BucketId));
-                        if(fileInfos != null && fileInfos.size()>0) {
+                        if (fileInfos != null && fileInfos.size() > 0) {
                             GalleryHoriontalAdapter adapter = new GalleryHoriontalAdapter(HorizontalFilesActivity.this, fileInfos, HorizontalFilesActivity.this);
                             binder.galleryHorizontalRv.setAdapter(adapter);
                             onClick(fileInfos.get(0));
                         }
-                    }else{
-                        Toast.makeText(HorizontalFilesActivity.this,"Permission not granted",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(HorizontalFilesActivity.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
                     }
                 }
             });

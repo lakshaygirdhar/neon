@@ -1,7 +1,5 @@
 package com.gaadi.neon.interfaces;
 
-import com.gaadi.neon.Enumerations.GalleryType;
-
 /**
  * @author princebatra
  * @version 1.0

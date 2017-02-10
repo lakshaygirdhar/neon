@@ -7,13 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.SingletonClass;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 
 import java.util.ArrayList;
@@ -71,7 +69,7 @@ public class GridFilesAdapter extends BaseAdapter {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(filesHolder.selectedImage);
 
-        if(SingletonClass.getSingleonInstance().checkImageAvailableForPath(fileInfos.get(position))){
+        if(NeonImagesHandler.getSingleonInstance().checkImageAvailableForPath(fileInfos.get(position))){
             filesHolder.selection_view.setVisibility(View.VISIBLE);
             filesHolder.transparentLayer.setVisibility(View.VISIBLE);
         }else{
@@ -82,13 +80,13 @@ public class GridFilesAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(SingletonClass.getSingleonInstance().checkImageAvailableForPath(fileInfos.get(position))){
-                    if(SingletonClass.getSingleonInstance().removeFromCollection(fileInfos.get(position))){
+                if(NeonImagesHandler.getSingleonInstance().checkImageAvailableForPath(fileInfos.get(position))){
+                    if(NeonImagesHandler.getSingleonInstance().removeFromCollection(fileInfos.get(position))){
                         finalFilesHolder.selection_view.setVisibility(View.GONE);
                         finalFilesHolder.transparentLayer.setVisibility(View.GONE);
                     }
                 }else{
-                    if(SingletonClass.getSingleonInstance().putInImageCollection(fileInfos.get(position),context)) {
+                    if(NeonImagesHandler.getSingleonInstance().putInImageCollection(fileInfos.get(position),context)) {
                         finalFilesHolder.selection_view.setVisibility(View.VISIBLE);
                         finalFilesHolder.transparentLayer.setVisibility(View.VISIBLE);
                     }
