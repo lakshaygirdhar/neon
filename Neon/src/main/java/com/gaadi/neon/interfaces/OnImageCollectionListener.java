@@ -1,6 +1,6 @@
 package com.gaadi.neon.interfaces;
 
-import com.gaadi.neon.Enumerations.ResponseCode;
+import com.gaadi.neon.enumerations.ResponseCode;
 import com.gaadi.neon.util.FileInfo;
 
 import java.util.HashMap;

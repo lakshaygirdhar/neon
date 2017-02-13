@@ -40,8 +40,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.gaadi.neon.Enumerations.CameraFacing;
-import com.gaadi.neon.Enumerations.CameraOrientation;
+import com.gaadi.neon.enumerations.CameraFacing;
+import com.gaadi.neon.enumerations.CameraOrientation;
 import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.model.ImageTagModel;

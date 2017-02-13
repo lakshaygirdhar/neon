@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gaadi.neon.Enumerations.GalleryType;
+import com.gaadi.neon.enumerations.GalleryType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.fragment.CameraFragment1;

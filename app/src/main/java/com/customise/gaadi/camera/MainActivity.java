@@ -5,11 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.gaadi.neon.Enumerations.CameraFacing;
-import com.gaadi.neon.Enumerations.CameraOrientation;
-import com.gaadi.neon.Enumerations.CameraType;
-import com.gaadi.neon.Enumerations.GalleryType;
-import com.gaadi.neon.Enumerations.ResponseCode;
+import com.gaadi.neon.enumerations.CameraFacing;
+import com.gaadi.neon.enumerations.CameraOrientation;
+import com.gaadi.neon.enumerations.CameraType;
+import com.gaadi.neon.enumerations.GalleryType;
+import com.gaadi.neon.enumerations.ResponseCode;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;

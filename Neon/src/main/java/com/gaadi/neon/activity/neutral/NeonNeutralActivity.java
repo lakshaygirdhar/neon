@@ -6,10 +6,10 @@ import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.gaadi.neon.Enumerations.CameraFacing;
-import com.gaadi.neon.Enumerations.CameraOrientation;
-import com.gaadi.neon.Enumerations.CameraType;
-import com.gaadi.neon.Enumerations.GalleryType;
+import com.gaadi.neon.enumerations.CameraFacing;
+import com.gaadi.neon.enumerations.CameraOrientation;
+import com.gaadi.neon.enumerations.CameraType;
+import com.gaadi.neon.enumerations.GalleryType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.fragment.ImageShowFragment;
 import com.gaadi.neon.interfaces.ICameraParam;

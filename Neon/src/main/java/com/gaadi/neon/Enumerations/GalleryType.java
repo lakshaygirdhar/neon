@@ -1,4 +1,4 @@
-package com.gaadi.neon.Enumerations;
+package com.gaadi.neon.enumerations;
 
 /**
  * @author princebatra
