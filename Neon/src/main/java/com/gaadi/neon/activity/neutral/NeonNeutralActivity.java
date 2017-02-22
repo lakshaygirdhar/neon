@@ -45,10 +45,14 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
         super.onPostResume();
         if (NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
                 NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) {
+            setTitle(R.string.photos);
             binder.tabList.setVisibility(View.VISIBLE);
             binder.imageShowFragmentContainer.setVisibility(View.GONE);
             if (adapter == null) {
                 List<ImageTagModel> tagModels = NeonImagesHandler.getSingleonInstance().getNeutralParam().getImageTagsModel();
+                if(tagModels == null || tagModels.size()<=0){
+                    return;
+                }
                 String[] tags = new String[tagModels.size()];
                 for (int i = 0; i < tagModels.size(); i++) {
                     tags[i] = tagModels.get(i).isMandatory() ? "- *" + tagModels.get(i).getTagName() :
@@ -58,7 +62,6 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                 adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tags);
             }
             binder.tabList.setAdapter(adapter);
-            setTitle(R.string.photos);
         } else {
             binder.tabList.setVisibility(View.GONE);
             binder.imageShowFragmentContainer.setVisibility(View.VISIBLE);
