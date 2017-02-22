@@ -61,9 +61,22 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                 @Override
                 public void onResult(boolean permissionGranted) {
                     if (permissionGranted) {
-                        CameraFragment1 fragment = new CameraFragment1();
-                        FragmentManager manager = getSupportFragmentManager();
-                        manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                        try {
+                            askForPermissionIfNeeded(PermissionType.camera, new OnPermissionResultListener() {
+                                @Override
+                                public void onResult(boolean permissionGranted) {
+                                    if (permissionGranted) {
+                                        CameraFragment1 fragment = new CameraFragment1();
+                                        FragmentManager manager = getSupportFragmentManager();
+                                        manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                                    }else{
+                                        Toast.makeText(NormalCameraActivityNeon.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } catch (ManifestPermission manifestPermission) {
+                            manifestPermission.printStackTrace();
+                        }
                     } else {
                         Toast.makeText(NormalCameraActivityNeon.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
                     }

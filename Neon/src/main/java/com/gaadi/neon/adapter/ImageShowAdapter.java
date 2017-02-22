@@ -8,10 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gaadi.neon.activity.ImageReviewActivity;
+import com.gaadi.neon.activity.neutral.NeonNeutralActivity;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
@@ -70,7 +70,7 @@ public class ImageShowAdapter extends BaseAdapter {
         if (NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFileTag() != null) {
             holder.tvProfile.setText(NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFileTag().getTagName());
         } else {
-            holder.tvProfile.setText("Select Tag");
+            holder.tvProfile.setText(R.string.select_tag);
         }
 
         holder.removeImage.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +78,11 @@ public class ImageShowAdapter extends BaseAdapter {
             public void onClick(View v) {
                 if (NeonImagesHandler.getSingleonInstance().removeFromCollection(position)) {
                     notifyDataSetChanged();
+                    if((NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
+                            NeonImagesHandler.getSingleonInstance().getImagesCollection().size()<=0) &&
+                            context instanceof NeonNeutralActivity){
+                        ((NeonNeutralActivity)context).onPostResume();
+                    }
                 }else{
                     Toast.makeText(context,"Failed to delete.Please try again later.",Toast.LENGTH_SHORT).show();
                 }

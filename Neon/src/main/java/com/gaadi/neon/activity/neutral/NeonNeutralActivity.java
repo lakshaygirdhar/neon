@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 import android.view.View;
-
+import android.widget.ArrayAdapter;
+import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
 import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.enumerations.GalleryType;
-import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.fragment.ImageShowFragment;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
@@ -21,7 +21,6 @@ import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NeutralActivityLayoutBinding;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +31,9 @@ import java.util.List;
  */
 public class NeonNeutralActivity extends NeonBaseNeutralActivity {
 
+    NeutralActivityLayoutBinding binder;
+    ArrayAdapter<String> adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,21 +41,34 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
     }
 
     @Override
-    protected void onPostResume() {
+    public void onPostResume() {
         super.onPostResume();
         if (NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
                 NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) {
+            binder.tabList.setVisibility(View.VISIBLE);
+            binder.imageShowFragmentContainer.setVisibility(View.GONE);
+            if (adapter == null) {
+                List<ImageTagModel> tagModels = NeonImagesHandler.getSingleonInstance().getNeutralParam().getImageTagsModel();
+                String[] tags = new String[tagModels.size()];
+                for (int i = 0; i < tagModels.size(); i++) {
+                    tags[i] = tagModels.get(i).isMandatory() ? "- *" + tagModels.get(i).getTagName() :
+                            "- " + tagModels.get(i).getTagName();
+
+                }
+                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tags);
+            }
+            binder.tabList.setAdapter(adapter);
             setTitle(R.string.photos);
         } else {
-            setTitle(getString(R.string.photos_count,NeonImagesHandler.getSingleonInstance().getImagesCollection().size()));
+            binder.tabList.setVisibility(View.GONE);
+            binder.imageShowFragmentContainer.setVisibility(View.VISIBLE);
+            setTitle(getString(R.string.photos_count, NeonImagesHandler.getSingleonInstance().getImagesCollection().size()));
         }
     }
 
     private void bindXml() {
-        NeutralActivityLayoutBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.neutral_activity_layout, frameLayout, true);
-
+        binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.neutral_activity_layout, frameLayout, true);
         binder.setHandlers(this);
-
         ImageShowFragment imageShowFragment = new ImageShowFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.imageShowFragmentContainer, imageShowFragment).commit();

@@ -269,14 +269,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
         if (mCamera == null) {
             try {
-                if (!permissionAlreadyRequested && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                        && !NeonUtils.checkForPermission(mActivity,
-                        new String[]{Manifest.permission.CAMERA,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        Constants.REQUEST_PERMISSION_CAMERA, "Camera and Storage")) {
-                    permissionAlreadyRequested = true;
-                    return;
-                }
                 if (cameraFacing == CameraFacing.front && NeonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     Log.d(TAG, "onResume: open front");
                     mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);

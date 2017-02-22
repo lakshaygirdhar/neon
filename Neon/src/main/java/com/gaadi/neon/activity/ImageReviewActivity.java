@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.gaadi.neon.adapter.ImagesReviewViewPagerAdapter;
 import com.gaadi.neon.events.ImageEditEvent;
 import com.gaadi.neon.interfaces.FragmentListener;
