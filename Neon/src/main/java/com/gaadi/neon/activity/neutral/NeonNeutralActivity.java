@@ -53,20 +53,33 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                 if(tagModels == null || tagModels.size()<=0){
                     return;
                 }
+                tagModels = getMandetoryTags(tagModels);
                 String[] tags = new String[tagModels.size()];
                 for (int i = 0; i < tagModels.size(); i++) {
-                    tags[i] = tagModels.get(i).isMandatory() ? "- *" + tagModels.get(i).getTagName() :
-                            "- " + tagModels.get(i).getTagName();
+                    tags[i] = "* " + tagModels.get(i).getTagName();
 
                 }
-                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tags);
+                adapter = new ArrayAdapter<>(this, R.layout.single_textview,R.id.tagText, tags);
             }
+            binder.txtTagTitle.setVisibility(View.VISIBLE);
             binder.tabList.setAdapter(adapter);
         } else {
             binder.tabList.setVisibility(View.GONE);
+            binder.txtTagTitle.setVisibility(View.GONE);
             binder.imageShowFragmentContainer.setVisibility(View.VISIBLE);
             setTitle(getString(R.string.photos_count, NeonImagesHandler.getSingleonInstance().getImagesCollection().size()));
         }
+    }
+
+    private List<ImageTagModel> getMandetoryTags(List<ImageTagModel> tagModels) {
+        List<ImageTagModel> fileterdList = new ArrayList<>();
+        for (ImageTagModel singleModel :
+                tagModels) {
+            if(singleModel.isMandatory()){
+                fileterdList.add(singleModel);
+            }
+        }
+        return fileterdList;
     }
 
     private void bindXml() {
