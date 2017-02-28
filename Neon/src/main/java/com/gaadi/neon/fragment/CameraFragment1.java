@@ -69,12 +69,12 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
     private static final String TAG = "CameraFragment1";
     private static final int REQUEST_REVIEW = 100;
-    NeonCameraFragmentLayoutBinding binder;
+    public NeonCameraFragmentLayoutBinding binder;
     private DrawingView drawingView;
     private ImageView currentFlashMode;
     private ArrayList<String> supportedFlashModes;
     private RecyclerView rcvFlash;
-    private Camera mCamera;
+    public Camera mCamera;
     private CameraPreview mCameraPreview;
     private boolean readyToTakePicture;
     private FrameLayout mCameraLayout;
