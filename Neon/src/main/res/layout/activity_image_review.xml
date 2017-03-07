@@ -7,13 +7,14 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/image_review_toolbar"
-        layout="@layout/imagereview_toolbar_layout" />
+        android:id="@+id/tool_bar"
+        layout="@layout/neon_tool_bar" />
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/image_review_toolbar">
+        android:layout_below="@id/tool_bar">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"

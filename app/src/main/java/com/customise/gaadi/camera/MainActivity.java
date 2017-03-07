@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void cameraPriorityClicked(View view) {
         try {
+
             PhotosLibrary.collectPhotos(this, PhotosMode.setCameraMode().setParams(new ICameraParam() {
                 @Override
                 public CameraFacing getCameraFacing() {

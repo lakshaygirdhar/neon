@@ -33,10 +33,15 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_review);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.image_review_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+
         setSupportActionBar(toolbar);
-        TextView mDoneButton = (TextView) findViewById(R.id.image_review_toolbar_doneBtn);
-        mDoneButton.setOnClickListener(this);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_left_arrow);
+        toolbar.setNavigationIcon(R.drawable.ic_left_arrow);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         mPager = (ViewPager) findViewById(R.id.pager);
         viewPagerLeftBtn = (ImageView) findViewById(R.id.view_pager_leftbtn);
         viewPagerRightBtn = (ImageView) findViewById(R.id.view_pager_rightbtn);

@@ -20,6 +20,7 @@ public class ImageShow extends NeonBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.image_review);
         bindXml();
     }
 

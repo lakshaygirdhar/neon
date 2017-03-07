@@ -10,9 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gaadi.neon.enumerations.GalleryType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
+import com.gaadi.neon.enumerations.GalleryType;
 import com.gaadi.neon.fragment.CameraFragment1;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
@@ -23,8 +23,8 @@ import com.gaadi.neon.util.AnimationUtils;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
-import com.gaadi.neon.util.PermissionType;
 import com.gaadi.neon.util.NeonImagesHandler;
+import com.gaadi.neon.util.PermissionType;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NormalCameraActivityLayoutBinding;
 
@@ -69,7 +69,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                                         CameraFragment1 fragment = new CameraFragment1();
                                         FragmentManager manager = getSupportFragmentManager();
                                         manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-                                    }else{
+                                    } else {
                                         Toast.makeText(NormalCameraActivityNeon.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -101,16 +101,15 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.buttonDone) {
-            if (finishValidation()) {
-                if (!NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
-                    Intent intent = new Intent(this, ImageShow.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    setResult(RESULT_OK);
-                    finish();
-                }
+            if (!NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
+                Intent intent = new Intent(this, ImageShow.class);
+                startActivity(intent);
+                finish();
+            } else {
+                setResult(RESULT_OK);
+                finish();
             }
+
         } else if (id == R.id.buttonGallery) {
             try {
                 IGalleryParam galleryParam = NeonImagesHandler.getSingleonInstance().getGalleryParam();
@@ -199,7 +198,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                /* Toast.makeText(this, NeonImagesHandler.getSingleonInstance().getCameraParam().getNumberOfPhotos() -
                         NeonImagesHandler.getSingleonInstance().getImagesCollection().size() + " more image required", Toast.LENGTH_SHORT).show();
                 */
-                Toast.makeText(this,getString(R.string.more_images,NeonImagesHandler.getSingleonInstance().getCameraParam().getNumberOfPhotos() -
+                Toast.makeText(this, getString(R.string.more_images, NeonImagesHandler.getSingleonInstance().getCameraParam().getNumberOfPhotos() -
                         NeonImagesHandler.getSingleonInstance().getImagesCollection().size()), Toast.LENGTH_SHORT).show();
 
                 return false;

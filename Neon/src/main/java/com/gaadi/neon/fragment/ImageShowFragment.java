@@ -80,7 +80,7 @@ public class ImageShowFragment extends Fragment {
                 continue;
             }
             if (!NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
-                Toast.makeText(getActivity(), "All mandatory tags are not covered.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), imageTagModels.get(j).getTagName() + " tag not covered.", Toast.LENGTH_SHORT).show();
                 return false;
             }
         }

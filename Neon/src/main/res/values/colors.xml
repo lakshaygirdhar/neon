@@ -18,8 +18,13 @@
     <color name="gaadi_blue">#263242</color>
     <color name="hintStrokeColor">#80CECECE</color>
     <color name="green">#86be65</color>
-    <color name="toolbar_color">#DC592B</color>
+
     <color name="colorPrimary">#DC592B</color>
+
+    <color name="buttonsColor">#DC592B</color>
+    <color name="toolbar_color">#DC592B</color>
+    <color name="toolBarIconsColor">#ffffff</color>
+
     <color name="colorPrimaryDark">#BA4824</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="transparentBlackBg">#80000000</color>
