@@ -208,13 +208,15 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     }
 
     public ImageTagModel getNextTag() {
-        if (tagModels.get(currentTag).isMandatory() &&
+       /* if (tagModels.get(currentTag).isMandatory() &&
                 !NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(tagModels.get(currentTag))) {
             Toast.makeText(this, String.format(getString(R.string.tag_mandatory_error), tagModels.get(currentTag).getTagName()),
                     Toast.LENGTH_SHORT).show();
         } else {
             currentTag++;
         }
+        */
+        currentTag++;
 
         if (currentTag == tagModels.size() - 1) {
             tvNext.setText(getString(R.string.finish));
@@ -254,7 +256,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             tvImageName.setVisibility(View.GONE);
             tagsLayout.setVisibility(View.VISIBLE);
             tagModels = cameraParams.getImageTagsModel();
-
+            initialiazeCurrentTag();
             setTag(tagModels.get(currentTag), true);
         } else {
             tagsLayout.setVisibility(View.GONE);
@@ -262,6 +264,21 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         }
 
         buttonGallery.setVisibility(cameraParams.cameraToGallerySwitchEnabled() ? View.VISIBLE : View.GONE);
+    }
+
+    private void initialiazeCurrentTag() {
+        for (int i = 0; i < NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel().size(); i++) {
+            if(!NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(tagModels.get(i))){
+                currentTag = i;
+                break;
+            }
+        }
+        if (currentTag == tagModels.size() - 1) {
+            tvNext.setText(getString(R.string.finish));
+        }
+        if (currentTag > 0) {
+            tvPrevious.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

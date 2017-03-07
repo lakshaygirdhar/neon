@@ -32,7 +32,7 @@
                 android:id="@+id/btnDone"
                 android:text="Done"
                 android:textColor="#ffffff"
-                android:background="@color/buttonsColor"
+                android:background="@color/neon_buttons_color"
                 android:layout_gravity="bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

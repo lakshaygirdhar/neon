@@ -21,9 +21,9 @@
 
     <color name="colorPrimary">#DC592B</color>
 
-    <color name="buttonsColor">#DC592B</color>
-    <color name="toolbar_color">#DC592B</color>
-    <color name="toolBarIconsColor">#ffffff</color>
+    <color name="neon_buttons_color">#DC592B</color>
+    <color name="neon_toolbar_color">#DC592B</color>
+    <color name="neon_toolbar_icons_color">#ffffff</color>
 
     <color name="colorPrimaryDark">#BA4824</color>
     <color name="textColorPrimary">#FFFFFF</color>

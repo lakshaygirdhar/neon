@@ -3,7 +3,6 @@ package com.gaadi.neon.activity;
 import android.Manifest;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -56,7 +54,7 @@ public abstract class NeonBaseActivity extends AppCompatActivity{
     @Override
     public void setTitle(CharSequence title) {
         SpannableString s = new SpannableString(title);
-        s.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this,R.color.toolBarIconsColor)), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this,R.color.neon_toolbar_icons_color)), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         super.setTitle(s);
     }
 
