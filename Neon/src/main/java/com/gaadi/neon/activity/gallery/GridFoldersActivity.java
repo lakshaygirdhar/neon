@@ -60,7 +60,7 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
-        } else if (id == R.id.menu_camera) {
+        } else if (id == R.id.menuCamera) {
             performCameraOperation();
         } else if (id == R.id.menu_next) {
             if (NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
