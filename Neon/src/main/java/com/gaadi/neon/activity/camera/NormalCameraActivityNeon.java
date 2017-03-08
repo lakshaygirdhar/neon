@@ -3,6 +3,7 @@ package com.gaadi.neon.activity.camera;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.ImageView;
@@ -66,9 +67,15 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                                 @Override
                                 public void onResult(boolean permissionGranted) {
                                     if (permissionGranted) {
-                                        CameraFragment1 fragment = new CameraFragment1();
-                                        FragmentManager manager = getSupportFragmentManager();
-                                        manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                                        new Handler().post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                CameraFragment1 fragment = new CameraFragment1();
+                                                FragmentManager manager = getSupportFragmentManager();
+                                                manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                                            }
+                                        });
+
                                     } else {
                                         Toast.makeText(NormalCameraActivityNeon.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
                                     }
