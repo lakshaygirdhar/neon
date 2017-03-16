@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public CameraOrientation getCameraOrientation() {
-                    return CameraOrientation.landscape;
+                    return CameraOrientation.portrait;
                 }
 
                 @Override

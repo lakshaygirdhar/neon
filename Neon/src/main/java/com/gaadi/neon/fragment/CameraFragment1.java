@@ -88,6 +88,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private float mDist;
     private ImageView mSwitchCamera;
     private CameraFacing cameraFacing;
+    private CameraFacing localCameraFacing;
 
     public void clickPicture() {
         if (readyToTakePicture) {
@@ -112,7 +113,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binder = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.neon_camera_fragment_layout, container, false);
-
+        localCameraFacing = NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraFacing();
         mActivity = getActivity();
         cameraParam = NeonImagesHandler.getSingleonInstance().getCameraParam();
         if (cameraParam != null) {
@@ -146,13 +147,15 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             clickPicture();
         } else if (v.getId() == R.id.switchCamera) {
             int cameraFacing = initCameraId();
-            if (cameraFacing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            if (localCameraFacing == CameraFacing.back) {
                 stopCamera();
                 useFrontFacingCamera = true;
+                localCameraFacing = CameraFacing.front;
                 startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
             } else {
                 stopCamera();
                 useFrontFacingCamera = false;
+                localCameraFacing = CameraFacing.back;
                 startCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
             }
         } else if (v.getId() == R.id.currentFlashMode) {
@@ -383,6 +386,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
     private void setCameraRotation() {
         //STEP #1: Get rotation degrees
+
         Camera.CameraInfo info = new Camera.CameraInfo();
         Camera.getCameraInfo(Camera.CameraInfo.CAMERA_FACING_BACK, info);
         int rotation = mActivity.getWindowManager().getDefaultDisplay().getRotation();
@@ -580,6 +584,13 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     }
 
     public int setPhotoOrientation(Activity activity, int cameraId) {
+        if(NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraOrientation() == CameraOrientation.portrait) {
+            if(localCameraFacing == CameraFacing.front) {
+                return 180;
+            }else{
+                return 0;
+            }
+        }
         Camera.CameraInfo info = new Camera.CameraInfo();
         Camera.getCameraInfo(cameraId, info);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();

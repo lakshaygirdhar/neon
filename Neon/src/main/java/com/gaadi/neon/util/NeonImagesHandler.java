@@ -166,7 +166,8 @@ public class NeonImagesHandler {
             Toast.makeText(context, context.getString(R.string.max_count_error,getGenericParam().getNumberOfPhotos()), Toast.LENGTH_SHORT).show();
             return false;
         }
-        return imagesCollection.add(fileInfo);
+        imagesCollection.add(0,fileInfo);
+        return true;
     }
 
     public boolean removeFromCollection(int position) {
