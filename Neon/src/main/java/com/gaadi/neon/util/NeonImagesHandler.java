@@ -57,6 +57,21 @@ public class NeonImagesHandler {
         }, 10000);
     }
 
+    public int getNumberOfPhotosCollected(ImageTagModel imageTagModel) {
+        int count = 0;
+        if(imagesCollection != null && imagesCollection.size()>0){
+            for(FileInfo fileInfo : imagesCollection){
+                if(fileInfo.getFileTag() == null){
+                    continue;
+                }
+                if(fileInfo.getFileTag().getTagId().equals(imageTagModel.getTagId())){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
     public OnImageCollectionListener getImageResultListener() {
         return imageResultListener;
     }
@@ -104,7 +119,7 @@ public class NeonImagesHandler {
                     continue;
                 }
                 if (originalFile.getFileTag() != null) {
-                    cloneFile.setFileTag(new ImageTagModel(originalFile.getFileTag().getTagName(), originalFile.getFileTag().getTagId(), originalFile.getFileTag().isMandatory()));
+                    cloneFile.setFileTag(new ImageTagModel(originalFile.getFileTag().getTagName(), originalFile.getFileTag().getTagId(), originalFile.getFileTag().isMandatory(), originalFile.getFileTag().getNumberOfPhotos()));
                 }
                 cloneFile.setSelected(originalFile.getSelected());
                 cloneFile.setSource(originalFile.getSource());
@@ -160,13 +175,23 @@ public class NeonImagesHandler {
         if (imagesCollection == null) {
             imagesCollection = new ArrayList<>();
         }
-        if (!getGenericParam().getTagEnabled() && getGenericParam().getNumberOfPhotos() > 0 &&
-                getImagesCollection() != null &&
-                getGenericParam().getNumberOfPhotos() == getImagesCollection().size()) {
-            Toast.makeText(context, context.getString(R.string.max_count_error,getGenericParam().getNumberOfPhotos()), Toast.LENGTH_SHORT).show();
-            return false;
+
+        if(!getGenericParam().getTagEnabled()){
+            if(getGenericParam().getNumberOfPhotos() > 0 &&
+                    getImagesCollection() != null &&
+                    getGenericParam().getNumberOfPhotos() == getImagesCollection().size()){
+                Toast.makeText(context, context.getString(R.string.max_count_error, getGenericParam().getNumberOfPhotos()), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }else{
+            ImageTagModel imageTagModel = fileInfo.getFileTag();
+            if(imageTagModel != null && imageTagModel.getNumberOfPhotos() > 0 &&
+                    getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()){
+                Toast.makeText(context, context.getString(R.string.max_tag_count_error, imageTagModel.getNumberOfPhotos()) + imageTagModel.getTagName(), Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
-        imagesCollection.add(0,fileInfo);
+        imagesCollection.add(0, fileInfo);
         return true;
     }
 

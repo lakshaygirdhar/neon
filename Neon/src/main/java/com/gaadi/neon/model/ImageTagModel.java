@@ -12,6 +12,7 @@ public class ImageTagModel implements Serializable {
     private String tagName;
     private boolean mandatory;
     private String tagId;
+    private int numberOfPhotos;
 
     public ImageTagModel() {
     }
@@ -20,6 +21,13 @@ public class ImageTagModel implements Serializable {
         tagName = _tagName;
         tagId = _tagId;
         mandatory = _mandatory;
+    }
+
+    public ImageTagModel(String _tagName, String _tagId, boolean _mandatory,int _numberOfPhotos) {
+        tagName = _tagName;
+        tagId = _tagId;
+        mandatory = _mandatory;
+        numberOfPhotos = _numberOfPhotos;
     }
 
 
@@ -45,5 +53,13 @@ public class ImageTagModel implements Serializable {
 
     public void setTagId(String tagId) {
         this.tagId = tagId;
+    }
+
+    public int getNumberOfPhotos() {
+        return numberOfPhotos;
+    }
+
+    public void setNumberOfPhotos(int numberOfPhotos) {
+        this.numberOfPhotos = numberOfPhotos;
     }
 }

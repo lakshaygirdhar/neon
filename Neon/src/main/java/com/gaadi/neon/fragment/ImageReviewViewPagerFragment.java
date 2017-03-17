@@ -171,7 +171,11 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageTagModel singleModel = tagModels.get(position);
-                imageModel.setFileTag(new ImageTagModel(singleModel.getTagName(), singleModel.getTagId(), singleModel.isMandatory()));
+                if(singleModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingleonInstance().getNumberOfPhotosCollected(singleModel) >=singleModel.getNumberOfPhotos()){
+                    Toast.makeText(getActivity(), getActivity().getString(R.string.max_tag_count_error, singleModel.getNumberOfPhotos()) + singleModel.getTagName(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                imageModel.setFileTag(new ImageTagModel(singleModel.getTagName(), singleModel.getTagId(), singleModel.isMandatory(),singleModel.getNumberOfPhotos()));
                 ImageEditEvent event = new ImageEditEvent();
                 event.setModel(imageModel);
                 ((FragmentListener) getActivity()).getFragmentChanges(event);

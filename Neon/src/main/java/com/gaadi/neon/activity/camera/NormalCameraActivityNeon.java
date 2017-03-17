@@ -249,7 +249,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     }
 
     public void setTag(ImageTagModel imageTagModel, boolean rightToLeft) {
-        tvTag.setText(imageTagModel.getTagName());
+        tvTag.setText(imageTagModel.isMandatory() ? "*" + imageTagModel.getTagName(): imageTagModel.getTagName());
         if (rightToLeft) {
             AnimationUtils.translateOnXAxis(tvTag, 200, 0);
         } else {
@@ -307,6 +307,13 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             fileInfo.setFileTag(tagModels.get(currentTag));
         }
         NeonImagesHandler.getSingleonInstance().putInImageCollection(fileInfo, this);
+
+        if(cameraParams.getTagEnabled()) {
+            ImageTagModel imageTagModel = tagModels.get(currentTag);
+            if (imageTagModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingleonInstance().getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()) {
+                onClick(binder.tvSkip);
+            }
+        }
     }
 
 }
