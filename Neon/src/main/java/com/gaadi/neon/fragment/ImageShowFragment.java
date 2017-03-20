@@ -31,7 +31,7 @@ public class ImageShowFragment extends Fragment {
     View.OnClickListener doneListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (validate()) {
+            if (NeonImagesHandler.getSingleonInstance().validateNeonExit(getActivity())) {
                 NeonImagesHandler.getSingleonInstance().sendImageCollectionAndFinish(getActivity(), ResponseCode.Success);
             }
         }
@@ -60,33 +60,6 @@ public class ImageShowFragment extends Fragment {
         }
     }
 
-    private boolean validate() {
-        if (!NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
-            return true;
-        }
-        List<FileInfo> fileInfos = NeonImagesHandler.getSingleonInstance().getImagesCollection();
-        if (fileInfos != null && fileInfos.size() > 0) {
-            for (int i = 0; i < fileInfos.size(); i++) {
-                if (fileInfos.get(i).getFileTag() == null) {
-                    Toast.makeText(getActivity(), "Set tag for all images", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            }
-        }
-
-        List<ImageTagModel> imageTagModels = NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel();
-        for (int j = 0; j < imageTagModels.size(); j++) {
-            if (!imageTagModels.get(j).isMandatory()) {
-                continue;
-            }
-            if (!NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
-                Toast.makeText(getActivity(), imageTagModels.get(j).getTagName() + " tag not covered.", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
-
-        return true;
-    }
 
 
 }

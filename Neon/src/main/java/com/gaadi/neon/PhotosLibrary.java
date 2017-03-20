@@ -8,6 +8,7 @@ import com.gaadi.neon.activity.gallery.GridFilesActivity;
 import com.gaadi.neon.activity.gallery.GridFoldersActivity;
 import com.gaadi.neon.activity.gallery.HorizontalFilesActivity;
 import com.gaadi.neon.activity.neutral.NeonNeutralActivity;
+import com.gaadi.neon.enumerations.LibraryMode;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.INeutralParam;
@@ -26,7 +27,12 @@ import java.util.List;
 public class PhotosLibrary {
 
     public static void collectPhotos(Context activity, PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
+        collectPhotos(activity,LibraryMode.Restrict,photosMode,listener);
+    }
+
+    public static void collectPhotos(Context activity, LibraryMode libraryMode, PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
         NeonImagesHandler.getSingleonInstance().setImageResultListener(listener);
+        NeonImagesHandler.getSingleonInstance().setLibraryMode(libraryMode);
         validate(activity, photosMode,listener);
         List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
         if(alreadyAddedImages != null) {
@@ -40,6 +46,8 @@ public class PhotosLibrary {
             startGalleryActivity(activity, photosMode);
         }
     }
+
+
 
     private static void validate(Context activity, PhotosMode photosMode,OnImageCollectionListener listener) throws NullPointerException, NeonException {
         if (activity == null) {

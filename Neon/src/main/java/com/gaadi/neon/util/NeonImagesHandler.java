@@ -7,7 +7,9 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
+import com.gaadi.neon.enumerations.LibraryMode;
 import com.gaadi.neon.enumerations.ResponseCode;
+import com.gaadi.neon.fragment.ImageShowFragment;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.INeutralParam;
@@ -35,6 +37,7 @@ public class NeonImagesHandler {
     private boolean neutralEnabled;
     private INeutralParam neutralParam;
     private OnImageCollectionListener imageResultListener;
+    private LibraryMode libraryMode;
 
     private NeonImagesHandler() {
     }
@@ -245,20 +248,69 @@ public class NeonImagesHandler {
     }
 
     public void showBackOperationAlertIfNeeded(final Activity activity) {
-        //TODO Review Lakshay : Use strings.xml
-        new AlertDialog.Builder(activity).setTitle("Are you sure want to go back?")
-                .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+        if(validateNeonExit(null)){
+            sendImageCollectionAndFinish(activity, ResponseCode.Success);
+        }else{
+            if(NeonImagesHandler.getSingleonInstance().getLibraryMode() == LibraryMode.Restrict) {
+                new AlertDialog.Builder(activity).setTitle("Are you sure want to go back?")
+                        .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        sendImageCollectionAndFinish(activity, ResponseCode.Back);
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }else{
                 sendImageCollectionAndFinish(activity, ResponseCode.Back);
             }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).show();
+        }
+
+
     }
 
+    public boolean validateNeonExit(Activity activity) {
+        if (!NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
+            return true;
+        }
+        List<FileInfo> fileInfos = NeonImagesHandler.getSingleonInstance().getImagesCollection();
+        if (fileInfos != null && fileInfos.size() > 0) {
+            for (int i = 0; i < fileInfos.size(); i++) {
+                if (fileInfos.get(i).getFileTag() == null) {
+                    if(activity != null) {
+                        Toast.makeText(activity, "Set tag for all images", Toast.LENGTH_SHORT).show();
+                    }
+                    return false;
+                }
+            }
+        }
+
+        List<ImageTagModel> imageTagModels = NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel();
+        for (int j = 0; j < imageTagModels.size(); j++) {
+            if (!imageTagModels.get(j).isMandatory()) {
+                continue;
+            }
+            if (!NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
+                if(activity != null) {
+                    Toast.makeText(activity, imageTagModels.get(j).getTagName() + " tag not covered.", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    public LibraryMode getLibraryMode() {
+        return libraryMode;
+    }
+
+    public void setLibraryMode(LibraryMode libraryMode) {
+        this.libraryMode = libraryMode;
+    }
 }

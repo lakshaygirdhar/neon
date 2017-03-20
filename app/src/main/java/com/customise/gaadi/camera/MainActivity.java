@@ -9,6 +9,7 @@ import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
 import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.enumerations.GalleryType;
+import com.gaadi.neon.enumerations.LibraryMode;
 import com.gaadi.neon.enumerations.ResponseCode;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.interfaces.ICameraParam;
@@ -184,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void neutralClicked(View view){
         try {
-            PhotosLibrary.collectPhotos(this,PhotosMode.setNeutralMode().setParams(new INeutralParam() {
+            PhotosLibrary.collectPhotos(this, LibraryMode.Relax,PhotosMode.setNeutralMode().setParams(new INeutralParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
                     return CameraFacing.front;
