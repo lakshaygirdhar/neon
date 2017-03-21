@@ -169,7 +169,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
                     };
                 }
-                PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(galleryParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
+                PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(galleryParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
                 finish();
             } catch (NeonException e) {
                 e.printStackTrace();

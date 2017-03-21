@@ -159,7 +159,7 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
             };
         }
         try {
-            PhotosLibrary.collectPhotos(this, PhotosMode.setCameraMode().setParams(cameraParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
+            PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(cameraParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
         } catch (NeonException e) {
             e.printStackTrace();
         }

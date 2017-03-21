@@ -95,7 +95,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
 
         if (id == R.id.addPhotoCamera) {
             try {
-                PhotosLibrary.collectPhotos(this, PhotosMode.setCameraMode().setParams(new ICameraParam() {
+                PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(),PhotosMode.setCameraMode().setParams(new ICameraParam() {
                     @Override
                     public CameraFacing getCameraFacing() {
                         return NeonImagesHandler.getSingleonInstance().getNeutralParam().getCameraFacing();
@@ -156,7 +156,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
             }
         } else if (id == R.id.addPhotoGallary) {
             try {
-                PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                     @Override
                     public boolean selectVideos() {
                         return NeonImagesHandler.getSingleonInstance().getNeutralParam().selectVideos();

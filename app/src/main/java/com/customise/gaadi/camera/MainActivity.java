@@ -20,6 +20,7 @@ import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
+import com.gaadi.neon.util.NeonImagesHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
     public void cameraPriorityClicked(View view) {
         try {
 
-            PhotosLibrary.collectPhotos(this, PhotosMode.setCameraMode().setParams(new ICameraParam() {
+            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(new ICameraParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
                     return CameraFacing.front;
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void cameraOnlyClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, PhotosMode.setCameraMode().setParams(new ICameraParam() {
+            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(),PhotosMode.setCameraMode().setParams(new ICameraParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
                     return CameraFacing.front;
@@ -282,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void gridOnlyFolderClicked(View view){
         try {
-            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingleonInstance().getLibraryMode(),PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -343,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void gridPriorityFolderClicked(View view){
         try {
-            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingleonInstance().getLibraryMode(),PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -404,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void gridOnlyFilesClicked(View view){
         try {
-            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingleonInstance().getLibraryMode(),PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
