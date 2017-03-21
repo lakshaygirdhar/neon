@@ -47,8 +47,6 @@ public class PhotosLibrary {
         }
     }
 
-
-
     private static void validate(Context activity, PhotosMode photosMode,OnImageCollectionListener listener) throws NullPointerException, NeonException {
         if (activity == null) {
             throw new NullPointerException("Activity instance cannot be null");
