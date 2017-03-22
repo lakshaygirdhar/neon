@@ -249,7 +249,7 @@ public class NeonImagesHandler {
 
     public void showBackOperationAlertIfNeeded(final Activity activity) {
         if(validateNeonExit(null)){
-            sendImageCollectionAndFinish(activity, ResponseCode.Success);
+            sendImageCollectionAndFinish(activity, ResponseCode.Back);
         }else{
             if(NeonImagesHandler.getSingleonInstance().getLibraryMode() == LibraryMode.Restrict) {
                 new AlertDialog.Builder(activity).setTitle("Are you sure want to go back?")
