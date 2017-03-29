@@ -49,7 +49,7 @@ public class ImageShowFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
-                NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) {
+                NeonImagesHandler.getSingleonInstance().getImagesCollection().size() < 0) {
             return;
         }
         if (adapter == null) {

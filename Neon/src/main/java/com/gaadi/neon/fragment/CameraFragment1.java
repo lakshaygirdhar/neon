@@ -469,7 +469,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         mCamera.setParameters(params);
     }
 
-    public void handleFocus(MotionEvent event, Camera.Parameters params) {
+    public void handleFocus(MotionEvent event, final Camera.Parameters params) {
         Log.d(TAG, "handleFocus: " + event);
         //        int pointerId = event.getPointerId(0);
         //        int pointerIndex = event.findPointerIndex(pointerId);
@@ -477,15 +477,24 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         //        float x = event.getX(pointerIndex);
         //        float y = event.getY(pointerIndex);
 
-        List<String> supportedFocusModes = params.getSupportedFocusModes();
-        if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
-            mCamera.autoFocus(new Camera.AutoFocusCallback() {
-                @Override
-                public void onAutoFocus(boolean b, Camera camera) {
-                    // currently set to auto-focus on single touch
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                List<String> supportedFocusModes = params.getSupportedFocusModes();
+                if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+                    params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                    mCamera.setParameters(params);
+                    mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                        @Override
+                        public void onAutoFocus(boolean b, Camera camera) {
+                            // currently set to auto-focus on single touch
+                            Log.e("tag","came");
+                        }
+                    });
                 }
-            });
-        }
+            }
+        },500);
+
     }
 
     /**
@@ -535,6 +544,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     @Override
                     public void readyToTakePicture(boolean ready) {
                         readyToTakePicture = ready;
+                        handleFocus(null,mCamera.getParameters());
                     }
                 });
 

@@ -47,6 +47,25 @@ public class PhotosLibrary {
         }
     }
 
+    public static void collectPhotos(int requestCode, Context activity, LibraryMode libraryMode, PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
+        NeonImagesHandler.getSingleonInstance().setImageResultListener(listener);
+        NeonImagesHandler.getSingleonInstance().setLibraryMode(libraryMode);
+        NeonImagesHandler.getSingleonInstance().setRequestCode(requestCode);
+        validate(activity, photosMode,listener);
+        List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
+        if(alreadyAddedImages != null) {
+            NeonImagesHandler.getSingleonInstance().setImagesCollection(alreadyAddedImages);
+        }
+        if (photosMode.getParams() instanceof INeutralParam) {
+            startNeutralActivity(activity, photosMode);
+        } else if (photosMode.getParams() instanceof ICameraParam) {
+            startCameraActivity(activity, photosMode);
+        } else if (photosMode.getParams() instanceof IGalleryParam) {
+            startGalleryActivity(activity, photosMode);
+        }
+    }
+
+
     private static void validate(Context activity, PhotosMode photosMode,OnImageCollectionListener listener) throws NullPointerException, NeonException {
         if (activity == null) {
             throw new NullPointerException("Activity instance cannot be null");

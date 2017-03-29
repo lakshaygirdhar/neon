@@ -16,6 +16,7 @@ import com.gaadi.neon.interfaces.INeutralParam;
 import com.gaadi.neon.interfaces.IParam;
 import com.gaadi.neon.interfaces.OnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
+import com.gaadi.neon.model.NeonResponse;
 import com.scanlibrary.R;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class NeonImagesHandler {
     private INeutralParam neutralParam;
     private OnImageCollectionListener imageResultListener;
     private LibraryMode libraryMode;
+    private int requestCode;
 
     private NeonImagesHandler() {
     }
@@ -241,8 +243,12 @@ public class NeonImagesHandler {
     }
 
     public void sendImageCollectionAndFinish(Activity activity, ResponseCode responseCode) {
-        NeonImagesHandler.getSingleonInstance().getImageResultListener().imageCollection(NeonImagesHandler.getSingleonInstance().getImagesCollection(), responseCode);
-        NeonImagesHandler.getSingleonInstance().getImageResultListener().imageCollection(NeonImagesHandler.getSingleonInstance().getFileHashMap(), responseCode);
+        NeonResponse neonResponse = new NeonResponse();
+        neonResponse.setRequestCode(getRequestCode());
+        neonResponse.setResponseCode(responseCode);
+        neonResponse.setImageCollection(NeonImagesHandler.getSingleonInstance().getImagesCollection());
+        neonResponse.setImageTagsCollection(NeonImagesHandler.getSingleonInstance().getFileHashMap());
+        NeonImagesHandler.getSingleonInstance().getImageResultListener().imageCollection(neonResponse);
         NeonImagesHandler.getSingleonInstance().scheduleSinletonClearance();
         activity.finish();
     }
@@ -312,5 +318,13 @@ public class NeonImagesHandler {
 
     public void setLibraryMode(LibraryMode libraryMode) {
         this.libraryMode = libraryMode;
+    }
+
+    public int getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(int requestCode) {
+        this.requestCode = requestCode;
     }
 }

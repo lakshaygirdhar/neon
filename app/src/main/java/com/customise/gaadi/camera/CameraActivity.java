@@ -19,6 +19,7 @@ import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.OnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
+import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
@@ -96,20 +97,18 @@ public class CameraActivity extends AppCompatActivity {
                             return null;
                         }
                     }), new OnImageCollectionListener() {
-                        @Override
-                        public void imageCollection(HashMap<String, List<FileInfo>> imageTagsCollection, ResponseCode responseCode) {
-
-                        }
 
                         @Override
-                        public void imageCollection(List<FileInfo> imageCollection, ResponseCode responseCode) {
+                        public void imageCollection(NeonResponse neonResponse) {
                             if (totalList == null) {
-                                totalList = imageCollection;
+                                totalList = neonResponse.getImageCollection();
                             } else {
-                                appendAllImages(imageCollection);
+                                appendAllImages(neonResponse.getImageCollection());
                             }
                             showImages();
+
                         }
+
                     });
                 } catch (NeonException e) {
                     e.printStackTrace();
@@ -124,16 +123,11 @@ public class CameraActivity extends AppCompatActivity {
                 try {
                     PhotosLibrary.collectPhotos(CameraActivity.this,NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(cameraParam), new OnImageCollectionListener() {
                         @Override
-                        public void imageCollection(HashMap<String, List<FileInfo>> imageTagsCollection, ResponseCode responseCode) {
-
-                        }
-
-                        @Override
-                        public void imageCollection(List<FileInfo> imageCollection, ResponseCode responseCode) {
+                        public void imageCollection(NeonResponse neonResponse) {
                             if (totalList == null) {
-                                totalList = imageCollection;
+                                totalList = neonResponse.getImageCollection();
                             } else {
-                                appendAllImages(imageCollection);
+                                appendAllImages(neonResponse.getImageCollection());
                             }
                             showImages();
                         }

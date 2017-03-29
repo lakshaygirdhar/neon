@@ -1,6 +1,7 @@
 package com.gaadi.neon.interfaces;
 
 import com.gaadi.neon.enumerations.ResponseCode;
+import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.util.FileInfo;
 
 import java.util.HashMap;
@@ -13,7 +14,6 @@ import java.util.List;
  */
 public interface OnImageCollectionListener {
 
-    void imageCollection(HashMap<String,List<FileInfo>> imageTagsCollection, ResponseCode responseCode);
-    void imageCollection(List<FileInfo> imageCollection,ResponseCode responseCode);
+    void imageCollection(NeonResponse neonResponse);
 
 }

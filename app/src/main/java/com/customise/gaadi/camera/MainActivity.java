@@ -17,6 +17,7 @@ import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.INeutralParam;
 import com.gaadi.neon.interfaces.OnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
+import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
@@ -774,18 +775,13 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
 
 
-    @Override
-    public void imageCollection(HashMap<String, List<FileInfo>> imageTagsCollection, ResponseCode responseCode) {
-        if(imageTagsCollection != null && imageTagsCollection.size()>0){
-            Toast.makeText(this,"Got Tags collection with size " + imageTagsCollection.size(),Toast.LENGTH_SHORT).show();
-        }
-    }
+
 
     @Override
-    public void imageCollection(List<FileInfo> imageCollection,ResponseCode responseCode) {
-        if(imageCollection != null && imageCollection.size()>0){
-            allreadyImages = imageCollection;
-            Toast.makeText(this,"Got collection with size " + imageCollection.size(),Toast.LENGTH_SHORT).show();
+    public void imageCollection(NeonResponse neonResponse) {
+        if(neonResponse.getImageCollection() != null && neonResponse.getImageCollection().size()>0){
+            allreadyImages = neonResponse.getImageCollection();
+            Toast.makeText(this,"Got collection with size " + neonResponse.getImageCollection().size(),Toast.LENGTH_SHORT).show();
         }
     }
 }
