@@ -6,7 +6,6 @@ package com.gaadi.neon.fragment;
  * @since 19/10/16
  */
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,7 +21,6 @@ import android.graphics.RectF;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -40,18 +38,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
 import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
-import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.DrawingView;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PrefsUtils;
-import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NeonCameraFragmentLayoutBinding;
 
@@ -70,11 +68,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private static final String TAG = "CameraFragment1";
     private static final int REQUEST_REVIEW = 100;
     public NeonCameraFragmentLayoutBinding binder;
+    public Camera mCamera;
     private DrawingView drawingView;
     private ImageView currentFlashMode;
     private ArrayList<String> supportedFlashModes;
     private RecyclerView rcvFlash;
-    public Camera mCamera;
     private CameraPreview mCameraPreview;
     private boolean readyToTakePicture;
     private FrameLayout mCameraLayout;
@@ -483,17 +481,19 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 List<String> supportedFocusModes = params.getSupportedFocusModes();
                 if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
                     params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-                    mCamera.setParameters(params);
-                    mCamera.autoFocus(new Camera.AutoFocusCallback() {
-                        @Override
-                        public void onAutoFocus(boolean b, Camera camera) {
-                            // currently set to auto-focus on single touch
-                            Log.e("tag","came");
-                        }
-                    });
+                    if (mCamera != null) {
+                        mCamera.setParameters(params);
+                        mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                            @Override
+                            public void onAutoFocus(boolean b, Camera camera) {
+                                // currently set to auto-focus on single touch
+                                Log.e("tag", "came");
+                            }
+                        });
+                    }
                 }
             }
-        },500);
+        }, 500);
 
     }
 
@@ -544,7 +544,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     @Override
                     public void readyToTakePicture(boolean ready) {
                         readyToTakePicture = ready;
-                        handleFocus(null,mCamera.getParameters());
+                        handleFocus(null, mCamera.getParameters());
                     }
                 });
 
@@ -594,10 +594,10 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     }
 
     public int setPhotoOrientation(Activity activity, int cameraId) {
-        if(NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraOrientation() == CameraOrientation.portrait) {
-            if(localCameraFacing == CameraFacing.front) {
+        if (NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraOrientation() == CameraOrientation.portrait) {
+            if (localCameraFacing == CameraFacing.front) {
                 return 180;
-            }else{
+            } else {
                 return 0;
             }
         }
