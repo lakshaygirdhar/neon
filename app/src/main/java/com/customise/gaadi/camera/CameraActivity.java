@@ -96,6 +96,11 @@ public class CameraActivity extends AppCompatActivity {
                         public List<FileInfo> getAlreadyAddedImages() {
                             return null;
                         }
+
+                        @Override
+                        public boolean enableImageEditing() {
+                            return false;
+                        }
                     }), new OnImageCollectionListener() {
 
                         @Override
@@ -196,6 +201,11 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public List<FileInfo> getAlreadyAddedImages() {
             return null;
+        }
+
+        @Override
+        public boolean enableImageEditing() {
+            return false;
         }
     };
 

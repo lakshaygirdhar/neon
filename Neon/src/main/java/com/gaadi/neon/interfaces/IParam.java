@@ -26,4 +26,6 @@ public interface IParam {
 
     List<FileInfo> getAlreadyAddedImages();
 
+    boolean enableImageEditing();
+
 }

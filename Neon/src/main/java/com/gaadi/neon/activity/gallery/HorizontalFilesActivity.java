@@ -17,6 +17,7 @@ import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.adapter.GalleryHoriontalAdapter;
+import com.gaadi.neon.enumerations.ResponseCode;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.OnImageClickListener;
 import com.gaadi.neon.interfaces.OnPermissionResultListener;
@@ -80,10 +81,18 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
                 return super.onOptionsItemSelected(item);
             } else {
                 if (!NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
-                    Intent intent = new Intent(this, ImageShow.class);
-                    startActivity(intent);
-                    setResult(Constants.destroyPreviousActivity);
-                    finish();
+                    if(NeonImagesHandler.getSingletonInstance().getGalleryParam().enableImageEditing()
+                            || NeonImagesHandler.getSingletonInstance().getGalleryParam().getTagEnabled()) {
+                        Intent intent = new Intent(this, ImageShow.class);
+                        startActivity(intent);
+                        setResult(Constants.destroyPreviousActivity);
+                        finish();
+                    }else{
+                        if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
+                            NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
+                            finish();
+                        }
+                    }
                 } else {
                     setResult(RESULT_OK);
                     finish();
@@ -169,6 +178,11 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
                 @Override
                 public ArrayList<FileInfo> getAlreadyAddedImages() {
                     return null;
+                }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return NeonImagesHandler.getSingletonInstance().getGalleryParam().enableImageEditing();
                 }
 
             };

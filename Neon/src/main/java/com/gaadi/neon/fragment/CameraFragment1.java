@@ -19,6 +19,10 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -61,6 +65,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimerTask;
 
 @SuppressWarnings("deprecation,unchecked")
 public class CameraFragment1 extends Fragment implements View.OnTouchListener, Camera.PictureCallback {
@@ -87,6 +92,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private ImageView mSwitchCamera;
     private CameraFacing cameraFacing;
     private CameraFacing localCameraFacing;
+    private SensorManager sensorManager;
+    private float[] mGravity;
+    private float mAccel;
+    private float mAccelCurrent;
+    private float mAccelLast;
 
     public void clickPicture() {
         if (readyToTakePicture) {
@@ -120,6 +130,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         } else {
             Toast.makeText(getContext(), getString(R.string.pass_params), Toast.LENGTH_SHORT).show();
         }
+        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         return binder.getRoot();
     }
 
@@ -193,6 +204,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             mCameraPreview.getHolder().removeCallback(mCameraPreview);
             mCamera.stopPreview();
             mCamera.release();
+            sensorManager.unregisterListener(sensorEventListener);
             mCamera = null;
             mCameraPreview = null;
         } catch (Exception e) {
@@ -478,6 +490,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                sensorManager.unregisterListener(sensorEventListener);
                 List<String> supportedFocusModes = params.getSupportedFocusModes();
                 if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
                     params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
@@ -486,8 +499,20 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                         mCamera.autoFocus(new Camera.AutoFocusCallback() {
                             @Override
                             public void onAutoFocus(boolean b, Camera camera) {
+
+                                sensorManager.registerListener(sensorEventListener,
+                                        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                                        SensorManager.SENSOR_DELAY_NORMAL);
+
                                 // currently set to auto-focus on single touch
                                 Log.e("tag", "came");
+                               /* new Handler().postDelayed(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        if(mCamera != null)
+                                        handleFocus(null,mCamera.getParameters());
+                                    }
+                                },2500);*/
                             }
                         });
                     }
@@ -545,6 +570,8 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     public void readyToTakePicture(boolean ready) {
                         readyToTakePicture = ready;
                         handleFocus(null, mCamera.getParameters());
+
+
                     }
                 });
 
@@ -565,6 +592,35 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             Log.e(TAG, "camera not null");
         }
     }
+
+    SensorEventListener sensorEventListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+                mGravity = event.values.clone();
+                // Shake detection
+                float x = mGravity[0];
+                float y = mGravity[1];
+                float z = mGravity[2];
+                mAccelLast = mAccelCurrent;
+                mAccelCurrent = (float) Math.sqrt(x*x + y*y + z*z);
+                float delta = mAccelCurrent - mAccelLast;
+                mAccel = mAccel * 0.9f + delta;
+                // Make this higher or lower according to how much
+                // motion you want to detect
+                if(mAccel > 0.25){
+                    handleFocus(null,mCamera.getParameters());
+                    Log.e("tag","came");
+                    // do something
+                }
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
 
     private int initCameraId() {
         int count = Camera.getNumberOfCameras();

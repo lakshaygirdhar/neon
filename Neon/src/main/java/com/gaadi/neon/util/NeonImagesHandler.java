@@ -44,13 +44,19 @@ public class NeonImagesHandler {
     private NeonImagesHandler() {
     }
 
+    @Deprecated
     public synchronized static NeonImagesHandler getSingleonInstance() {
+       return getSingletonInstance();
+    }
+
+    public synchronized static NeonImagesHandler getSingletonInstance() {
         if (singleonInstance == null || clearInstance) {
             singleonInstance = new NeonImagesHandler();
             clearInstance = false;
         }
         return singleonInstance;
     }
+
 
     private void scheduleSinletonClearance() {
         clearInstance = true;

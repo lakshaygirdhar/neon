@@ -103,6 +103,11 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                     return allreadyImages;
                 }
 
+                @Override
+                public boolean enableImageEditing() {
+                    return false;
+                }
+
 
             }),this);
         } catch (NullPointerException e) {
@@ -173,6 +178,11 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 @Override
                 public List<FileInfo> getAlreadyAddedImages() {
                     return allreadyImages;
+                }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return false;
                 }
 
 
@@ -275,6 +285,11 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<FileInfo> getAlreadyAddedImages() {
                     return allreadyImages;
                 }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return false;
+                }
             }),this);
         } catch (NeonException e) {
             e.printStackTrace();
@@ -337,6 +352,11 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<FileInfo> getAlreadyAddedImages() {
                     return allreadyImages;
                 }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return false;
+                }
             }),this);
         }catch (Exception e){
 
@@ -397,6 +417,11 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 @Override
                 public List<FileInfo> getAlreadyAddedImages() {
                     return allreadyImages;
+                }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return false;
                 }
             }),this);
         }catch (Exception e){
@@ -459,6 +484,11 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<FileInfo> getAlreadyAddedImages() {
                     return allreadyImages;
                 }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return false;
+                }
             }),this);
         }catch (Exception e){
 
@@ -519,6 +549,11 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 @Override
                 public List<FileInfo> getAlreadyAddedImages() {
                     return allreadyImages;
+                }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return false;
                 }
             }),this);
         }catch (Exception e){
@@ -583,6 +618,11 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<FileInfo> getAlreadyAddedImages() {
                     return allreadyImages;
                 }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return false;
+                }
             }),this);
         }catch (Exception e){
 
@@ -643,6 +683,11 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 @Override
                 public List<FileInfo> getAlreadyAddedImages() {
                     return allreadyImages;
+                }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return false;
                 }
             }),this);
         }catch (Exception e){
@@ -705,6 +750,11 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<FileInfo> getAlreadyAddedImages() {
                     return allreadyImages;
                 }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return false;
+                }
             }),this);
         }catch (Exception e){
 
@@ -765,6 +815,11 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 @Override
                 public List<FileInfo> getAlreadyAddedImages() {
                     return allreadyImages;
+                }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return false;
                 }
             }),this);
         }catch (Exception e){

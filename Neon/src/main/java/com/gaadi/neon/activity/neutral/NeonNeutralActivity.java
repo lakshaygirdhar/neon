@@ -95,7 +95,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
 
         if (id == R.id.addPhotoCamera) {
             try {
-                PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(),PhotosMode.setCameraMode().setParams(new ICameraParam() {
+                PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingletonInstance().getLibraryMode(),PhotosMode.setCameraMode().setParams(new ICameraParam() {
                     @Override
                     public CameraFacing getCameraFacing() {
                         return NeonImagesHandler.getSingleonInstance().getNeutralParam().getCameraFacing();
@@ -143,20 +143,25 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
 
                     @Override
                     public List<ImageTagModel> getImageTagsModel() {
-                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getImageTagsModel();
+                        return NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel();
                     }
 
                     @Override
                     public ArrayList<FileInfo> getAlreadyAddedImages() {
                         return null;
                     }
-                }), NeonImagesHandler.getSingleonInstance().getImageResultListener());
+
+                    @Override
+                    public boolean enableImageEditing() {
+                        return NeonImagesHandler.getSingletonInstance().getNeutralParam().enableImageEditing();
+                    }
+                }), NeonImagesHandler.getSingletonInstance().getImageResultListener());
             } catch (NeonException e) {
                 e.printStackTrace();
             }
         } else if (id == R.id.addPhotoGallary) {
             try {
-                PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                     @Override
                     public boolean selectVideos() {
                         return NeonImagesHandler.getSingleonInstance().getNeutralParam().selectVideos();
@@ -194,14 +199,19 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
 
                     @Override
                     public List<ImageTagModel> getImageTagsModel() {
-                        return NeonImagesHandler.getSingleonInstance().getNeutralParam().getImageTagsModel();
+                        return NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel();
                     }
 
                     @Override
                     public ArrayList<FileInfo> getAlreadyAddedImages() {
                         return null;
                     }
-                }), NeonImagesHandler.getSingleonInstance().getImageResultListener());
+
+                    @Override
+                    public boolean enableImageEditing() {
+                        return NeonImagesHandler.getSingletonInstance().getNeutralParam().enableImageEditing();
+                    }
+                }), NeonImagesHandler.getSingletonInstance().getImageResultListener());
             } catch (NeonException e) {
                 e.printStackTrace();
             }

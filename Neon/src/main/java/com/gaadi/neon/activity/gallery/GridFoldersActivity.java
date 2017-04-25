@@ -13,6 +13,7 @@ import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.adapter.ImagesFoldersAdapter;
+import com.gaadi.neon.enumerations.ResponseCode;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.OnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
@@ -63,16 +64,25 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
         } else if (id == R.id.menuCamera) {
             performCameraOperation();
         } else if (id == R.id.menu_next) {
-            if (NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
+            if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
                 finish();
-            } else if (NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
-                    NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) {
+            } else if (NeonImagesHandler.getSingletonInstance().getImagesCollection() == null ||
+                    NeonImagesHandler.getSingletonInstance().getImagesCollection().size() <= 0) {
                 Toast.makeText(this, R.string.no_image_selected, Toast.LENGTH_SHORT).show();
                 return super.onOptionsItemSelected(item);
             } else {
-                Intent intent = new Intent(this, ImageShow.class);
-                startActivity(intent);
-                finish();
+                if(NeonImagesHandler.getSingletonInstance().getGalleryParam().enableImageEditing()
+                        || NeonImagesHandler.getSingletonInstance().getGalleryParam().getTagEnabled()) {
+                    Intent intent = new Intent(this, ImageShow.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
+                        NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
+                        finish();
+                    }
+                }
+
 
             }
         }
@@ -147,6 +157,11 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
                 @Override
                 public ArrayList<FileInfo> getAlreadyAddedImages() {
                     return null;
+                }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return NeonImagesHandler.getSingletonInstance().getGalleryParam().enableImageEditing();
                 }
 
             };

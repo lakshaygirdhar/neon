@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.enumerations.GalleryType;
+import com.gaadi.neon.enumerations.ResponseCode;
 import com.gaadi.neon.fragment.CameraFragment1;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
@@ -108,10 +109,18 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.buttonDone) {
-            if (!NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
-                Intent intent = new Intent(this, ImageShow.class);
-                startActivity(intent);
-                finish();
+            if (!NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
+                if(NeonImagesHandler.getSingletonInstance().getCameraParam().enableImageEditing()
+                        || NeonImagesHandler.getSingletonInstance().getCameraParam().getTagEnabled()) {
+                    Intent intent = new Intent(this, ImageShow.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
+                        NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
+                        finish();
+                    }
+                }
             } else {
                 setResult(RESULT_OK);
                 finish();
@@ -165,6 +174,11 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                         @Override
                         public ArrayList<FileInfo> getAlreadyAddedImages() {
                             return null;
+                        }
+
+                        @Override
+                        public boolean enableImageEditing() {
+                            return NeonImagesHandler.getSingleonInstance().getCameraParam().enableImageEditing();
                         }
 
                     };

@@ -13,6 +13,7 @@ import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.adapter.GridFilesAdapter;
+import com.gaadi.neon.enumerations.ResponseCode;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.OnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
@@ -65,10 +66,18 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
                 return super.onOptionsItemSelected(item);
             }else {
                 if (!NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
-                    Intent intent = new Intent(this, ImageShow.class);
-                    startActivity(intent);
-                    setResult(Constants.destroyPreviousActivity);
-                    finish();
+                    if(NeonImagesHandler.getSingletonInstance().getGalleryParam().enableImageEditing()
+                            || NeonImagesHandler.getSingletonInstance().getGalleryParam().getTagEnabled()) {
+                        Intent intent = new Intent(this, ImageShow.class);
+                        startActivity(intent);
+                        setResult(Constants.destroyPreviousActivity);
+                        finish();
+                    }else{
+                        if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
+                            NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
+                            finish();
+                        }
+                    }
                 } else {
                     setResult(RESULT_OK);
                     finish();
@@ -154,6 +163,11 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
                 @Override
                 public ArrayList<FileInfo> getAlreadyAddedImages() {
                     return null;
+                }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return NeonImagesHandler.getSingletonInstance().getGalleryParam().enableImageEditing();
                 }
 
             };
