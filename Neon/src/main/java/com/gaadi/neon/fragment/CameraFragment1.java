@@ -503,16 +503,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                                 sensorManager.registerListener(sensorEventListener,
                                         sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                                         SensorManager.SENSOR_DELAY_NORMAL);
-
-                                // currently set to auto-focus on single touch
-                                Log.e("tag", "came");
-                               /* new Handler().postDelayed(new TimerTask() {
-                                    @Override
-                                    public void run() {
-                                        if(mCamera != null)
-                                        handleFocus(null,mCamera.getParameters());
-                                    }
-                                },2500);*/
                             }
                         });
                     }
@@ -534,6 +524,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
     public void stopCamera() {
         try {
+            readyToTakePicture = false;
             if (null == mCamera) {
                 return;
             }
@@ -820,12 +811,13 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 mCamera.startPreview();*/
 
                 mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
-                readyToTakePicture = true;
+               // readyToTakePicture = true;
             } else {
                 Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
-                readyToTakePicture = true;
+                //readyToTakePicture = true;
                 mCamera.startPreview();
             }
+            readyToTakePicture = true;
         }
     }
 }

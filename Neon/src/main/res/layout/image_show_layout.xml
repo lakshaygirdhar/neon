@@ -30,7 +30,7 @@
 
             <Button
                 android:id="@+id/btnDone"
-                android:text="Sumbit"
+                android:text="Submit"
                 android:textColor="#ffffff"
                 android:background="@color/neon_buttons_color"
                 android:layout_gravity="bottom"
