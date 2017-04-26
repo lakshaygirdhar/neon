@@ -398,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public boolean getTagEnabled() {
-                    return true;
+                    return false;
                 }
 
                 @Override

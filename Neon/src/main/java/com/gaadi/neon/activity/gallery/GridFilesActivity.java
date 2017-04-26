@@ -73,9 +73,14 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
                         setResult(Constants.destroyPreviousActivity);
                         finish();
                     }else{
-                        if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
-                            NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
+                        if(NeonImagesHandler.getSingletonInstance().getGalleryParam().enableFolderStructure()){
+                            setResult(RESULT_OK);
                             finish();
+                        }else {
+                            if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
+                                NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
+                                finish();
+                            }
                         }
                     }
                 } else {
