@@ -152,7 +152,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     }
 
     public void onClickFragmentsView(View v) {
-        if (v.getId() == R.id.buttonCaptureVertical || v.getId()  == R.id.buttonCaptureHorizontal) {
+        if (v.getId() == R.id.buttonCaptureVertical || v.getId() == R.id.buttonCaptureHorizontal) {
             clickPicture();
         } else if (v.getId() == R.id.switchCamera) {
             int cameraFacing = initCameraId();
@@ -491,26 +491,38 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         //        float x = event.getX(pointerIndex);
         //        float y = event.getY(pointerIndex);
 
+        if (!readyToTakePicture) {
+            return;
+        }
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                sensorManager.unregisterListener(sensorEventListener);
-                List<String> supportedFocusModes = params.getSupportedFocusModes();
-                if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
-                    params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-                    if (mCamera != null) {
-                        mCamera.setParameters(params);
-                        mCamera.autoFocus(new Camera.AutoFocusCallback() {
-                            @Override
-                            public void onAutoFocus(boolean b, Camera camera) {
-
-                                sensorManager.registerListener(sensorEventListener,
-                                        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                                        SensorManager.SENSOR_DELAY_NORMAL);
-                            }
-                        });
+                try {
+                    sensorManager.unregisterListener(sensorEventListener);
+                    List<String> supportedFocusModes = params.getSupportedFocusModes();
+                    if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+                        params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                        if (mCamera != null) {
+                            mCamera.setParameters(params);
+                            mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                                @Override
+                                public void onAutoFocus(boolean b, Camera camera) {
+                                    try {
+                                        sensorManager.registerListener(sensorEventListener,
+                                                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                                                SensorManager.SENSOR_DELAY_NORMAL);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
             }
         }, 500);
 
@@ -560,6 +572,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 setCameraRotation();
 
                 mCameraPreview = new CameraPreview(mActivity, mCamera);
+
                 mCameraPreview.setReadyListener(new CameraPreview.ReadyToTakePicture() {
                     @Override
                     public void readyToTakePicture(boolean ready) {
@@ -591,21 +604,21 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     SensorEventListener sensorEventListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
-            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 mGravity = event.values.clone();
                 // Shake detection
                 float x = mGravity[0];
                 float y = mGravity[1];
                 float z = mGravity[2];
                 mAccelLast = mAccelCurrent;
-                mAccelCurrent = (float) Math.sqrt(x*x + y*y + z*z);
+                mAccelCurrent = (float) Math.sqrt(x * x + y * y + z * z);
                 float delta = mAccelCurrent - mAccelLast;
                 mAccel = mAccel * 0.9f + delta;
                 // Make this higher or lower according to how much
                 // motion you want to detect
-                if(mAccel > 0.25){
-                    handleFocus(null,mCamera.getParameters());
-                    Log.e("tag","came");
+                if (mAccel > 0.25) {
+                    handleFocus(null, mCamera.getParameters());
+                    Log.e("tag", "came");
                     // do something
                 }
             }
@@ -791,7 +804,9 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 Log.d(TAG, "Error accessing file: " + e.getMessage());
             }
 
-            mCamera.startPreview();
+            if (mCamera != null) {
+                mCamera.startPreview();
+            }
             return pictureFile;
         }
 
@@ -815,11 +830,13 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 mCamera.startPreview();*/
 
                 mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
-               // readyToTakePicture = true;
+                // readyToTakePicture = true;
             } else {
                 Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
                 //readyToTakePicture = true;
-                mCamera.startPreview();
+                if(mCamera != null) {
+                    mCamera.startPreview();
+                }
             }
             readyToTakePicture = true;
         }
