@@ -298,6 +298,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     @Override
                     public void readyToTakePicture(boolean ready) {
                         readyToTakePicture = ready;
+                        handleFocus(null, mCamera.getParameters());
                     }
                 });
 
@@ -834,7 +835,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             } else {
                 Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
                 //readyToTakePicture = true;
-                if(mCamera != null) {
+                if (mCamera != null) {
                     mCamera.startPreview();
                 }
             }

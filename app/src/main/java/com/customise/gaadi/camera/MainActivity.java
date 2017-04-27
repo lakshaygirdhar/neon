@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
             PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(new ICameraParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
-                    return CameraFacing.front;
+                    return CameraFacing.back;
                 }
 
                 @Override
