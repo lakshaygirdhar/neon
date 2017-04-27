@@ -31,7 +31,7 @@ import java.util.List;
 public class NeonImagesHandler {
 
     private static NeonImagesHandler singleonInstance;
-    private static boolean clearInstance;
+    private boolean clearInstance;
     private List<FileInfo> imagesCollection;
     private ICameraParam cameraParam;
     private IGalleryParam galleryParam;
@@ -50,22 +50,22 @@ public class NeonImagesHandler {
     }
 
     public synchronized static NeonImagesHandler getSingletonInstance() {
-        if (singleonInstance == null || clearInstance) {
+        if (singleonInstance == null || singleonInstance.clearInstance) {
             singleonInstance = new NeonImagesHandler();
-            clearInstance = false;
+            singleonInstance.clearInstance = false;
         }
         return singleonInstance;
     }
 
 
-    private void scheduleSinletonClearance() {
+    public void scheduleSingletonClearance() {
         clearInstance = true;
-        new Handler().postDelayed(new Runnable() {
+      /*  new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 getSingleonInstance();
             }
-        }, 10000);
+        }, 10000);*/
     }
 
     public int getNumberOfPhotosCollected(ImageTagModel imageTagModel) {
@@ -255,7 +255,7 @@ public class NeonImagesHandler {
         neonResponse.setImageCollection(NeonImagesHandler.getSingleonInstance().getImagesCollection());
         neonResponse.setImageTagsCollection(NeonImagesHandler.getSingleonInstance().getFileHashMap());
         NeonImagesHandler.getSingleonInstance().getImageResultListener().imageCollection(neonResponse);
-        NeonImagesHandler.getSingleonInstance().scheduleSinletonClearance();
+        NeonImagesHandler.getSingleonInstance().scheduleSingletonClearance();
         activity.finish();
     }
 

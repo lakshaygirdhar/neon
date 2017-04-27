@@ -152,7 +152,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     }
 
     public void onClickFragmentsView(View v) {
-        if (v.getId() == R.id.buttonCapture) {
+        if (v.getId() == R.id.buttonCaptureVertical || v.getId()  == R.id.buttonCaptureHorizontal) {
             clickPicture();
         } else if (v.getId() == R.id.switchCamera) {
             int cameraFacing = initCameraId();
@@ -432,8 +432,12 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         if (orientation != null) {
             if (orientation == CameraOrientation.landscape) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                binder.buttonCaptureHorizontal.setVisibility(View.VISIBLE);
+                binder.buttonCaptureVertical.setVisibility(View.INVISIBLE);
             } else if (orientation == CameraOrientation.portrait) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                binder.buttonCaptureHorizontal.setVisibility(View.INVISIBLE);
+                binder.buttonCaptureVertical.setVisibility(View.VISIBLE);
             }
         } else {
             Log.e(Constants.TAG, "No orientation set");
