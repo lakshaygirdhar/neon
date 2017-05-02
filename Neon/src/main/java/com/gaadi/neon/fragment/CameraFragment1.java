@@ -94,9 +94,9 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private CameraFacing localCameraFacing;
     private SensorManager sensorManager;
     private float[] mGravity;
-    private float mAccel;
-    private float mAccelCurrent;
-    private float mAccelLast;
+    private long lastUpdate = 0;
+    private float last_x, last_y, last_z;
+    private static final int SHAKE_THRESHOLD = 20;
 
     public void clickPicture() {
         if (readyToTakePicture) {
@@ -611,17 +611,24 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 float x = mGravity[0];
                 float y = mGravity[1];
                 float z = mGravity[2];
-                mAccelLast = mAccelCurrent;
-                mAccelCurrent = (float) Math.sqrt(x * x + y * y + z * z);
-                float delta = mAccelCurrent - mAccelLast;
-                mAccel = mAccel * 0.9f + delta;
-                // Make this higher or lower according to how much
-                // motion you want to detect
-                if (mAccel > 0.25) {
-                    handleFocus(null, mCamera.getParameters());
-                    Log.e("tag", "came");
-                    // do something
+
+                long curTime = System.currentTimeMillis();
+
+                if ((curTime - lastUpdate) > 100) {
+                    long diffTime = (curTime - lastUpdate);
+                    lastUpdate = curTime;
+
+                    float speed = Math.abs(x + y + z - last_x - last_y - last_z)/ diffTime * 10000;
+
+                    if (speed > SHAKE_THRESHOLD) {
+                        handleFocus(null, mCamera.getParameters());
+                    }
+                    Log.e("tag",String.valueOf(speed));
+                    last_x = x;
+                    last_y = y;
+                    last_z = z;
                 }
+
             }
         }
 

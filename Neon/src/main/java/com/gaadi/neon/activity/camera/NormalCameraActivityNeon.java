@@ -57,6 +57,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         bindCameraFragment();
     }
 
+
     private void bindCameraFragment() {
         try {
             askForPermissionIfNeeded(PermissionType.write_external_storage, new OnPermissionResultListener() {
