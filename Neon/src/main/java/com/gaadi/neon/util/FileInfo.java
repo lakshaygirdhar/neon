@@ -6,8 +6,8 @@ import java.io.Serializable;
 
 /**
  * Created by Lakshay
- * @since 27-02-2015.
  *
+ * @since 27-02-2015.
  */
 public class FileInfo implements Serializable {
 
@@ -20,6 +20,10 @@ public class FileInfo implements Serializable {
     private int fileCount;
     private String dateTimeTaken;
     private ImageTagModel fileTag;
+
+    public FileInfo(String _filePath) {
+        filePath = _filePath;
+    }
 
 
     public String getDateTimeTaken() {

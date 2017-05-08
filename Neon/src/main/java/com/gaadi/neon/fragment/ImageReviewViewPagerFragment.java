@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +70,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     private Context mContext;
     private ImageView cropBtn;
     private File cropFilePath;
+    private RelativeLayout fileEditLayout;
 
     public ImageReviewViewPagerFragment() {
     }
@@ -115,6 +117,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_image_review_viewpager, container, false);
 
+        fileEditLayout = (RelativeLayout) rootView.findViewById(R.id.header_options_imageereview);
         deleteBtn = (ImageView) rootView.findViewById(R.id.imagereview_deletebtn);
         cropBtn = (ImageView) rootView.findViewById(R.id.imagereview_cropbtn);
         rotateBtn = (ImageView) rootView.findViewById(R.id.imagereview_rotatebtn);
@@ -130,6 +133,12 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         rotateBtn.setOnClickListener(this);
         cropBtn.setOnClickListener(this);
         txtVwTagSpinner.setOnClickListener(this);
+        if (imageModel != null && imageModel.getFilePath() != null && (imageModel.getFilePath().contains("http") ||
+                imageModel.getFilePath().contains("https"))) {
+            fileEditLayout.setVisibility(View.INVISIBLE);
+        } else {
+            fileEditLayout.setVisibility(View.VISIBLE);
+        }
         onLoad(savedInstanceState);
         return rootView;
     }
@@ -171,11 +180,11 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageTagModel singleModel = tagModels.get(position);
-                if(singleModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingleonInstance().getNumberOfPhotosCollected(singleModel) >=singleModel.getNumberOfPhotos()){
+                if (singleModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingleonInstance().getNumberOfPhotosCollected(singleModel) >= singleModel.getNumberOfPhotos()) {
                     Toast.makeText(getActivity(), getActivity().getString(R.string.max_tag_count_error, singleModel.getNumberOfPhotos()) + singleModel.getTagName(), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                imageModel.setFileTag(new ImageTagModel(singleModel.getTagName(), singleModel.getTagId(), singleModel.isMandatory(),singleModel.getNumberOfPhotos()));
+                imageModel.setFileTag(new ImageTagModel(singleModel.getTagName(), singleModel.getTagId(), singleModel.isMandatory(), singleModel.getNumberOfPhotos()));
                 ImageEditEvent event = new ImageEditEvent();
                 event.setModel(imageModel);
                 ((FragmentListener) getActivity()).getFragmentChanges(event);
@@ -191,7 +200,6 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             }
         });
     }
-
 
 
     /**
