@@ -133,13 +133,13 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         rotateBtn.setOnClickListener(this);
         cropBtn.setOnClickListener(this);
         txtVwTagSpinner.setOnClickListener(this);
+        onLoad(savedInstanceState);
         if (imageModel != null && imageModel.getFilePath() != null && (imageModel.getFilePath().contains("http") ||
                 imageModel.getFilePath().contains("https"))) {
             fileEditLayout.setVisibility(View.INVISIBLE);
         } else {
             fileEditLayout.setVisibility(View.VISIBLE);
         }
-        onLoad(savedInstanceState);
         return rootView;
     }
 

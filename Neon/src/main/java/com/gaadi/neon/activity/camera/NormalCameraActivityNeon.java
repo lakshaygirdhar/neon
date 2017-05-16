@@ -295,7 +295,8 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     private void initialiazeCurrentTag() {
         for (int i = 0; i < NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel().size(); i++) {
-            if (!NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(tagModels.get(i))) {
+            if (tagModels.get(i).isMandatory() &&
+                    !NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(tagModels.get(i))) {
                 currentTag = i;
                 break;
             }
