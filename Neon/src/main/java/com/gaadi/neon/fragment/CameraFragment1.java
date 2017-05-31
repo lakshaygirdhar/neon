@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -97,6 +98,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private long lastUpdate = 0;
     private float last_x, last_y, last_z;
     private static final int SHAKE_THRESHOLD = 20;
+    private boolean fromCreate;
 
     public void clickPicture() {
         if (readyToTakePicture) {
@@ -131,6 +133,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             Toast.makeText(getContext(), getString(R.string.pass_params), Toast.LENGTH_SHORT).show();
         }
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        fromCreate = true;
         return binder.getRoot();
     }
 
@@ -279,7 +282,18 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     @Override
     public void onResume() {
         super.onResume();
+        if(!fromCreate){
+            try {
+                CameraFragment1 fragment = new CameraFragment1();
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
+        fromCreate = false;
         if (mCamera == null) {
             try {
                 if (cameraFacing == CameraFacing.front && NeonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
