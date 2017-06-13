@@ -83,6 +83,12 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                                         });
 
                                     } else {
+                                        if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
+                                            finish();
+                                        }else{
+                                            NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(NormalCameraActivityNeon.this,
+                                                    ResponseCode.Camera_Permission_Error);
+                                        }
                                         Toast.makeText(NormalCameraActivityNeon.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -91,6 +97,12 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                             manifestPermission.printStackTrace();
                         }
                     } else {
+                        if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
+                            finish();
+                        }else{
+                            NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(NormalCameraActivityNeon.this,
+                                    ResponseCode.Write_Permission_Error);
+                        }
                         Toast.makeText(NormalCameraActivityNeon.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
                     }
                 }

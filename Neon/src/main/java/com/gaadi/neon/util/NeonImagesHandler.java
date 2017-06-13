@@ -252,10 +252,10 @@ public class NeonImagesHandler {
         NeonResponse neonResponse = new NeonResponse();
         neonResponse.setRequestCode(getRequestCode());
         neonResponse.setResponseCode(responseCode);
-        neonResponse.setImageCollection(NeonImagesHandler.getSingleonInstance().getImagesCollection());
-        neonResponse.setImageTagsCollection(NeonImagesHandler.getSingleonInstance().getFileHashMap());
-        NeonImagesHandler.getSingleonInstance().getImageResultListener().imageCollection(neonResponse);
-        NeonImagesHandler.getSingleonInstance().scheduleSingletonClearance();
+        neonResponse.setImageCollection(NeonImagesHandler.getSingletonInstance().getImagesCollection());
+        neonResponse.setImageTagsCollection(NeonImagesHandler.getSingletonInstance().getFileHashMap());
+        NeonImagesHandler.getSingletonInstance().getImageResultListener().imageCollection(neonResponse);
+        NeonImagesHandler.getSingletonInstance().scheduleSingletonClearance();
         activity.finish();
     }
 
