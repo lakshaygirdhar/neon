@@ -786,6 +786,10 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     bm = BitmapFactory.decodeByteArray(data, 0, (data != null) ? data.length : 0);
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                         // Notice that width and height are reversed
+                        if (bm.getHeight() < bm.getWidth()) {
+                            bm = rotateBitmap(bm, 90);
+                        }
+
                         Bitmap scaled = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
                         int w = scaled.getWidth();
                         int h = scaled.getHeight();
@@ -871,5 +875,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             }
             readyToTakePicture = true;
         }
+    }
+
+    public static Bitmap rotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 }
