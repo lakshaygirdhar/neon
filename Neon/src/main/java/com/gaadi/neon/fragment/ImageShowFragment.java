@@ -101,12 +101,8 @@ public class ImageShowFragment extends Fragment  {
                 NeonImagesHandler.getSingleonInstance().getImagesCollection().size() < 0) {
             return;
         }
-        if (adapter == null) {
-            adapter = new ImageShowAdapter(getActivity());
-            binder.imageShowGrid.setAdapter(adapter);
-        } else {
-            adapter.notifyDataSetChanged();
-        }
+        adapter = new ImageShowAdapter(getActivity());
+        binder.imageShowGrid.setAdapter(adapter);
     }
 
     //binder.imageShowGrid.startEditMode(position);

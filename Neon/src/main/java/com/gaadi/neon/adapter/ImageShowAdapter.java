@@ -59,7 +59,7 @@ public class ImageShowAdapter extends BaseDynamicGridAdapter {
             holder = (PhotosHolder) convertView.getTag();
         }
 
-        if (!NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
+        if (!NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
             holder.tvProfile.setVisibility(View.GONE);
         } else {
             holder.tvProfile.setVisibility(View.VISIBLE);
