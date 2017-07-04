@@ -202,7 +202,7 @@ public class NeonImagesHandler {
                 return false;
             }
         }
-        imagesCollection.add(0, fileInfo);
+        imagesCollection.add(fileInfo);
         return true;
     }
 
