@@ -31,6 +31,14 @@ public class ImageShowAdapter extends BaseDynamicGridAdapter {
         this.context = context;
     }
 
+    @Override
+    public int getCount() {
+        if(NeonImagesHandler.getSingletonInstance().getImagesCollection() != null) {
+            return NeonImagesHandler.getSingletonInstance().getImagesCollection().size();
+        }
+        return 0;
+    }
+
    /* @Override
     public int getCount() {
         if(NeonImagesHandler.getSingleonInstance().getImagesCollection() != null) {
